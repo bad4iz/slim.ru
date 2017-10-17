@@ -1,10 +1,10 @@
 ---
-## Документация
+title: Документация
 ---
 
 <div class="alert alert-info">
     <p>
-        This documentation is for <strong>Slim 3</strong>. The Slim 2 documentation is available at <a href="http://docs.slimframework.com/">docs.slimframework.com</a>.
+        Эта документация предназначена для <strong>Slim 3</strong>. Документацию по Slim 2 можно найти на <a href="http://docs.slimframework.com/">docs.slimframework.com</a>.
     </p>
 </div>
 
@@ -13,44 +13,40 @@
         <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" />
     </a>
     <br />
-    This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.
+    Эта работа лицензируется в соответствии с  <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.
 </p>
 
-## Welcome
+## Добро пожаловать
 
-Slim is a PHP micro framework that helps you
-quickly write simple yet powerful web applications and APIs. At its core, Slim
-is a dispatcher that receives an HTTP request, invokes an appropriate callback
-routine, and returns an HTTP response. That's it.
+Slim - это микроструктура PHP, которая помогает быстро писать простые, но мощные веб-приложения и API. 
+По сути, Slim - диспетчер, который получает HTTP-запрос, вызывает соответствующую процедуру обратного вызова и
+ возвращает HTTP-ответ. Вот и все.
 
-## What's the point?
+## В чем смысл?
 
-Slim is an ideal tool to create APIs that consume, repurpose, or publish data. Slim is also
-a great tool for rapid prototyping. Heck, you can even build full-featured web
-applications with user interfaces. More importantly, Slim is super fast
-and has very little code. In fact, you can read and understand its source code
-in only an afternoon!
+Slim - идеальный инструмент для создания API-интерфейсов, которые потребляют, перенастраивают или публикуют данные. 
+Slim - отличный инструмент для быстрого прототипирования. Черт, вы даже можете создавать полнофункциональные 
+веб-приложения с пользовательскими интерфейсами. Что еще более важно, Slim очень быстрый и имеет очень мало кода. 
+Фактически, вы можете читать и понимать его исходный код `только днем` (!in only an afternoon!)
 
-> At its core, Slim
-is a dispatcher that receives an HTTP request, invokes an appropriate callback
-routine, and returns an HTTP response. That's it.
+> По сути, Slim - диспетчер, который получает HTTP-запрос, вызывает 
+соответствующую процедуру обратного вызова и 
+возвращает HTTP-ответ. Вот и все.
 
-You don't always need a kitchen-sink solution like [Symfony][symfony] or [Laravel][laravel].
-These are great tools, for sure. But they are often overkill. Instead, Slim
-provides only a minimal set of tools that do what you need and nothing else.
+Вам не всегда нужно `kitchen-sink` решение , например, [Symfony][symfony] или [Laravel][laravel].
+Это отличные инструменты, конечно. Но они часто переполняются. Вместо этого Slim предоставляет только 
+минимальный набор инструментов, которые делают то, что вам нужно, и ничего больше.
 
-## How does it work?
+## Как это работает?
 
-First, you need a web server like Nginx or Apache. You should [configure
-your web server](/docs/start/web-servers.html) so that it sends all appropriate
-requests to one "front-controller" PHP file. You instantiate and run your Slim
-app in this PHP file.
+Во-первых, вам нужен веб-сервер, такой как Nginx или Apache. Вы должны [настроить свой веб-сервер](/docs/start/web-servers.html)
+ так, чтобы он отправлял все соответствующие запросы в один файл PHP «front-controller». Вы создаете экземпляр и 
+ запускаете свое приложение Slim в этом файле PHP.
 
-A Slim app contains routes that respond to specific HTTP requests. Each route
-invokes a callback and returns an HTTP response. To get started, you first
-instantiate and configure the Slim application. Next, you define your application
-routes. Finally, you run the Slim application. It's that easy. Here's an
-example application:
+Приложение Slim содержит маршруты, отвечающие определенным HTTP-запросам. Каждый маршрут вызывает обратный 
+вызов и возвращает HTTP-ответ. Чтобы начать работу, сначала создайте экземпляр и настройте приложение Slim. 
+Затем вы определяете маршруты своего приложения. Наконец, вы запускаете приложение Slim. Это так просто. 
+Вот пример приложения:
 
 <figure>
 
@@ -82,36 +78,34 @@ example application:
                 class="p">();</span></code></pre>
   </figure>
 
-  <figcaption>Figure 1: Example Slim application</figcaption>
+  <figcaption>Пример 1: Пример Slim application</figcaption>
 </figure>
 
-## Request and response
+## Запрос и ответ
 
-When you build a Slim app, you are often working directly with Request
-and Response objects. These objects represent the actual HTTP request received
-by the web server and the eventual HTTP response returned to the client.
+Когда вы создаете Slim-приложение, вы часто работаете непосредственно с объектами Request and Response. 
+Эти объекты представляют собой фактический HTTP-запрос, полученный веб-сервером, и возможный HTTP-ответ, 
+возвращаемый клиенту.
 
-Every Slim app route is given the current Request and Response objects as arguments
-to its callback routine. These objects implement the popular [PSR 7](/docs/concepts/value-objects.html) interfaces. The Slim app route can inspect
-or manipulate these objects as necessary. Ultimately, each Slim app route
-**MUST** return a PSR 7 Response object.
+Каждому маршруту Slim-приложения присваиваются текущие объекты Request and Response в качестве аргументов 
+его подпрограммы обратного вызова. Эти объекты реализуют популярные интерфейсы [PSR 7](/docs/concepts/value-objects.html). 
+Slim route приложения может проверять или манипулировать этими объектами по мере необходимости. 
+ В конечном счете, каждый маршрут приложения Slim **MUST** возвращать ответ PSR 7  объекта.
 
-## Bring your own components
+## Принесите свои собственные компоненты
 
-Slim is designed to play well with other PHP components, too. You can register
-additional first-party components such as [Slim-Csrf][csrf], [Slim-HttpCache][httpcache],
-or [Slim-Flash][flash] that build upon Slim's default functionality. It's also
-easy to integrate third-party components found on [Packagist](https://packagist.org/).
+Slim также хорошо сочетается с другими компонентами PHP. Вы можете зарегистрировать дополнительные сторонние 
+компоненты, такие как [Slim-Csrf][csrf], [Slim-HttpCache][httpcache],
+или [Slim-Flash][flash] которые основываются на функциональных возможностях Slim по умолчанию. 
+Также легко интегрировать сторонние компоненты, найденные в [Packagist](https://packagist.org/).
 
-## How to read this documentation
+## Как читать эту документацию
 
-If you are new to Slim, I recommend you read this documentation from start
-to finish. If you are already familiar with Slim, you can instead jump straight
-to the appropriate section.
+Если вы новичок в Slim, я рекомендую вам прочитать эту документацию от начала до конца. 
+Если вы уже знакомы с Slim, вы можете перейти прямо в соответствующий раздел.
 
-This documentation begins by explaining Slim's concepts and architecture
-before venturing into specific topics like request and response handling,
-routing, and error handling.
+Эта документация начинается с объяснения концепций и архитектуры Slim, прежде чем вникать в конкретные темы, 
+такие как обработка запросов и ответов, маршрутизация и обработка ошибок.
 
 [symfony]: http://symfony.com/
 [laravel]: http://laravel.com/
