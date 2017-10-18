@@ -1,99 +1,99 @@
 ---
-title: Upgrade Guide
+title: Руководство по обновлению
 ---
 
-If you are upgrading from version 2 to version 3, these are the significant changes that
-you need to be aware of.
+Если вы обновляетесь с версии 2 до версии 3, это существенные изменения, о которых вам нужно знать.
 
-## New PHP version
-Slim 3 requires PHP 5.5+
+## Новая версия PHP
+Для Slim 3 требуется PHP 5.5+
 
-## Class \Slim\Slim renamed \Slim\App
-Slim 3 uses `\Slim\App` for the [Application](/docs/objects/application.html) object usually named `$app`.
+## Класс \ Slim \ Slim переименован \ Slim \ App
+Slim 3 использует `\Slim\App` для [Application](/docs/objects/application.html) объект обычно называется `$app`.
 
-{% highlight php %}
-$app = new \Slim\App();
-{% endhighlight %}
+<figure class="highlight"><pre><code class="language-php" data-lang="php">$app = new \Slim\App();</code></pre></figure>
 
-## New Route Function Signature
+## Подпись новой функции маршрута
 
-{% highlight php %}
-$app->get('/', function (Request $req,  Response $res, $args = []) {
-    return $res->withStatus(400)->write('Bad Request');
-});
-{% endhighlight %}
+<figure class="highlight">
+<pre>
+    <code class="language-php" data-lang="php">$app-&gt;get('/', function (Request $req, Response $res, $args = []) {
+        return $res-&gt;withStatus(400)-&gt;write('Bad Request');
+    });</code>
+</pre>
+</figure>
 
-## Request and response objects are no longer accessible via the Application object
-As mentioned above, Slim 3 passes the `Request` and `Response` objects as arguments to the route handling function. Since they are now accessible directly in the body of a route function, `request` and `response` are no longer properties of the `/Slim/App` ([Application](/docs/objects/application.html) object) instance.
+## Объекты запроса и ответа больше не доступны через объект приложения
+Как упоминалось выше, Slim 3 передает объекты `Request` и `Response` объекты в качестве аргументов функции обработки 
+маршрута. Поскольку они теперь доступны непосредственно в теле функции маршрута `request` и `response` больше не 
+являются объектами экземпляра `/Slim/App` ([Application](/docs/objects/application.html) object).
 
-## Getting _GET and _POST variables
-{% highlight php %}
-$app->get('/', function (Request $req,  Response $res, $args = []) {
-    $myvar1 = $req->getParam('myvar'); //checks both _GET and _POST [NOT PSR-7 Compliant]
-    $myvar2 = $req->getParsedBody()['myvar']; //checks _POST  [IS PSR-7 compliant]
-    $myvar3 = $req->getQueryParams()['myvar']; //checks _GET [IS PSR-7 compliant]
-});
-{% endhighlight %}
+## Получение переменных _GET и _POST
+<figure class="highlight"><pre>
+<code class="language-php" data-lang="php">$app-&gt;get('/', function (Request $req,  Response $res, $args = []) {
+    $myvar1 = $req-&gt;getParam('myvar'); //checks both _GET and _POST [NOT PSR-7 Compliant]
+    $myvar2 = $req-&gt;getParsedBody()['myvar']; //checks _POST  [IS PSR-7 compliant]
+    $myvar3 = $req-&gt;getQueryParams()['myvar']; //checks _GET [IS PSR-7 compliant]
+});</code></pre>
+</figure>
 
+## Хуки
+Хуки больше не являются частью Slim по сравнению с v3. Вы должны рассмотреть реализовав какие - либо функциональные 
+возможности, связанные с [default hooks in Slim v2](http://docs.slimframework.com/hooks/defaults/) как
+ [middleware](/docs/concepts/middleware.html) вместо. Если вам нужна возможность применять пользовательские Хуки 
+ в произвольных точках вашего кода (например, в пределах route),вам следует рассмотреть сторонний пакет, например
+  [Symfony's EventDispatcher](http://symfony.com/doc/current/components/event_dispatcher/introduction.html) или
+   [Zend Framework's EventManager](https://zend-eventmanager.readthedocs.org/en/latest/).
 
-## Hooks
-Hooks are no longer part of Slim as of v3.  You should consider reimplementing any functionality associated with the [default hooks in Slim v2](http://docs.slimframework.com/hooks/defaults/) as [middleware](/docs/concepts/middleware.html) instead.  If you need the ability to apply custom hooks at arbitrary points in your code (for example, within a route), you should consider a third-party package such as [Symfony's EventDispatcher](http://symfony.com/doc/current/components/event_dispatcher/introduction.html) or [Zend Framework's EventManager](https://zend-eventmanager.readthedocs.org/en/latest/).
+## Удаление HTTP-кеша
+В Slim v3 мы удалили HTTP-кэширование в свой собственный модуль [Slim\Http\Cache](https://github.com/slimphp/Slim-HttpCache).
 
-## Removal HTTP Cache
-In Slim v3 we have removed the HTTP-Caching into its own module [Slim\Http\Cache](https://github.com/slimphp/Slim-HttpCache).
+## Удаление остановки/остановки `Stop/Halt`
+Slim Core удалил Stop / Halt. В ваших приложениях вы должны перейти к использованию методов withStatus () и withBody ().
 
-## Removal of Stop/Halt
-Slim Core has removed Stop/Halt.
-In your applications, you should transition to using the withStatus() and withBody() methods.
+## Удаление автозагрузчика
+`Slim::registerAutoloader()` были удалены, мы полностью перешли к композитору.
 
-## Removal of autoloader
-`Slim::registerAutoloader()` have been removed, we have fully moved to composer.
+## Изменения в контейнере
+`$app->container->singleton(...)` теперь `$container = $app->getContainer(); $container['...'] = function () {};`
+ читайте в Pimple docs для получения дополнительной информации
 
-## Changes to container
-`$app->container->singleton(...)` is now `$container = $app->getContainer(); $container['...'] = function () {};` Please read Pimple docs for more info
+## Удаление configureMode()
+`$app->configureMode(...)` был удален в v3.
 
-## Removal of configureMode()
-`$app->configureMode(...)` has been removed in v3.
+## Удаление PrettyExceptions
+PrettyExceptions вызывают множество проблем для многих людей, поэтому они были удалены.
 
-## Removal of PrettyExceptions
-PrettyExceptions cause lots of issues for many people, so these have been removed.
+## Route::setDefaultConditions(...) удален
+Мы включили маршрутизаторы, которые позволяют вам сохранять регулярные выражения по умолчанию внутри шаблона маршрута.
 
-## Route::setDefaultConditions(...) has been removed
-We have switched routers which enable you to keep the default conditions regex inside of the route pattern.
+## Изменения в перенаправлении
+В Slim v2.x можно использовать вспомогательную функцию `$app->redirect();` для запуска запроса перенаправления.
+В Slim v3.x можно сделать то же самое с использованием класса Response.
 
-## Changes to redirect
-In Slim v2.x one would use the helper function `$app->redirect();` to trigger a redirect request.
-In Slim v3.x one can do the same with using the Response class like so.
+Пример:
 
-Example:
+<figure class="highlight"><pre><code class="language-php" data-lang="php">$app-&gt;get('/', function ($req, $res, $args) {
+  return $res-&gt;withStatus(302)-&gt;withHeader('Location', 'your-new-uri');
+});</code></pre></figure>
 
-{% highlight php %}
-$app->get('/', function ($req, $res, $args) {
-  return $res->withStatus(302)->withHeader('Location', 'your-new-uri');
-});
-{% endhighlight %}
+## Подпись `Middleware` промежуточного ПО 
+Подпись middleware изменилась с класса на функцию.
 
-## Middleware Signature
-The middleware signature has changed from a class to a function.
+Новая подпись:
 
-New signature:
-
-{% highlight php %}
-use Psr\Http\Message\RequestInterface as Request;
+<figure class="highlight"><pre><code class="language-php" data-lang="php">use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-$app->add(function (Request $req,  Response $res, callable $next) {
+$app-&gt;add(function (Request $req,  Response $res, callable $next) {
     // Do stuff before passing along
     $newResponse = $next($req, $res);
     // Do stuff after route is rendered
     return $newResponse; // continue
-});
-{% endhighlight %}
+});</code></pre></figure>
 
-You can still use a class:
+Вы все равно можете использовать класс:
 
-{% highlight php %}
-namespace My;
+<figure class="highlight"><pre><code class="language-php" data-lang="php">namespace My;
 
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -110,17 +110,15 @@ class Middleware
 
 
 // Register
-$app->add(new My\Middleware());
+$app-&gt;add(new My\Middleware());
 // or
-$app->add(My\Middleware::class);
-
-{% endhighlight %}
+$app-&gt;add(My\Middleware::class);</code></pre></figure>
 
 
-## Middleware Execution
-Application middleware is executed as Last In First Executed (LIFE).
+## Выполнение Middleware
+Приложение middleware выполняется как Last In First Executed (LIFE).
 
-## Flash Messages
+## Flash-сообщения 
 Flash messages are no longer a part of the Slim v3 core but instead have been moved to seperate [Slim Flash](/docs/features/flash.html) package.
 
 ## Cookies
