@@ -1,62 +1,52 @@
 ---
-title: Deployment
+title: Развертывание
 ---
-Congratulations! if you have made it this far, that means you have successfully built something 
-awesome using Slim. However, the time to party has not come yet. We still have to push our 
-application to the production server.
+Поздравления! если вы сделали это так далеко, это означает, что вы успешно создали что-то потрясающее, используя Slim. 
+Однако время для вечеринки еще не наступило. 
+Нам все равно придется подталкивать наше приложение на производственный сервер.
 
-There are many ways to do this that are beyond the scope of this documentation. In 
-this section, we provide some notes for various set-ups.
+Существует много способов сделать это, выходящие за рамки этой документации. 
+В этом разделе мы приводим несколько заметок для различных настроек.
 
-### Disable error display in production
+### Отключить отображение ошибок в процессе производства
 
-The first thing to do is to tweak your settings (`src/settings.php` in the 
-skeleton application) and ensure that you do not display full error details to the
-public.
+Первое, что нужно сделать, это настроить настройки  (`src/settings.php` в приложении скелета) 
+и убедиться, что вы не отображаете полную информацию об ошибке для публики.
 
-{% highlight php %}
-  'displayErrorDetails' => false, // set to false in production
-{% endhighlight %}
+<figure class="highlight"><pre><code class="language-php" data-lang="php">  'displayErrorDetails' =&gt; false, // set to false in production</code></pre></figure>
 
-You should also ensure that your PHP installation is configured to not display
-errors with the `php.ini` setting:
+Вы также должны убедиться, что ваша установка PHP настроена так, чтобы не отображать ошибки с `php.ini` настройкой:
 
-{% highlight ini %}
-display_errors = 0
-{% endhighlight %}
+<figure class="highlight"><pre><code class="language-ini" data-lang="ini">
+<span class="py">display_errors</span> <span class="p">= </span><span class="s"> 0</span></code></pre>
+</figure>
 
 
+## Развертывание на собственный сервер
 
-## Deploying to your own server
-
-If you control your server, then you should set up a deployment process using any 
-one of the many deployment system such as:
+Если вы управляете своим сервером, вам следует настроить процесс развертывания с использованием 
+любой из многих систем развертывания, таких как:
 
 * Deploybot
 * Capistrano
-* Script controlled with Phing, Make, Ant, etc.
+* Сценарий, управляемый Phing, Make, Ant, etc.
 
 
-Review the [Web Servers](/docs/start/web-servers.html) documentation to configure your webserver.
+Просмотрите документацию [Web Servers](/docs/start/web-servers.html) для настройки вашего веб-сервера.
 
 
-## Deploying to a shared server
+## Развертывание на общий сервер
 
-If your shared server runs Apache, then you need to create a `.htaccess` file 
-in your web server root directory (usually named `htdocs`, `public`, `public_html`
-or `www`) with the following content:
+Если ваш общий сервер работает Apache, то вам нужно создать`.htaccess` файл в веб - сервера корневой каталог
+ (обычно называется `htdocs`, `public`, `public_html` или `www`) со следующим содержанием:
 
-{% highlight apache %}
-<IfModule mod_rewrite.c>
-   RewriteEngine on
-   RewriteRule ^$ public/     [L]
-   RewriteRule (.*) public/$1 [L]
-</IfModule>
-{% endhighlight %}
+<figure class="highlight"><pre><code class="language-apache" data-lang="apache"><span class="p">&lt;</span><span class="nl">IfModule</span><span class="sr"> mod_rewrite.c</span><span class="p">&gt;
+</span>   <span class="nc">RewriteEngine</span> <span class="ss">on</span>
+   <span class="nc">RewriteRule</span> ^$ public/     [L]
+   <span class="nc">RewriteRule</span> (.*) public/$1 [L]
+<span class="p">&lt;/</span><span class="nl">IfModule</span><span class="p">&gt;</span></code></pre></figure>
 
-(replace 'public' with the correct name of)
+(замените `public` на правильное имя)
 
-Now upload all the files that make up your Slim project to the webserver. As you
-are on shared hosting, this is probably done via FTP and you can use any FTP client, 
-such as Filezilla to do this.
-
+Теперь загрузите все файлы, составляющие ваш проект Slim, на веб-сервер. Поскольку вы находитесь на общем хостинге, 
+это, вероятно, выполняется через FTP, и вы можете использовать любой FTP-клиент, такой как Filezilla, для этого.
