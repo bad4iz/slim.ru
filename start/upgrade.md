@@ -119,66 +119,60 @@ $app-&gt;add(My\Middleware::class);</code></pre></figure>
 Приложение middleware выполняется как Last In First Executed (LIFE).
 
 ## Flash-сообщения 
-Flash messages are no longer a part of the Slim v3 core but instead have been moved to seperate [Slim Flash](/docs/features/flash.html) package.
+Flash-сообщения больше не являются частью ядра Slim v3, а вместо этого перемещены в отдельный пакет
+ [Slim Flash](/docs/features/flash.html).
 
 ## Cookies
-In v3.0 cookies has been removed from core. See [FIG Cookies](https://github.com/dflydev/dflydev-fig-cookies) for a PSR-7 compatible cookie component.
+В v3.0 файлы cookie удалены из ядра. См.  [FIG Cookies](https://github.com/dflydev/dflydev-fig-cookies) для файла 
+cookie, совместимого с PSR-7
 
-## Removal of Crypto
-In v3.0 we have removed the dependency for crypto in core.
+## Удаление Crypto
+В v3.0 мы удалили зависимость для crypto в ядре.
 
-## New Router
-Slim now utilizes [FastRoute](https://github.com/nikic/FastRoute), a new, more powerful router!
+## Новый маршрутизатор `Router`
+Slim теперь использует [FastRoute](https://github.com/nikic/FastRoute), новый, более мощный маршрутизатор!
 
-This means that the specification of route patterns has changed with named parameters now in braces and square brackets used for optional segments:
+Это означает, что спецификация шаблонов маршрутов изменилась с именованными параметрами теперь в фигурных скобках и 
+квадратных скобках, используемых для необязательных сегментов:
 
-{% highlight php %}
-// named parameter:
-$app->get('/hello/{name}', /*...*/);
+<figure class="highlight"><pre><code class="language-php" data-lang="php">// named parameter:
+$app-&gt;get('/hello/{name}', /*...*/);
 
 // optional segment:
-$app->get('/news[/{year}]', /*...*/);
-{% endhighlight %}
+$app-&gt;get('/news[/{year}]', /*...*/);</code></pre></figure>
 
-## Route Middleware
-The syntax for adding route middleware has changed slightly.
-In v3.0:
+## Маршрутное промежуточное ПО `Route Middleware`
+Синтаксис добавления промежуточного ПО маршрута несколько изменился. В версии 3.0:
 
-{% highlight php %}
-$app->get(…)->add($mw2)->add($mw1);
-{% endhighlight %}
+<figure class="highlight"><pre>
+<code class="language-php" data-lang="php">
+$app-&gt;get(…)-&gt;add($mw2)-&gt;add($mw1);</code></pre></figure>
 
-## Getting the current route
-The route is an attribute of the Request object in v3.0:
+## Получение текущего маршрута
+Маршрут является атрибутом объекта Request в v3.0:
 
-{% highlight php %}
-$request->getAttribute('route');
-{% endhighlight %}
+<figure class="highlight"><pre><code class="language-php" data-lang="php">$request-&gt;getAttribute('route');</code></pre></figure>
 
-When getting the current route in middleware, the value for
-`determineRouteBeforeAppMiddleware` must be set to `true` in the Application
-configuration, otherwise the getAttribute call returns `null`.
+При получении текущего route в middleware, значение параметра
+`determineRouteBeforeAppMiddleware` должно быть установлено `true` в конфигурации приложения, в противном случае
+ возвращается вызов getAttribute `null`.
 
-## urlFor() is now pathFor() in the router
+## urlFor() теперь pathFor() в маршрутизаторе
 
-`urlFor()` has been renamed `pathFor()` and can be found in the `router` object:
+`urlFor()` был переименован `pathFor()` и может быть найден в `router` объекте:
 
-{% highlight php %}
-$app->get('/', function ($request, $response, $args) {
-    $url = $this->router->pathFor('home');
-    $response->write("<a href='$url'>Home</a>");
+<figure class="highlight"><pre><code class="language-php" data-lang="php">$app-&gt;get('/', function ($request, $response, $args) {
+    $url = $this-&gt;router-&gt;pathFor('home');
+    $response-&gt;write("<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">'$url'</span><span class="nt">&gt;</span>Home<span class="nt">&lt;/a&gt;</span>");
     return $response;
-})->setName('home');
-{% endhighlight %}
+})-&gt;setName('home');</code></pre></figure>
 
-Also, `pathFor()` is base path aware.
+Также, `pathFor()` известен базовый путь.
 
-## Container and DI ... Constructing
-Slim uses Pimple as a Dependency Injection Container.
+## Контейнер и DI ... Построение
+Slim использует Pimple в качестве контейнера для инъекций зависимостей.
 
-{% highlight php %}
-
-// index.php
+<figure class="highlight"><pre><code class="language-php" data-lang="php">// index.php
 $app = new Slim\App(
     new \Slim\Container(
         include '../config/container.config.php'
@@ -187,88 +181,80 @@ $app = new Slim\App(
 
 // Slim will grab the Home class from the container defined below and execute its index method.
 // If the class is not defined in the container Slim will still contruct it and pass the container as the first arugment to the constructor!
-$app->get('/', Home::class . ':index');
+$app-&gt;get('/', Home::class . ':index');
 
 
 // In container.config.php
 // We are using the SlimTwig here
 return [
-    'settings' => [
-        'viewTemplatesDirectory' => '../templates',
+    'settings' =&gt; [
+        'viewTemplatesDirectory' =&gt; '../templates',
     ],
-    'twig' => [
-        'title' => '',
-        'description' => '',
-        'author' => ''
+    'twig' =&gt; [
+        'title' =&gt; '',
+        'description' =&gt; '',
+        'author' =&gt; ''
     ],
-    'view' => function ($c) {
+    'view' =&gt; function ($c) {
         $view = new Twig(
             $c['settings']['viewTemplatesDirectory'],
             [
-                'cache' => false // '../cache'
+                'cache' =&gt; false // '../cache'
             ]
         );
 
         // Instantiate and add Slim specific extension
-        $view->addExtension(
+        $view-&gt;addExtension(
             new TwigExtension(
                 $c['router'],
-                $c['request']->getUri()
+                $c['request']-&gt;getUri()
             )
         );
 
-        foreach ($c['twig'] as $name => $value) {
-            $view->getEnvironment()->addGlobal($name, $value);
+        foreach ($c['twig'] as $name =&gt; $value) {
+            $view-&gt;getEnvironment()-&gt;addGlobal($name, $value);
         }
 
         return $view;
     },
-    Home::class => function ($c) {
+    Home::class =&gt; function ($c) {
         return new Home($c['view']);
     }
-];
+];</code></pre></figure>
 
-{% endhighlight %}
+## Объекты PSR-7
 
-## PSR-7 Objects
+### `Request, Response` Запрос, ответ,, Uri & UploadFile неизменяемы.
+Это означает, что при изменении одного из этих объектов старый экземпляр не обновляется.
 
-### Request, Response, Uri & UploadFile are immutable.
-This means that when you change one of these objects, the old instance is not updated.
-
-{% highlight php %}
-// This is WRONG. The change will not pass through.
-$app->add(function (Request $request, Response $response, $next) {
-    $request->withAttribute('abc', 'def');
+<figure class="highlight"><pre><code class="language-php" data-lang="php">// This is WRONG. The change will not pass through.
+$app-&gt;add(function (Request $request, Response $response, $next) {
+    $request-&gt;withAttribute('abc', 'def');
     return $next($request, $response);
 });
 
 // This is correct.
-$app->add(function (Request $request, Response $response, $next) {
-    $request = $request->withAttribute('abc', 'def');
+$app-&gt;add(function (Request $request, Response $response, $next) {
+    $request = $request-&gt;withAttribute('abc', 'def');
     return $next($request, $response);
-});
-{% endhighlight %}
+});</code></pre></figure>
 
-### Message bodies are streams
+### Телами сообщений являются потоки
 
-{% highlight php %}
-// ...
+<figure class="highlight"><pre><code class="language-php" data-lang="php">// ...
 $image = __DIR__ . '/huge_photo.jpg';
 $body = new Stream($image);
 $response = (new Response())
-     ->withStatus(200, 'OK')
-     ->withHeader('Content-Type', 'image/jpeg')
-     ->withHeader('Content-Length', filesize($image))
-     ->withBody($body);
-// ...
-{% endhighlight %}
+     -&gt;withStatus(200, 'OK')
+     -&gt;withHeader('Content-Type', 'image/jpeg')
+     -&gt;withHeader('Content-Length', filesize($image))
+     -&gt;withBody($body);
+// ...</code></pre></figure>
 
-For text:
-{% highlight php %}
-// ...
-$response = (new Response())->getBody()->write('Hello world!')
+Для текста:
+<figure class="highlight"><pre><code class="language-php" data-lang="php">// ...
+$response = (new Response())-&gt;getBody()-&gt;write('Hello world!')
 
 // Or Slim specific: Not PSR-7 compliant.
-$response = (new Response())->write('Hello world!');
-// ...
-{% endhighlight %}
+$response = (new Response())-&gt;write('Hello world!');
+// ...</code></pre></figure>
