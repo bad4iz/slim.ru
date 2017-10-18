@@ -1,31 +1,27 @@
 ---
-title: Installation
+title: Установка
 ---
 
-## System Requirements
+## Системные Требования
 
-* Web server with URL rewriting
-* PHP 5.5 or newer
+* Веб-сервер с переписыванием URL-адресов
+* PHP 5.5 или новее
 
-## How to Install Slim
+## Как установить Slim
 
-We recommend you install Slim with [Composer](https://getcomposer.org/).
-Navigate into your project's root directory and execute the bash command
-shown below. This command downloads the Slim Framework and its third-party
-dependencies into your project's `vendor/` directory.
+Мы рекомендуем установить Slim с [Composer](https://getcomposer.org/).
+Перейдите в корневой каталог вашего проекта и выполните команду bash, показанную ниже. 
+Эта команда загружает Slim Framework и ее сторонние зависимости в `vendor/` каталог вашего проекта.
 
-{% highlight bash %}
-composer require slim/slim "^3.0"
-{% endhighlight %}
+<figure class="highlight"><pre>
+<code class="language-bash" data-lang="bash">composer require slim/slim <span class="s2">"^3.0"</span></code>
+</pre></figure>
 
-Require the Composer autoloader into your PHP script, and you are ready
-to start using Slim.
+Установите автозагрузчик Composer в свой PHP-скрипт, и вы готовы начать использовать Slim.
 
-{% highlight php %}
-<?php
-require 'vendor/autoload.php';
-{% endhighlight %}
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">'vendor/autoload.php'</span><span class="p">;</span></code></pre></figure>
 
-## How to Install Composer
+## Как установить Composer
 
-Don't have Composer? It's easy to install by following the instructions on their [download](https://getcomposer.org/download/) page.
+У вас нет Composer? Его легко установить, следуя инструкциям на странице [загрузки](https://getcomposer.org/download/).
