@@ -1,53 +1,47 @@
 ---
-title: Web Servers
+title: Веб-серверы
 ---
 
-It is typical to use the front-controller pattern to funnel appropriate HTTP
-requests received by your web server to a single PHP file. The instructions
-below explain how to tell your web server to send HTTP requests to your PHP
-front-controller file.
+Типичное использование патерна front-controller для перебора соответствующих HTTP-запросов, 
+полученных вашим веб-сервером, в один файл PHP. В приведенных ниже инструкциях объясняется, как сообщить веб-серверу 
+отправлять HTTP-запросы в ваш файл front-controller PHP.
 
-## PHP built-in server
+## Встроенный сервер PHP
 
-Run the following command in terminal to start localhost web server,
-assuming `./public/` is public-accessible directory with `index.php` file:
+Запустите следующую команду в терминале, чтобы запустить веб-сервер localhost, предполагая, что 
+ `./public/` это общедоступный каталог с `index.php` файлом:
 
-{% highlight bash %}
-php -S localhost:8888 -t public public/index.php
-{% endhighlight %}
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">php -S localhost:8888 -t public public/index.php</code></pre></figure>
 
-If you are not using `index.php` as your entry point then change appropriately.
 
-## Apache configuration
+Если вы не используете `index.php` свою точку входа, измените ее соответствующим образом.
 
-Ensure your `.htaccess` and `index.php` files are in the same
-public-accessible directory. The `.htaccess` file should contain this code:
+## Конфигурация Apache
 
-{% highlight text %}
-RewriteEngine On
+Убедитесь, что ваши файлы `.htaccess` и `index.php` файлы находятся в том же общедоступном каталоге. 
+Файл `.htaccess`  должен содержать следующий код:
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.php [QSA,L]
-{% endhighlight %}
+RewriteRule ^ index.php [QSA,L]</code></pre></figure>
 
-Make sure your Apache virtual host is configured with the `AllowOverride` option
-so that the `.htaccess` rewrite rules can be used:
+Убедитесь, что ваш виртуальный хост Apache настроен с параметром `AllowOverride` 
+чтобы `.htaccess` можно было использовать правила перезаписи:
 
-{% highlight text %}
-AllowOverride All
-{% endhighlight %}
+<figure class="highlight"><pre><code class="language-text" data-lang="text">AllowOverride All</code></pre></figure>
 
-## Nginx configuration
 
-This is an example Nginx virtual host configuration for the domain `example.com`.
-It listens for inbound HTTP connections on port 80. It assumes a PHP-FPM server
-is running on port 9000. You should update the `server_name`, `error_log`,
-`access_log`, and `root` directives with your own values. The `root` directive
-is the path to your application's public document root directory; your Slim app's
-`index.php` front-controller file should be in this directory.
+## Конфигурация Nginx
 
-{% highlight text %}
-server {
+Это пример конфигурации виртуального хоста Nginx для домена `example.com`.
+Он слушает для входящих HTTP соединений на порт 80. Это предполагает сервер PHP-FPM работает на порту 9000. 
+Вы должны обновить `server_name`, `error_log`,
+`access_log`, и `root` директиву с вашими собственными значениями. Директива `root` путь к общественности документ 
+корневой директории вашего приложения; ваш
+`index.php` файл front-controller Slim должен находиться в этом каталоге.
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">server {
     listen 80;
     server_name example.com;
     index index.php;
@@ -68,15 +62,14 @@ server {
         fastcgi_index index.php;
         fastcgi_pass 127.0.0.1:9000;
     }
-}
-{% endhighlight %}
+}</code></pre></figure>
 
-## HipHop Virtual Machine
+## Виртуальная машина HipHop
 
-Your HipHop Virtual Machine configuration file should contain this code (along with other settings you may need). Be sure you change the `SourceRoot` setting to point to your Slim app's document root directory.
+Ваш файл конфигурации виртуальной машины HipHop должен содержать этот код (вместе с другими параметрами, которые могут 
+вам понадобиться). Убедитесь, что вы изменили  `SourceRoot` настройку, чтобы указать на корневой каталог документа Slim app.
 
-{% highlight text %}
-Server {
+<figure class="highlight"><pre><code class="language-text" data-lang="text">Server {
     SourceRoot = /path/to/public/directory
 }
 
@@ -95,39 +88,38 @@ VirtualHost {
                 }
         }
     }
-}
-{% endhighlight %}
+}</code></pre></figure>
+
 
 ## IIS
 
-Ensure the `Web.config` and `index.php` files are in the same public-accessible directory. The `Web.config` file should contain this code:
+Убедитесь, что файлы `Web.config` и `index.php` файлы находятся в том же общедоступном каталоге.
+ Файл `Web.config` должен содержать следующий код:
 
-{% highlight xml %}
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <system.webServer>
-        <rewrite>
-            <rules>
-                <rule name="slim" patternSyntax="Wildcard">
-                    <match url="*" />
-                    <conditions>
-                        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
-                        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
-                    </conditions>
-                    <action type="Rewrite" url="index.php" />
-                </rule>
-            </rules>
-        </rewrite>
-    </system.webServer>
-</configuration>
-{% endhighlight %}
+
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;configuration&gt;</span>
+    <span class="nt">&lt;system.webServer&gt;</span>
+        <span class="nt">&lt;rewrite&gt;</span>
+            <span class="nt">&lt;rules&gt;</span>
+                <span class="nt">&lt;rule</span> <span class="na">name=</span><span class="s">"slim"</span> <span class="na">patternSyntax=</span><span class="s">"Wildcard"</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;match</span> <span class="na">url=</span><span class="s">"*"</span> <span class="nt">/&gt;</span>
+                    <span class="nt">&lt;conditions&gt;</span>
+                        <span class="nt">&lt;add</span> <span class="na">input=</span><span class="s">"{REQUEST_FILENAME}"</span> <span class="na">matchType=</span><span class="s">"IsFile"</span> <span class="na">negate=</span><span class="s">"true"</span> <span class="nt">/&gt;</span>
+                        <span class="nt">&lt;add</span> <span class="na">input=</span><span class="s">"{REQUEST_FILENAME}"</span> <span class="na">matchType=</span><span class="s">"IsDirectory"</span> <span class="na">negate=</span><span class="s">"true"</span> <span class="nt">/&gt;</span>
+                    <span class="nt">&lt;/conditions&gt;</span>
+                    <span class="nt">&lt;action</span> <span class="na">type=</span><span class="s">"Rewrite"</span> <span class="na">url=</span><span class="s">"index.php"</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;/rule&gt;</span>
+            <span class="nt">&lt;/rules&gt;</span>
+        <span class="nt">&lt;/rewrite&gt;</span>
+    <span class="nt">&lt;/system.webServer&gt;</span>
+<span class="nt">&lt;/configuration&gt;</span></code></pre></figure>
 
 ## lighttpd
 
-Your lighttpd configuration file should contain this code (along with other settings you may need). This code requires lighttpd >= 1.4.24.
+Ваш файл конфигурации lighttpd должен содержать этот код (вместе с другими параметрами, которые могут вам понадобиться). 
+Этот код требует lighttpd> = 1.4.24
 
-{% highlight text %}
-url.rewrite-if-not-file = ("(.*)" => "/index.php/$0")
-{% endhighlight %}
+<figure class="highlight"><pre><code class="language-text" data-lang="text">url.rewrite-if-not-file = ("(.*)" =&gt; "/index.php/$0")</code></pre></figure>
 
-This assumes that Slim's `index.php` is in the root folder of your project (www root).
+Это предполагает, что Slim  `index.php` находится в корневой папке вашего проекта (www root).
