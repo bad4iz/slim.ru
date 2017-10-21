@@ -1,16 +1,22 @@
 ---
-title: First Application Walkthrough
+title: Первое пошаговое руководство
 ---
 
-If you're looking for a tour through all the ingredients for setting up a very simple Slim application (this one doesn't use Twig, but does use Monolog and a PDO database connection) then you're in the right place.  Either walk through the tutorial to build the example application, or adapt each step for your own needs.
+Если вы ищете гид по всем компонентам для создания очень простого приложения Slim  
+(тут нет Twig, но есть Monolog и подключение к базе данных PDO), то вы в нужном месте. Пройдитесь через учебник, 
+чтобы создать пример приложения, или адаптируйте каждый шаг для своих нужд.
 
-Before you start: There is also a [skeleton project](https://github.com/slimphp/Slim-Skeleton) which will give you a quick-start for a sample application, so use that if you'd rather just have something working rather than exploring how all the moving parts work.
+Прежде чем вы начнете: существует также [skeleton project](https://github.com/slimphp/Slim-Skeleton) 
+который даст вам быстрый старт для примера приложения, поэтому используйте его, если вы предпочитаете просто 
+что-то сделать, а не изучать, как работают все компоненты.
 
-> This tutorial walks through building an example application.  The [code for the application is available](https://github.com/slimphp/Tutorial-First-Application) if you want to refer to it.
+> В этом учебном пособии рассматривается пример приложения. [Код приложения](https://github.com/slimphp/Tutorial-First-Application), если вы хотите , чтобы обратиться к нему.
 
-## Getting Set Up
+## Настройка
 
-Start by making a folder for your project (mine is called `project`, because naming things is hard).  I like to reserve the top level for things-that-are-not-code and then have a folder for source code, and a folder inside that which is my webroot, so my initial structure looks like this:
+Начните с создания папки для вашего проекта (у меня называется `project`, потому что именовать вещи сложно). 
+Мне нравится резервировать верхний уровень для вещей, которые есть не-код, а затем есть папка для исходного кода и 
+папка внутри того, что является моим webroot, поэтому моя первоначальная структура выглядит следующим образом:
 
 ```
 .
@@ -19,31 +25,44 @@ Start by making a folder for your project (mine is called `project`, because nam
 │       └── public
 ```
 
-### Installing Slim Framework
+### Установка Slim Framework
 
-[Composer](https://getcomposer.org) is the best way to install Slim Framework.  If you don't have it already, you can follow the [installation instructions](https://getcomposer.org/download/), in my project I've just downloaded the `composer.phar` into my `src/` directory and I'll use it locally.  So my first command looks like this (I'm in the `src/` directory):
+[Composer](https://getcomposer.org) лучший способ установить Slim Framework. 
+Если у вас его нет, вы можете воспользоваться [инструкцией по установке](https://getcomposer.org/download/), 
+в моем проекте я только что загрузил `composer.phar` в свой `src/` каталог, и я буду использовать его локально.
+  Итак, моя первая команда выглядит так (Я в  `src/` каталоге):
 
+```
     php composer.phar require slim/slim
+```
 
-This does two things:
+Это сделает две вещи:
 
-* Add the Slim Framework dependency to `composer.json` (in my case it creates the file for me as I don't already have one, it's safe to run this if you do already have a `composer.json` file)
-* Run `composer install` so that those dependencies are actually available to use in your application
+* Добавьте зависимость Slim Framework в `composer.json` (в моем случае он создает файл для меня, 
+поскольку у меня его еще нет, безопасно запускать его, если у вас уже есть `composer.json` файл )
+* Выполните `composer install` так, чтобы эти зависимости действительно были доступны для использования в вашем приложении
 
-If you look inside the project directory now, you'll see that you have a `vendor/` folder with all the library code in it.  There are also two new files: `composer.json` and `composer.lock`.  This would be a great time to get our source control setup correct as well: when working with composer, we always exclude the `vendor/` directory, but both `composer.json` and `composer.lock` should be included under source control.  Since I'm using `composer.phar` in this directory I'm going to include it in my repo as well; you could equally install the `composer` command on all the systems that need it.
+Если вы сейчас заглянете в каталог проекта, вы увидите, что у вас есть `vendor/` папка со всем кодом библиотеки. 
+Также есть два новых файла: `composer.json` и `composer.lock`. Это самое лучшее время, чтобы настроить 
+системы управления версиями, а также: при работе с composer,  всегда исключать `vendor/` каталог, 
+но два `composer.json` И `composer.lock` должны быть включены в систему контроля версиями. Поскольку я использую 
+`composer.phar` в этом каталогк я собираюсь включить его также в свое репо; чтобы вы могли использовать `composer` 
+команды на всех системай в которых надо.
 
-To set up the git ignore correctly, create a file called `src/.gitignore` and add the following single line to the file:
+Чтобы правильно настроить игнорирование в git , создайте файл `src/.gitignore` и добавте следующую стоку в файл.
 
     vendor/*
 
 
-Now git won't prompt you to add the files in `vendor/` to the repository - we don't want to do this because we're letting composer manage these dependencies rather than including them in our source control repository.
+Теперь git не предложит вам добавить файлы `vendor/` в репозиторий - потому что мы позволяем 
+composer управлять этими зависимостями, а не включать их в наш репозиторий управления версиями.
 
-### Create The Application
+### Создание Приложения
 
-There's a really excellent and minimal example of an `index.php` for Slim Framework on the [project homepage](http://www.slimframework.com) so we'll use that as our starting point.  Put the following code into `src/public/index.php`:
-
-{% highlight php %}
+На [project homepage](http://www.slimframework.com) есть отличный и минимальный пример, 
+поэтому мы будем использовать этот пример как отправную точку `index.php` для Slim Framework. 
+Поместите следующий код в `src/public/index.php`:
+``` php
 <?php
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -58,34 +77,48 @@ $app->get('/hello/{name}', function (Request $request, Response $response) {
     return $response;
 });
 $app->run();
+``` 
+Мы просто вставили загрузку кода ... давайте посмотрим, что он делает.
 
-{% endhighlight %}
+В `use` объявление в верхней части скрипта только подключения `Request` и `Response` в наш скрипт, 
+и мы не должны обращаться к ним по их многословным именам. Slim framework поддерживает PSR-7, который является стандартом 
+PHP для обмена сообщениями HTTP, поэтому вы заметите, что при создании своего приложения вы часто и часто видите 
+`Request` и `Response` объекты. Это современный и отличный подход к написанию веб-приложений.
 
-We just pasted a load of code ... let's take a look at what it does.
+Затем мы подключаем `vendor/autoload.php` файл - файл созданый Composer. Он позволит ссылаться на Slim  
+и другие связанные зависимости которые мы установили ранее. Обратите внимание: если вы используете ту же структуру 
+файлов, что и я, то `vendor/` каталог находится в родительском уровне от вашего, `index.php` и вам, возможно, придется 
+настроить путь, как я сделал выше.
 
-The `use` statements at the top of the script are just bringing the `Request` and `Response` classes into our script so we don't have to refer to them by their long-winded names.  Slim framework supports PSR-7 which is the PHP standard for HTTP messaging, so you'll notice as you build your application that the `Request` and `Response` objects are something you see often.  This is a modern and excellent approach to writing web applications.
+Наконец, мы создаем `$app` бъект, который является началом Slim goodness. 
+`$app->get()` Вызов наш первый "route" - когда мы делаем запрос GET на `/hello/someone` 
+то это код , который ответит на него. **Не забывайте** вам нужна эта заключительная `$app->run()` 
+строка, чтобы рассказать Slim, что мы закончили настройку, и пришло время заняться основным событием.
 
-Next we include the `vendor/autoload.php` file - this is created by Composer and allows us to refer to the Slim and other related dependencies we installed earlier.  Look out that if you're using the same file structure as me then the `vendor/` directory is one level up from your `index.php` and you may need to adjust the path as I did above.
+Теперь у нас есть приложение, нам нужно его запустить. Я расскажу о двух вариантах: встроенном веб-сервере 
+PHP и настройке виртуального хоста Apache.
 
-Finally we create the `$app` object which is the start of the Slim goodness.  The `$app->get()` call is our first "route" - when we make a GET request to `/hello/someone` then this is the code that will respond to it.  **Don't forget** you need that final `$app->run()` line to tell Slim that we're done configuring and it's time to get on with the main event.
+### Запуск приложения с веб-сервером PHP
 
-Now we have an application, we'll need to run it.  I'll cover two options: the built-in PHP webserver, and an Apache virtual host setup.
-
-### Run Your Application With PHP's Webserver
-
-This is my preferred "quick start" option because it doesn't rely on anything else!  From the `src/public` directory run the command:
+Это мой предпочтительный вариант «быстрого старта», потому что он не полагается ни на что другое! Из `src/public` 
+каталого запустите команду:
 
     php -S localhost:8080
 
-This will make your application available at http://localhost:8080 (if you're already using port 8080 on your machine, you'll get a warning.  Just pick a different port number, PHP doesn't care what you bind it to).
+Это сделает ваше приложение доступным по адресу [http://localhost:8080](http://localhost:8080) 
+(если вы уже используете порт 8080 на своем компьютере, вы получите предупреждение. Просто выберите другой номер порта).
 
-**Note** you'll get an error message about "Page Not Found" at this URL - but it's an error message **from** Slim, so this is expected.  Try http://localhost:8080/hello/joebloggs instead :)
+**Обратите внимание** вы получите сообщение об ошибке "Page Not Found" по этому URL-адресу - 
+но это сообщение об ошибке **от Slim**, так что это ожидается.  Попробуйте 
+[http://localhost:8080/hello/joebloggs](http://localhost:8080/hello/joebloggs) вместо этого :)
 
-### Run Your Application With Apache or nginx
+### Запустите приложение с помощью Apache или nginx
 
-To get this set up on a standard LAMP stack, we'll need a couple of extra ingredients: some virtual host configuration, and one rewrite rule.
+Чтобы получить эту настройку в стандартном стеке LAMP, нам понадобится пара дополнительных компонентов: 
+некоторая конфигурация виртуального хоста и одно правило перезаписи.
 
-The vhost configuration should be fairly straightforward; we don't need anything special here.  Copy your existing default vhost configuration and set the `ServerName` to be how you want to refer to your project.  For example you can set:
+Конфигурация vhost должна быть довольно простой; нам здесь ничего не нужно. Скопируйте существующую конфигурацию 
+vhost по умолчанию и укажите, `ServerName` как вы хотите ссылаться на свой проект. Например, вы можете установить:
 
     ServerName slimproject.dev
 
@@ -93,7 +126,8 @@ The vhost configuration should be fairly straightforward; we don't need anything
 
     server_name slimproject.dev;
 
-Then you'll also want to set the `DocumentRoot` to point to the `public/` directory of your project, something like this (edit the existing line):
+Затем вы также захотите установить `DocumentRoot` чтобы указать `public/` каталог вашего проекта, что-то 
+вроде этого (отредактируйте существующую строку):
 
     DocumentRoot    /home/lorna/projects/slim/project/src/public/
 
@@ -102,9 +136,11 @@ Then you'll also want to set the `DocumentRoot` to point to the `public/` direct
     root    /home/lorna/projects/slim/project/src/public/
 
 
-**Don't forget** to restart your server process now you've changed the configuration!
+**Не забудьте** перезапустить сервер, ведь вы изменили конфигурацию!
 
-I also have a `.htaccess` file in my `src/public` directory; this relies on Apache's rewrite module being enabled and simply makes all web requests go to index.php so that Slim can then handle all the routing for us.  Here's my `.htaccess` file:
+У меня также есть `.htaccess` файл в моем `src/public` каталоге; это зависит от того, включен ли модуль 
+перезаписи Apache и просто делает все веб-запросы доступными к `index.php`, чтобы Slim мог обрабатывать всю 
+маршрутизацию для нас. Вот мой `.htaccess` файл:
 
 ```
 RewriteEngine on
@@ -113,7 +149,8 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . index.php [L]
 ```
 
-nginx does not use `.htaccess` files, so you will need to add the following to your server configuration in the `location` block:
+nginx не использует `.htaccess` файлы, поэтому вам нужно добавить следующее в конфигурацию вашего сервера 
+в `location` блоке:
 
 ```
 if (!-e $request_filename){
@@ -121,21 +158,29 @@ if (!-e $request_filename){
 }
 ```
 
-*NOTE:* If you want your entry point to be something other than index.php you will need your config to change as well. `api.php` is also commonly used as an entry point, so your set up should match accordingly. This example assumes your are using index.php.
+**ПРИМЕЧАНИЕ:** Если вы хотите, чтобы ваша точка входа была чем-то иным, чем index.php, вам также понадобится 
+изменить вашу конфигурацию.
+`api.php` также обычно используется в качестве точки входа, поэтому ваша настройка должна соответствовать 
+соответствующим образом. В этом примере предполагается, что вы используете `index.php.`
 
-With this setup, just remember to use http://slimproject.dev instead of http://localhost:8080 in the other examples in this tutorial.  The same health warning as above applies: you'll see an error page at http://slimproject.dev but crucially it's *Slim's* error page.  If you go to http://slimproject.dev/hello/joebloggs then something better should happen.
+С помощью этой настройки просто не забудьте использовать http://slimproject.dev вместо http: // localhost: 8080 в 
+других примерах этого урока. Такое же предупреждение о работоспособности, как указано выше: вы увидите страницу с 
+ошибкой на странице http://slimproject.dev, но на самом деле это страница с ошибкой *Slim's* . Если вы перейдете к 
+http://slimproject.dev/hello/joebloggs, тогда должно произойти что-то лучше.
 
-## Configuration and Autoloaders
+## Конфигурация и автозагрузчики
 
-Now we've set up the platform, we can start getting everything we need in place in the application itself.
+Теперь мы создали платформу, мы можем начать получать все, что нам нужно, в самом приложении.
 
-### Add Config Settings to Your Application
+### Добавить параметры конфигурации в приложение
 
-The initial example uses all the Slim defaults, but we can easily add configuration to our application when we create it.  There are a few options but here I've just created an array of config options and then told Slim to take its settings from here when I create it.
+В первом примере используются все значения по умолчанию Slim, но мы можем легко добавить конфигурацию в наше 
+приложение, когда мы его создадим. Есть несколько вариантов, но здесь я только что создал массив опций конфигурации, 
+а затем сказал Slim, чтобы использовать его настройки здесь, когда я его создаю.
 
-First the configuration itself:
+Сначала сама конфигурация:
 
-{% highlight php %}
+``` php
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
 
@@ -143,27 +188,38 @@ $config['db']['host']   = "localhost";
 $config['db']['user']   = "user";
 $config['db']['pass']   = "password";
 $config['db']['dbname'] = "exampleapp";
-{% endhighlight %}
+``` 
 
-The first line is the most important!  Turn this on in development mode to get information about errors (without it, Slim will at least log errors so if you're using the built in PHP webserver then you'll see them in the console output which is helpful). The second line allows the web server to set the Content-Length header which makes Slim behave more predictably.
 
-The other settings here are not specific keys/values, they're just some data that I want to be able to access later.
+Первая строка - самая важная! Включите это в режиме разработки, чтобы получить информацию об ошибках 
+(без этого, Slim будет, по крайней мере, регистрировать ошибки, поэтому, если вы используете встроенный веб-сервер 
+PHP, тогда вы увидите их на консольном выходе, который будет полезен). Вторая строка позволяет веб-серверу 
+устанавливать заголовок Content-Length, который делает Slim более предсказуемым.
 
-Now to feed this into Slim, we need to *change* where we create the `Slim/App` object so that it now looks like this:
+Другие настройки здесь не являются конкретными ключами/значениями, это всего лишь некоторые данные, 
+которые я хочу получить позже.
 
-{% highlight php %}
+Теперь, чтобы передать это в Slim, нам нужно *изменить*, где мы создаем`Slim/App` 
+объект, чтобы он теперь выглядел следующим образом:
+
+
+``` php
 $app = new \Slim\App(["settings" => $config]);
-{% endhighlight %}
+``` 
+Теперь мы сможем получить доступ к любым настройкам, которые мы помещаем в этот `$config` массив из нашего приложения.
 
-We'll be able to access any settings we put into that `$config` array from our application later on.
+## Настройка автозагрузки для собственных классов
 
-## Set up Autoloading for Your Own Classes
+Composer может обрабатывать автозагрузку ваших собственных классов так же хорошо, как и имеющиеся. 
+Для углубленного руководства взгляните на 
+[использование Composer для управления правилами автозагрузки](https://getcomposer.org/doc/04-schema.md#autoload).
 
-Composer can handle the autoloading of your own classes just as well as the vendored ones. For an in-depth guide, take a look at [using Composer to manage autoloading rules](https://getcomposer.org/doc/04-schema.md#autoload).
+Моя настройка довольно проста, так как у меня есть только несколько дополнительных классов, они просто находятся 
+в глобальном пространстве имен, а файлы находятся в  
+`src/classes/` каталоге. Поэтому, чтобы загрузить их, я добавлю этот `autoload` раздел в свой  `composer.json` файл:
 
-My setup is pretty simple since I only have a few extra classes, they're just in the global namespace, and the files are in the `src/classes/` directory.  So to autoload them, I add this `autoload` section to my `composer.json` file:
 
-{% highlight javascript %}
+``` php
 {
     "require": {
         "slim/slim": "^3.1",
@@ -177,58 +233,77 @@ My setup is pretty simple since I only have a few extra classes, they're just in
         }
     }
 }
-{% endhighlight %}
+``` 
 
-## Add Dependencies
+## Добавление зависимостей
 
-Most applications will have some dependencies, and Slim handles them nicely using a DIC (Dependency Injection Container) built on [Pimple](http://pimple.sensiolabs.org/).  This example will use both [Monolog](https://github.com/Seldaek/monolog) and a [PDO](http://php.net/manual/en/book.pdo.php) connection to MySQL.
+Большинство приложений будут иметь некоторые зависимости, а Slim прекрасно их имитирует, используя DIC 
+(Container Injection Container), построенный на [Pimple](http://pimple.sensiolabs.org/). 
+В этом примере будут использоваться как [Monolog](https://github.com/Seldaek/monolog) так и 
+[PDO](http://php.net/manual/en/book.pdo.php) соединение с MySQL.
 
-The idea of the dependency injection container is that you configure the container to be able to load the dependencies that your application needs, when it needs them.  Once the DIC has created/assembled the dependencies, it stores them and can supply them again later if needed.
+Идея контейнера для инъекций зависимостей заключается в том, что вы настраиваете контейнер для загрузки 
+зависимостей, которые необходимы вашему приложению, когда они им нужны. После того, как DIC создал / собрал 
+зависимости, он сохраняет их и может предоставить их позже, если это необходимо.
 
-To get the container, we can add the following after the line where we create `$app` and before we start to register the routes in our application:
+Чтобы получить контейнер, мы можем добавить следующее после строки, в которой мы создаем, `$app` и до того, 
+как мы начнем регистрировать маршруты в нашем приложении:
 
-{% highlight php %}
+
+``` php
 $container = $app->getContainer();
-{% endhighlight %}
+``` 
+Теперь у нас есть `Slim\Container` объект, мы можем добавить к нему наши сервисы.
 
-Now we have the `Slim\Container` object, we can add our services to it.
+### использование Monolog в вашем приложении
 
-### Use Monolog In Your Application
-
-If you're not already familiar with Monolog, it's an excellent logging framework for PHP applications, which is why I'm going to use it here.  First of all, get the Monolog library installed via Composer:
+Если вы еще не знакомы с Monolog, это отличный framework логирования для PHP-приложений, поэтому собираюсь использовать 
+его здесь. Во-первых, подключите библиотеку Monolog через composer:
 
     php composer.phar require monolog/monolog
 
-The dependency is named `logger` and the code to add it looks like this:
+Зависимость называется `logger`, а код для добавления выглядит следующим образом:
 
-{% highlight php %}
+
+``` php
 $container['logger'] = function($c) {
     $logger = new \Monolog\Logger('my_logger');
     $file_handler = new \Monolog\Handler\StreamHandler("../logs/app.log");
     $logger->pushHandler($file_handler);
     return $logger;
 };
-{% endhighlight %}
+``` 
 
-We're adding an element to the container, which is itself an anonymous function (the `$c` that is passed in is the container itself so you can acess other dependencies if you need to).  This will be called when we try to access this dependency for the first time; the code here does the setup of the dependency.  Next time we try to access the same dependence, the same object that was created the first time will be used the next time.
+Мы добавляем элемент в контейнер, который сам является анонимной функцией 
+(`$c` параметр передается в самом контейнере, поэтому вы можете использовать другие зависимости, если это вам нужно).  
+Это будет вызвано, когда мы попытаемся получить доступ к этой зависимости в первый раз; здесь код устанавливает 
+настройку зависимости. В следующий раз, когда мы попытаемся получить доступ к той же зависимости, тот же самый 
+объект, который был создан в первый раз, будет использоваться в следующий раз.
 
-My Monolog config here is fairly light; just setting up the application to log all errors to a file called `logs/app.log` (remember this path is from the point of view of where the script is running, i.e. `index.php`).
+Мой Monolog конфиг здесь довольно прозрачен, только настройки приложения для регистрации всех ошибок в файл 
+`logs/app.log` (помните, это путь с точки зрения того, где работает скрипт, в нашем случае это `index.php`).
 
-With the logger in place, I can use it from inside my route code with a line like this:
+С помощью logger на месте я могу использовать его изнутри кода роута с помощью строки, подобной этой:
 
-{% highlight php %}
-    $this->logger->addInfo("Something interesting happened");
-{% endhighlight %}
+``` php
+ $this->logger->addInfo("Something interesting happened");
+``` 
 
-Having good application logging is a really important foundation for any application so I'd always recommend putting something like this in place.  This allows you to add as much or as little debugging as you want, and by using the appropriate log levels with each message, you can have as much or as little detail as is appropriate for what you're doing in any one moment.
+Хорошее логирование приложения - действительно важная основа для любого приложения, поэтому я всегда рекомендую 
+поместить что-то подобное на место. Это позволяет вам добавить столько или меньше отладки, сколько захотите, и с 
+помощью соответствующих уровней журнала с каждым сообщением вы можете иметь столько же или немного деталей, сколько 
+подходит для того, что вы делаете в любой момент.
 
-### Add A Database Connection
+### Добавить соединение с базой данных
 
-There are many database libraries available for PHP, but this example uses PDO - this is available in PHP as standard so it's probably useful in every project, or you can use your own libraries by adapting the examples below.
+Существует множество библиотек баз данных, доступных для PHP, но в этом примере используется PDO - это доступно в PHP 
+в качестве стандарта, поэтому оно, вероятно, полезно в каждом проекте или вы можете использовать свои собственные 
+библиотеки, адаптировав приведенные ниже примеры.
 
-Exactly as we did for adding Monolog to the DIC, we'll add an anonymous function that sets up the dependency, in this case called `db`:
+Точно так же, как мы сделали для добавления Monolog to the DIC, мы добавим анонимную функцию, которая 
+устанавливает зависимость, в этом случае называется `db`:
 
-{% highlight php %}
+``` php
 $container['db'] = function ($c) {
     $db = $c['settings']['db'];
     $pdo = new PDO("mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'],
@@ -237,25 +312,38 @@ $container['db'] = function ($c) {
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $pdo;
 };
-{% endhighlight %}
+``` 
 
-Remember the config that we added into our app earlier?  Well, this is where we use it - the container knows how to access our settings, and so we can grab our configuration very easily from here.  With the config, we create the `PDO` object (remember this will throw a `PDOException` if it fails and you might like to handle that here) so that we can connect to the database.  I've included two `setAttribute()` calls that really aren't necessary but I find these two settings make PDO itself much more usable as a library so I left the settings in this example so you can use them too!  Finally, we return our connection object.
 
-Again, we can access our dependencies with just `$this->` and then the name of the dependency we want which in this case is `$this->db`, so there is code in my application that looks something like:
+Помните конфиг, который мы добавили в наше приложение раньше? 
+Ну, вот где мы его используем - контейнер знает, как получить доступ к нашим настройкам, и поэтому мы можем легко 
+получить нашу конфигурацию отсюда. С помощью config мы создаем `PDO` объект 
+(помните, что это приведет к отказу, `PDOException` если он сработает, и вы можете обработать это здесь) 
+чтобы мы могли подключиться к базе данных. Я включил два `setAttribute()` вызова, которые действительно не нужны, 
+но я нахожу, что эти два параметра делают PDO более удобным для использования в качестве библиотеки, поэтому я 
+оставил настройки в этом примере, чтобы вы могли их использовать! Наконец, мы возвращаем наш объект соединения.
 
-{% highlight php %}
-    $mapper = new TicketMapper($this->db);
-{% endhighlight %}
+Опять, мы можем получить доступ к нашим зависимостям с помощью только, `$this->` и затем имя требуемой зависимости, 
+которая в этом случае есть `$this->db`, по этому в моем случае приложении есть код, который выглядит примерно так:
 
-This will fetch the `db` dependency from the DIC, creating it if necessary, and in this example just allows me to pass the `PDO` object straight into my mapper class.
+``` php
+ $mapper = new TicketMapper($this->db);
+``` 
 
-## Create Routes
+Это приведет к `db` dependency ависимости от DIC, создав его, если это необходимо, и в этом примере просто позволяет 
+мне передать `PDO` объект прямо в мой класс сопоставления.
 
-"Routes" are the URL patterns that we'll describe and attach functionality to.  Slim doesn't use any automatic mapping or URL formulae so you can make any route pattern you like map onto any function you like, it's very flexible.  Routes can be linked to a particular HTTP verb (such as GET or POST), or more than one verb.
+## Создание роутеров
 
-As a first example, here's the code for making a GET request to `/tickets` which lists the tickets in my bug tracker example application.  It just spits out the variables since we haven't added any views to our application yet:
+"Роутеры" - это шаблоны URL, которые мы будем описывать и прикреплять к ним функциональность. 
+Slim не использует автоматическое сопоставление или формулы URL-адресов, поэтому вы можете сделать любой шаблон 
+маршрута, который вам нравится, на любую понравившуюся вам функцию, она очень гибкая. Маршруты могут быть связаны 
+с определенным HTTP-глаголом (например, GET или POST) или более чем одним глаголом.
 
-{% highlight php %}
+В качестве первого примера, вот код для создания запроса GET, `/tickets` в котором перечислен список в мой багтрекер 
+пример приложения. Он просто выплевывает переменные, так как мы еще не добавили никаких представлений в наше приложение:
+
+``` php
 $app->get('/tickets', function (Request $request, Response $response) {
     $this->logger->addInfo("Ticket list");
     $mapper = new TicketMapper($this->db);
@@ -264,27 +352,49 @@ $app->get('/tickets', function (Request $request, Response $response) {
     $response->getBody()->write(var_export($tickets, true));
     return $response;
 });
-{% endhighlight %}
+``` 
 
-The use of `$app->get()` here means that this route is only available for GET requests; there's an equivalent `$app->post()` call that also takes the route pattern and a callback for POST requests.  There are also [methods for other verbs](http://www.slimframework.com/docs/objects/router.html) - and also the `map()` function for situations where more than one verb should use the same code for a particular route.
 
-Slim routes match in the order they are declared, so if you have a route which could overlap another route, you need to put the most specific one first.  Slim will throw an exception if there's a problem, for example in this application I have both `/ticket/new` and `/ticket/{id}` and they need to be declared in that order otherwise the routing will think that "new" is an ID!
+Использование `$app->get()` означает, что этот маршрут доступен только для запросов GET; 
+есть эквивалентный `$app->post()` вызов, который также принимает шаблон роутера и обратный вызов для запросов POST. 
+Существуют также [методы для других глаголов](objects/router.html) - а также `map()` 
+функция для ситуаций, когда более одного глагола должен использовать один и тот же код для определенного роута.
 
-In this example application, all the routes are in `index.php` but in practice this can make for a rather long and unwieldy file!  It's fine to refactor your application to put routes into a different file or files, or just register a set of routes with callbacks that are actually declared elsewhere.
+Slim роуты работают в том порядке, в котором они объявлены, поэтому, если у вас есть роут, который может пересекать 
+другой роут, вам нужно сначала поставить наиболее конкретный роут. Slim будет генерировать исключение, если есть 
+проблема, например, в этом приложении у меня есть оба `/ticket/new` и `/ticket/{id}` они должны быть объявлены в этом 
+порядке, иначе маршрутизация будет считать, что «новый» - это идентификатор!
 
-All route callbacks accept three parameters (the third one is optional):
+В этом примере приложения все роуторы находятся в `index.php` но напрактике это может сделать довольно длинный и 
+громоздкий файл! Это хороших повод прорефакторить ваше приложени, чтобы поместить набор маршрутов с обратными вызовами, 
+которые фактически объявлены в другом месте.
 
- * Request: this contains all the information about the incoming request, headers, variables, etc.
- * Response: we can add output and headers to this and, once complete, it will be turned into the HTTP response that the client receives
- * Arguments: the named placeholders from the URL (more on those in just a moment), this is optional and is usually omitted if there aren't any
+Все обратные вызовы роута принимают три параметра (третий необязателен):
 
-This emphasis on Request and Response illustrates Slim 3 being based on the PSR-7 standard for HTTP Messaging.  Using the Request and Response object also makes the application more testable as we don't need to make **actual** requests and responses, we can just set up the objects as desired.
+<dl>
+  <dt>Request</dt>
+  <dd>запрос в нем содержится вся информация о входящем запросе, заголовках, переменных и т. д.</dd>
 
-### Routes with Named Placeholders
+  <dt>Response</dt>
+  <dd>ответ мы можем добавить к нему выходные данные и заголовки, и после его завершения он будет превращен 
+       в HTTP-ответ, который получает клиент</dd>
+  
+  <dt>Arguments</dt>
+  <dd>аргументы именованные заполнители из URL-адреса (больше всего за один момент), это необязательно и обычно 
+  опускается, если нет </dd>
+</dl>
 
-Sometimes, our URLs have variables in them that we want to use in our application.  In my bug tracking example, I want to have URLs like `/ticket/42` to refer to the ticket - and Slim has an easy way of parsing out the "42" bit and making it available for easy use in the code.  Here's the route that does exactly that:
+Этот акцент на Request and Response иллюстрирует, что Slim 3 основан на стандарте PSR-7 для HTTP-сообщений. 
+Использование объекта запроса и ответа также делает приложение более тестируемым, так как нам не нужно делать 
+**реальные** запросы и ответы, мы можем просто настроить объекты по желанию.
 
-{% highlight php %}
+### Роуторы с помощью именных заполнителей
+
+Sometimes, our URLs have variables in them that we want to use in our application.  In my bug tracking example, 
+I want to have URLs like `/ticket/42` to refer to the ticket - and Slim has an easy way of parsing out the "42" 
+bit and making it available for easy use in the code.  Here's the route that does exactly that:
+
+``` php
 $app->get('/ticket/{id}', function (Request $request, Response $response, $args) {
     $ticket_id = (int)$args['id'];
     $mapper = new TicketMapper($this->db);
@@ -293,7 +403,7 @@ $app->get('/ticket/{id}', function (Request $request, Response $response, $args)
     $response->getBody()->write(var_export($ticket, true));
     return $response;
 });
-{% endhighlight %}
+```
 
 Look at where the route itself is defined: we write it as `/ticket/{id}`.  When we do this, the route will take the portion of the URL from where the `{id}` is declared, and it becomes available as `$args['id']` inside the callback.
 
@@ -302,9 +412,9 @@ Look at where the route itself is defined: we write it as `/ticket/{id}`.  When 
 Since GET and POST send data in such different ways, then the way that we get that data from the Request object differs hugely in Slim.
 
 It is possible to get all the query parameters from a request by doing `$request->getQueryParams()` which will return an associative array.  So for the URL `/tickets?sort=date&order=desc` we'd get an associative array like:
-
+``` php
     ["sort" => "date", "order" => "desc"]
-
+``` 
 These can then be used (after validating of course) inside your callback.
 
 
@@ -314,14 +424,12 @@ When working with incoming data, we can find this in the body.  We've already se
 
 For data that comes from a web form, Slim will turn that into an array.  My tickets example application has a form for creating new tickets that just sends two fields: "title" and "description".  Here is the first part of the route that receives that data, note that for a POST route use `$app->post()` rather than `$app->get()`:
 
-{% highlight php %}
-$app->post('/ticket/new', function (Request $request, Response $response) {
-    $data = $request->getParsedBody();
+<figure class="highlight"><pre><code class="language-php" data-lang="php">$app-&gt;post('/ticket/new', function (Request $request, Response $response) {
+    $data = $request-&gt;getParsedBody();
     $ticket_data = [];
     $ticket_data['title'] = filter_var($data['title'], FILTER_SANITIZE_STRING);
     $ticket_data['description'] = filter_var($data['description'], FILTER_SANITIZE_STRING);
-    // ...
-{% endhighlight %}
+    // ...</code></pre></figure>
 
 The call to `$request->getParsedBody()` asks Slim to look at the request and the `Content-Type` headers of that request, then do something smart and useful with the body.  In this example it's just a form post and so the resulting `$data` array looks very similar to what we'd expect from `$_POST` - and we can go ahead and use the [filter](http://php.net/manual/en/book.filter.php) extension to check the value is acceptable before we use it.  A huge advantage of using the built in Slim methods is that we can test things by injecting different request objects - if we were to use `$_POST` directly, we aren't able to do that.
 
@@ -337,22 +445,18 @@ Since we'll be using the PHP views, we'll need to add this dependency to our pro
 
 In order to be able to render the view, we'll first need to create a view and make it available to our application; we do that by adding it to the DIC.  The code we need goes with the other DIC additions near the top of `src/public/index.php` and it looks like this:
 
-{% highlight php %}
-$container['view'] = new \Slim\Views\PhpRenderer("../templates/");
-{% endhighlight %}
+<figure class="highlight"><pre><code class="language-php" data-lang="php">$container['view'] = new \Slim\Views\PhpRenderer("../templates/");</code></pre></figure>
 
 Now we have a `view` element in the DIC, and by default it will look for its templates in the `src/templates/` directory.  We can use it to render templates in our actions - here's the ticket list route again, this time including the call to pass data into the template and render it:
 
-{% highlight php %}
-$app->get('/tickets', function (Request $request, Response $response) {
-    $this->logger->addInfo("Ticket list");
-    $mapper = new TicketMapper($this->db);
-    $tickets = $mapper->getTickets();
+<figure class="highlight"><pre><code class="language-php" data-lang="php">$app-&gt;get('/tickets', function (Request $request, Response $response) {
+    $this-&gt;logger-&gt;addInfo("Ticket list");
+    $mapper = new TicketMapper($this-&gt;db);
+    $tickets = $mapper-&gt;getTickets();
 
-    $response = $this->view->render($response, "tickets.phtml", ["tickets" => $tickets]);
+    $response = $this-&gt;view-&gt;render($response, "tickets.phtml", ["tickets" =&gt; $tickets]);
     return $response;
-});
-{% endhighlight %}
+});</code></pre></figure>
 
 The only new part here is the penultimate line where we set the `$response` variable.  Now that the `view` is in the DIC, we can refer to it as `$this->view`.  Calling `render()` needs us to supply three arguments: the `$response` to use, the template file (inside the default templates directory), and any data we want to pass in.  Response objects are *immutable* which means that the call to `render()` won't update the response object; instead it will return us a new object which is why it needs to be captured like this.  This is always true when you operate on the response object.
 
@@ -360,33 +464,31 @@ When passing the data to templates, you can add as many elements to the array as
 
 As an example, here's a snippet from the template that displays the ticket list (i.e. the code from `src/templates/tickets.phtml` - which uses [Pure.css](http://purecss.io/) to help cover my lack of frontend skills):
 
-{% highlight php %}
-<h1>All Tickets</h1>
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nt">&lt;h1&gt;</span>All Tickets<span class="nt">&lt;/h1&gt;</span>
 
-<p><a href="/ticket/new">Add new ticket</a></p>
+<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">"/ticket/new"</span><span class="nt">&gt;</span>Add new ticket<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
 
-<table class="pure-table">
-    <tr>
-        <th>Title</th>
-        <th>Component</th>
-        <th>Description</th>
-        <th>Actions</th>
-    </tr>
+<span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">"pure-table"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;th&gt;</span>Title<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;th&gt;</span>Component<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;th&gt;</span>Description<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;th&gt;</span>Actions<span class="nt">&lt;/th&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
 
-<?php foreach ($tickets as $ticket): ?>
+<span class="cp">&lt;?php</span> <span class="k">foreach</span> <span class="p">(</span><span class="nv">$tickets</span> <span class="k">as</span> <span class="nv">$ticket</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span>
 
-    <tr>
-        <td><?=$ticket->getTitle() ?></td>
-        <td><?=$ticket->getComponent() ?></td>
-        <td><?=$ticket->getShortDescription() ?> ...</td>
-        <td>
-            <a href="<?=$router->pathFor('ticket-detail', ['id' => $ticket->getId()])?>">view</a>
-        </td>
-    </tr>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span><span class="cp">&lt;?=</span><span class="nv">$ticket</span><span class="o">-&gt;</span><span class="na">getTitle</span><span class="p">()</span> <span class="cp">?&gt;</span><span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span><span class="cp">&lt;?=</span><span class="nv">$ticket</span><span class="o">-&gt;</span><span class="na">getComponent</span><span class="p">()</span> <span class="cp">?&gt;</span><span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span><span class="cp">&lt;?=</span><span class="nv">$ticket</span><span class="o">-&gt;</span><span class="na">getShortDescription</span><span class="p">()</span> <span class="cp">?&gt;</span> ...<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>
+            <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"</span><span class="cp">&lt;?=</span><span class="nv">$router</span><span class="o">-&gt;</span><span class="na">pathFor</span><span class="p">(</span><span class="s1">'ticket-detail'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'id'</span> <span class="o">=&gt;</span> <span class="nv">$ticket</span><span class="o">-&gt;</span><span class="na">getId</span><span class="p">()])</span><span class="cp">?&gt;</span><span class="s">"</span><span class="nt">&gt;</span>view<span class="nt">&lt;/a&gt;</span>
+        <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
 
-<?php endforeach; ?>
-</table>
-{% endhighlight %}
+<span class="cp">&lt;?php</span> <span class="k">endforeach</span><span class="p">;</span> <span class="cp">?&gt;</span>
+<span class="nt">&lt;/table&gt;</span></code></pre></figure>
 
 In this case, `$tickets` is actually a `TicketEntity` class with getters and setters, but if you passed in an array, you'd be able to access it using array rather than object notation here.
 
@@ -396,17 +498,13 @@ Did you notice something fun going on with `$router->pathFor()` right at the end
 
 When we create a route, we can give it a name by calling `->setName()` on the route object.  In this case, I am adding the name to the route that lets me view an individual ticket so that I can quickly create the right URL for a ticket by just giving the name of the route, so my code now looks something like this (just the changed bits shown here):
 
-{% highlight php %}
-$app->get('/ticket/{id}', function (Request $request, Response $response, $args) {
+<figure class="highlight"><pre><code class="language-php" data-lang="php">$app-&gt;get('/ticket/{id}', function (Request $request, Response $response, $args) {
     // ...
-})->setName("ticket-detail");
-{% endhighlight %}
+})-&gt;setName("ticket-detail");</code></pre></figure>
 
 To use this in my template, I need to make the router available in the template that's going to want to create this URL, so I've amended the `tickets/` route to pass a router through to the template by changing the render line to look like this:
 
-{% highlight php %}
-    $response = $this->view->render($response, "tickets.phtml", ["tickets" => $tickets, "router" => $this->router]);
-{% endhighlight %}
+<figure class="highlight"><pre><code class="language-php" data-lang="php">    $response = $this-&gt;view-&gt;render($response, "tickets.phtml", ["tickets" =&gt; $tickets, "router" =&gt; $this-&gt;router]);</code></pre></figure>
 
 With the `/tickets/{id}` route having a friendly name, and the router now available in our template, this is what makes the `pathFor()` call in our template work.  By supplying the `id`, this gets used as a named placeholder in the URL pattern, and the correct URL for linking to that route with those values is created.  This feature is brilliant for readable template URLs and is even better if you ever need to change a URL format for any reason - no need to grep templates to see where it's used.  This approach is definitely recomended, especially for links you'll use a lot.
 
