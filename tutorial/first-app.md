@@ -390,9 +390,10 @@ Slim роуты работают в том порядке, в котором о�
 
 ### Роуторы с помощью именных заполнителей
 
-Sometimes, our URLs have variables in them that we want to use in our application.  In my bug tracking example, 
-I want to have URLs like `/ticket/42` to refer to the ticket - and Slim has an easy way of parsing out the "42" 
-bit and making it available for easy use in the code.  Here's the route that does exactly that:
+Иногда наши URL-адреса имеют в них переменные, которые мы хотим использовать в нашем приложении. 
+В моем примере отслеживания ошибок я хочу, чтобы URL-адреса хотели `/ticket/42` ссылаться на ticket - 
+и Slim имеет простой способ разбора секции "42" и сделать его доступным для удобства использования в коде. 
+Вот маршрут, который делает именно это:
 
 ``` php
 $app->get('/ticket/{id}', function (Request $request, Response $response, $args) {
@@ -405,111 +406,184 @@ $app->get('/ticket/{id}', function (Request $request, Response $response, $args)
 });
 ```
 
-Look at where the route itself is defined: we write it as `/ticket/{id}`.  When we do this, the route will take the portion of the URL from where the `{id}` is declared, and it becomes available as `$args['id']` inside the callback.
+Посмотрите, где определен маршрут: мы пишем его как `/ticket/{id}`.  
+Когда мы это сделаем, маршрут займет часть URL-адреса, где `{id}` объявлен, и становиться доступным внутри обратного 
+вызова как `$args['id']`.
 
-### Using GET Parameters
+### Использование параметров GET
 
-Since GET and POST send data in such different ways, then the way that we get that data from the Request object differs hugely in Slim.
+Поскольку GET и POST отправляют данные по-разному, то способ, которым мы получаем эти данные из объекта Request, 
+сильно отличается в Slim.
 
-It is possible to get all the query parameters from a request by doing `$request->getQueryParams()` which will return an associative array.  So for the URL `/tickets?sort=date&order=desc` we'd get an associative array like:
+Можно получить все параметры запроса из запроса, выполнив `$request->getQueryParams()`команду, которая вернет 
+ассоциативный массив. Поэтому для URL-адреса `/tickets?sort=date&order=desc` мы получим ассоциативный массив, например:
+
 ``` php
     ["sort" => "date", "order" => "desc"]
 ``` 
-These can then be used (after validating of course) inside your callback.
+Затем они могут использоваться (после проверки, конечно) внутри вашего обратного вызова.
 
+### Работа с данными POST
 
-### Working with POST Data
+При работе с входящими данными мы можем найти это в теле. 
+Мы уже видели, как мы можем анализировать данные из URL-адреса и как получать переменные GET, `$request->getQueryParams()` 
+но как насчет данных POST? Данные запроса POST можно найти в теле запроса, а Slim имеет хорошие встроенные помощники, 
+чтобы упростить получение информации в полезном формате.
 
-When working with incoming data, we can find this in the body.  We've already seen how we can parse data from the URL and how to obtain the GET variables by doing `$request->getQueryParams()` but what about POST data?  The POST request data can be found in the body of the request, and Slim has some good built in helpers to make it easier to get the information in a useful format.
+Для данных, которые поступают из веб-формы, Slim превратит это в массив. В моем приложении-примере для tickets 
+есть форма для создания новых tickets которые просто отправляют два поля: «title» и «description». 
+Вот первая часть маршрута, который получает эти данные, обратите внимание, что для использования маршрута POST, 
+`$app->post()` а не `$app->get()`:
 
-For data that comes from a web form, Slim will turn that into an array.  My tickets example application has a form for creating new tickets that just sends two fields: "title" and "description".  Here is the first part of the route that receives that data, note that for a POST route use `$app->post()` rather than `$app->get()`:
-
-<figure class="highlight"><pre><code class="language-php" data-lang="php">$app-&gt;post('/ticket/new', function (Request $request, Response $response) {
-    $data = $request-&gt;getParsedBody();
+``` php
+$app->post('/ticket/new', function (Request $request, Response $response) {
+    $data = $request->getParsedBody();
     $ticket_data = [];
     $ticket_data['title'] = filter_var($data['title'], FILTER_SANITIZE_STRING);
     $ticket_data['description'] = filter_var($data['description'], FILTER_SANITIZE_STRING);
-    // ...</code></pre></figure>
+    // ...
+``` 
 
-The call to `$request->getParsedBody()` asks Slim to look at the request and the `Content-Type` headers of that request, then do something smart and useful with the body.  In this example it's just a form post and so the resulting `$data` array looks very similar to what we'd expect from `$_POST` - and we can go ahead and use the [filter](http://php.net/manual/en/book.filter.php) extension to check the value is acceptable before we use it.  A huge advantage of using the built in Slim methods is that we can test things by injecting different request objects - if we were to use `$_POST` directly, we aren't able to do that.
 
-What's really neat here is that if you're building an API or writing AJAX endpoints, for example, it's super easy to work with data formats that arrive by POST but which aren't a web form.  As long as the `Content-Type` header is set correctly, Slim will parse a JSON payload into an array and you can access it exactly the same way: by using `$request->getParsedBody()`.
+Запрос `$request->getParsedBody()` просит Slim посмотреть запрос и `Content-Type` 
+заголовки этого запроса, затем сделать что-то умное и полезное с телом. 
+В этом примере это просто сообщение формы, поэтому результирующий `$data` 
+массив выглядит очень похоже на то, от чего мы ожидаем, `$_POST` - и мы можем продолжать использовать расширение 
+[filter](http://php.net/manual/ru/book.filter.php) чтобы проверить, что значение приемлемо, прежде чем мы его используем.  
+Огромное преимущество использования встроенных методов Slim заключается в том, что мы можем тестировать вещи, введя 
+разные объекты запроса - если мы будем использовать $_POST напрямую, мы не сможем это сделать.
 
-## Views and Templates
+Что здесь действительно хорошо, так это то, что если вы создаете API или записываете конечные точки AJAX, например, 
+очень легко работать с форматами данных, которые поступают через POST, но не являются веб-формой. 
+Пока `Content-Type` заголовок установлен правильно, Slim будет анализировать полезную нагрузку JSON в массив, и 
+вы можете получить к ней доступ точно так же: используя `$request->getParsedBody()`.
 
-Slim doesn't have an opinion on the views that you should use, although there are some options that are ready to plug in.  Your best choices are either Twig or plain old PHP.  Both options have pros and cons: if you're already familiar with Twig then it offers lots of excellent features and functionality such as layouts - but if you're not already using Twig, it can be a large learning curve overhead to add to a microframework project.  If you're looking for something dirt simple then the PHP views might be for you!  I picked PHP for this example project, but if you're familiar with Twig then feel free to use that; the basics are mostly the same.
+## Views и Шаблоны
 
-Since we'll be using the PHP views, we'll need to add this dependency to our project via Composer.  The command looks like this (similar to the ones you've already seen):
+У Slim нет мнения о мнениях, которые вы должны использовать, хотя есть некоторые варианты, которые готовы подключить. 
+Ваш лучший выбор - это Twig или простой старый PHP. 
+У обоих вариантов есть плюсы и минусы: если вы уже знакомы с Twig, тогда он предлагает множество отличных фичи и 
+функциональность, таких как разметка, но если вы еще не используете Twig, это может быть большой накладной кривой обучения, 
+чтобы добавить в проект микрофрейворка. Если вы ищете простое, то PHP-представления могут быть для вас! 
+Я выбрал PHP для этого примера проекта, но если вы знакомы с Twig, тогда не стесняйтесь использовать это; 
+основы в основном одинаковые.
 
+Поскольку мы будем использовать представления PHP, нам нужно будет добавить эту зависимость в наш проект через Composer. 
+Команда выглядит так (аналогично тому, что вы уже видели):
+
+```
     php composer.phar require slim/php-view
 
-In order to be able to render the view, we'll first need to create a view and make it available to our application; we do that by adding it to the DIC.  The code we need goes with the other DIC additions near the top of `src/public/index.php` and it looks like this:
+```
 
-<figure class="highlight"><pre><code class="language-php" data-lang="php">$container['view'] = new \Slim\Views\PhpRenderer("../templates/");</code></pre></figure>
+Чтобы иметь возможность отображать представление, нам сначала нужно создать представление и сделать его доступным для 
+нашего приложения; мы делаем это, добавляя его в DIC. Код, который нам нужен, связан с другими дополнениями DIC в 
+верхней части `src/public/index.php` и выглядит следующим образом:
 
-Now we have a `view` element in the DIC, and by default it will look for its templates in the `src/templates/` directory.  We can use it to render templates in our actions - here's the ticket list route again, this time including the call to pass data into the template and render it:
+``` php
+$container['view'] = new \Slim\Views\PhpRenderer("../templates/");
+``` 
 
-<figure class="highlight"><pre><code class="language-php" data-lang="php">$app-&gt;get('/tickets', function (Request $request, Response $response) {
-    $this-&gt;logger-&gt;addInfo("Ticket list");
-    $mapper = new TicketMapper($this-&gt;db);
-    $tickets = $mapper-&gt;getTickets();
+Теперь у нас есть `view` элемент в DIC, и по умолчанию он будет искать его шаблоны в `src/templates/` 
+каталоге. Мы можем использовать его для визуализации шаблонов в наших действиях - вот маршрут списка билетов снова, 
+на этот раз включая вызов для передачи данных в шаблон и его рендеринга:
 
-    $response = $this-&gt;view-&gt;render($response, "tickets.phtml", ["tickets" =&gt; $tickets]);
+``` php
+$app->get('/tickets', function (Request $request, Response $response) {
+    $this->logger->addInfo("Ticket list");
+    $mapper = new TicketMapper($this->db);
+    $tickets = $mapper->getTickets();
+
+    $response = $this->view->render($response, "tickets.phtml", ["tickets" => $tickets]);
     return $response;
-});</code></pre></figure>
+});
+``` 
 
-The only new part here is the penultimate line where we set the `$response` variable.  Now that the `view` is in the DIC, we can refer to it as `$this->view`.  Calling `render()` needs us to supply three arguments: the `$response` to use, the template file (inside the default templates directory), and any data we want to pass in.  Response objects are *immutable* which means that the call to `render()` won't update the response object; instead it will return us a new object which is why it needs to be captured like this.  This is always true when you operate on the response object.
 
-When passing the data to templates, you can add as many elements to the array as you want to make available in the template.  The keys of the array are the variables that the data will exist in once we get to the template itself.
+Единственная новая часть здесь - предпоследняя линия, где мы устанавливаем  `$response` переменную. 
+Теперь, когда `view` находится в DIC, мы можем ссылаться на него как `$this->view`. Вызов `render()` 
+требует, чтобы мы предоставили три аргумента: `$response`, файл шаблона 
+(внутри каталога шаблонов по умолчанию), и любые данные, которые мы хотим передать. 
+Объекты ответа *(неизменяемы) immutable* что означает, что вызов `render()` не будет обновлять объект ответа; 
+вместо этого он вернет нам новый объект, поэтому он должен быть захвачен таким образом. Это всегда верно, 
+когда вы работаете с объектом ответа.
 
-As an example, here's a snippet from the template that displays the ticket list (i.e. the code from `src/templates/tickets.phtml` - which uses [Pure.css](http://purecss.io/) to help cover my lack of frontend skills):
+При передаче данных в шаблоны вы можете добавить столько элементов в массив, сколько хотите сделать доступными 
+в шаблоне. Ключи массива - это переменные, которые будут существовать в момент, когда мы перейдем к самому шаблону.
 
-<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="nt">&lt;h1&gt;</span>All Tickets<span class="nt">&lt;/h1&gt;</span>
+Например, вот фрагмент из шаблона, который отображает список билетов (т.е. код из `src/templates/tickets.phtml` - 
+который использует [Pure.css](http://purecss.io/) чтобы помочь покрыть мои недостатки навыков фронтенда):
 
-<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">"/ticket/new"</span><span class="nt">&gt;</span>Add new ticket<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+``` php
+<h1>All Tickets</h1>
 
-<span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">"pure-table"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;tr&gt;</span>
-        <span class="nt">&lt;th&gt;</span>Title<span class="nt">&lt;/th&gt;</span>
-        <span class="nt">&lt;th&gt;</span>Component<span class="nt">&lt;/th&gt;</span>
-        <span class="nt">&lt;th&gt;</span>Description<span class="nt">&lt;/th&gt;</span>
-        <span class="nt">&lt;th&gt;</span>Actions<span class="nt">&lt;/th&gt;</span>
-    <span class="nt">&lt;/tr&gt;</span>
+<p><a href="/ticket/new">Add new ticket</a></p>
 
-<span class="cp">&lt;?php</span> <span class="k">foreach</span> <span class="p">(</span><span class="nv">$tickets</span> <span class="k">as</span> <span class="nv">$ticket</span><span class="p">)</span><span class="o">:</span> <span class="cp">?&gt;</span>
+<table class="pure-table">
+    <tr>
+        <th>Title</th>
+        <th>Component</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
 
-    <span class="nt">&lt;tr&gt;</span>
-        <span class="nt">&lt;td&gt;</span><span class="cp">&lt;?=</span><span class="nv">$ticket</span><span class="o">-&gt;</span><span class="na">getTitle</span><span class="p">()</span> <span class="cp">?&gt;</span><span class="nt">&lt;/td&gt;</span>
-        <span class="nt">&lt;td&gt;</span><span class="cp">&lt;?=</span><span class="nv">$ticket</span><span class="o">-&gt;</span><span class="na">getComponent</span><span class="p">()</span> <span class="cp">?&gt;</span><span class="nt">&lt;/td&gt;</span>
-        <span class="nt">&lt;td&gt;</span><span class="cp">&lt;?=</span><span class="nv">$ticket</span><span class="o">-&gt;</span><span class="na">getShortDescription</span><span class="p">()</span> <span class="cp">?&gt;</span> ...<span class="nt">&lt;/td&gt;</span>
-        <span class="nt">&lt;td&gt;</span>
-            <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"</span><span class="cp">&lt;?=</span><span class="nv">$router</span><span class="o">-&gt;</span><span class="na">pathFor</span><span class="p">(</span><span class="s1">'ticket-detail'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'id'</span> <span class="o">=&gt;</span> <span class="nv">$ticket</span><span class="o">-&gt;</span><span class="na">getId</span><span class="p">()])</span><span class="cp">?&gt;</span><span class="s">"</span><span class="nt">&gt;</span>view<span class="nt">&lt;/a&gt;</span>
-        <span class="nt">&lt;/td&gt;</span>
-    <span class="nt">&lt;/tr&gt;</span>
+<?php foreach ($tickets as $ticket): ?>
 
-<span class="cp">&lt;?php</span> <span class="k">endforeach</span><span class="p">;</span> <span class="cp">?&gt;</span>
-<span class="nt">&lt;/table&gt;</span></code></pre></figure>
+    <tr>
+        <td><?=$ticket->getTitle() ?></td>
+        <td><?=$ticket->getComponent() ?></td>
+        <td><?=$ticket->getShortDescription() ?> ...</td>
+        <td>
+            <a href="<?=$router->pathFor('ticket-detail', ['id' => $ticket->getId()])?>">view</a>
+        </td>
+    </tr>
 
-In this case, `$tickets` is actually a `TicketEntity` class with getters and setters, but if you passed in an array, you'd be able to access it using array rather than object notation here.
+<?php endforeach; ?>
+</table>
+``` 
 
-Did you notice something fun going on with `$router->pathFor()` right at the end of the example?  Let's talk about named routes next :)
 
-### Easy URL Building with Named Routes
+В этом случае  `$tickets` на самом деле это `TicketEntity` класс с геттерами и сеттерами, но если вы пройдете 
+в массиве, вы сможете получить к нему доступ, используя здесь массив, а не объектную нотацию.
 
-When we create a route, we can give it a name by calling `->setName()` on the route object.  In this case, I am adding the name to the route that lets me view an individual ticket so that I can quickly create the right URL for a ticket by just giving the name of the route, so my code now looks something like this (just the changed bits shown here):
+Вы заметили, что что-то интересное происходит `$router->pathFor()` в конце примера? 
+Давайте поговорим о названных роутерах далее :)
 
-<figure class="highlight"><pre><code class="language-php" data-lang="php">$app-&gt;get('/ticket/{id}', function (Request $request, Response $response, $args) {
+### Простое создание URL с именованными роутерами
+
+Когда мы создаем маршрут, мы можем присвоить ему имя, вызвав `->setName()` объект маршрута. В этом случае я добавляю 
+имя на маршрут, который позволяет мне просматривать отдельный ticket, чтобы я мог быстро создать правильный URL-адрес 
+для ticket, просто указав имя маршрута, поэтому мой код теперь выглядит примерно так (просто изменен кусок кода, 
+показаннный здесь):
+
+``` php
+$app->get('/ticket/{id}', function (Request $request, Response $response, $args) {
     // ...
-})-&gt;setName("ticket-detail");</code></pre></figure>
+})->setName("ticket-detail");
+``` 
 
-To use this in my template, I need to make the router available in the template that's going to want to create this URL, so I've amended the `tickets/` route to pass a router through to the template by changing the render line to look like this:
+Чтобы использовать это в своем шаблоне, мне нужно сделать маршрутизатор доступным в шаблоне, который захочет 
+создать этот URL-адрес, поэтому я изменил `tickets/` маршрут, чтобы передать маршрутизатор в шаблон, изменив строку 
+визуализации, чтобы выглядеть так:
 
-<figure class="highlight"><pre><code class="language-php" data-lang="php">    $response = $this-&gt;view-&gt;render($response, "tickets.phtml", ["tickets" =&gt; $tickets, "router" =&gt; $this-&gt;router]);</code></pre></figure>
+``` php
+    $response = $this->view->render($response, "tickets.phtml", ["tickets" => $tickets, "router" => $this->router]);
+``` 
 
-With the `/tickets/{id}` route having a friendly name, and the router now available in our template, this is what makes the `pathFor()` call in our template work.  By supplying the `id`, this gets used as a named placeholder in the URL pattern, and the correct URL for linking to that route with those values is created.  This feature is brilliant for readable template URLs and is even better if you ever need to change a URL format for any reason - no need to grep templates to see where it's used.  This approach is definitely recomended, especially for links you'll use a lot.
+Поскольку `/tickets/{id}` маршрут имеет дружественное имя и маршрутизатор, который теперь доступен в нашем шаблоне, э
+то то, что делает `pathFor()` 
+вызов в нашем шаблоне. Поставляя `id`, он используется как именованный заполнитель в шаблоне URL-адреса,
+ и создается правильный URL-адрес для привязки к этому маршруту с этими значениями. Эта функция блестящая для 
+ читаемых URL-адресов шаблонов и даже лучше, если вам когда-либо понадобится изменить формат URL по любой причине - 
+ не нужно grep шаблонов, чтобы увидеть, где они используются. Этот подход определенно рекомендуется, особенно для 
+ ссылок, которые вы будете использовать много.
 
-## Where Next?
+## Что дальше?
 
-This article gave a walkthrough of how to get set up with a simple application of your own, which I hope will let you get quickly started, see some working examples, and build something awesome.
+В этой статье дается пошаговое руководство по настройке с помощью простого приложения, которое, я надеюсь, позволит 
+вам быстро начать работу, увидеть некоторые рабочие примеры и создать что-то потрясающее.
 
-From here, I'd recommend you take a look at the other parts of the project documentation for anything you need that wasn't already covered or that you want to see an alternative example of.  A great next step would be to take a look at the [Middleware](http://www.slimframework.com/docs/concepts/middleware.html) section - this technique is how we layer up our application and add functionality such as authentication which can be applied to multiple routes.
+Отсюда я рекомендую вам взглянуть на другие части проектной документации на все, что вам нужно, которое еще не было 
+охвачено, или что вы хотите увидеть альтернативный пример. Следующим шагом было бы взглянуть на раздел 
+[Middleware](concepts/middleware.html) этот метод заключается в том, как мы размещаем наше приложение и добавляем 
+такие функции, как аутентификация, которая может применяться к нескольким маршрутам.

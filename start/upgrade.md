@@ -10,17 +10,18 @@ title: Руководство по обновлению
 ## Класс \ Slim \ Slim переименован \ Slim \ App
 Slim 3 использует `\Slim\App` для [Application](/docs/objects/application.html) объект обычно называется `$app`.
 
-<figure class="highlight"><pre><code class="language-php" data-lang="php">$app = new \Slim\App();</code></pre></figure>
+``` php
+$app = new \Slim\App();                       
+``` 
 
 ## Подпись новой функции маршрута
 
-<figure class="highlight">
-<pre>
-    <code class="language-php" data-lang="php">$app-&gt;get('/', function (Request $req, Response $res, $args = []) {
-        return $res-&gt;withStatus(400)-&gt;write('Bad Request');
-    });</code>
-</pre>
-</figure>
+``` php
+ $app->get('/', function (Request $req, Response $res, $args = []) {
+        return $res->withStatus(400)->write('Bad Request');
+    });
+``` 
+
 
 ## Объекты запроса и ответа больше не доступны через объект приложения
 Как упоминалось выше, Slim 3 передает объекты `Request` и `Response` объекты в качестве аргументов функции обработки 
@@ -72,9 +73,11 @@ PrettyExceptions вызывают множество проблем для мн�
 
 Пример:
 
-<figure class="highlight"><pre><code class="language-php" data-lang="php">$app-&gt;get('/', function ($req, $res, $args) {
-  return $res-&gt;withStatus(302)-&gt;withHeader('Location', 'your-new-uri');
-});</code></pre></figure>
+``` php
+$app->get('/', function ($req, $res, $args) {
+  return $res->withStatus(302)->withHeader('Location', 'your-new-uri');
+});
+``` 
 
 ## Запись `Middleware` промежуточного ПО 
 Запись middleware изменилась с класса на функцию.
