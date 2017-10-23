@@ -47,9 +47,9 @@ Middleware идеально подходит для этих сценариев.
 Middleware является вызываемым, которое принимает три аргумента: объект Request, объект Response и следующее middleware. 
 Каждое middleware **ДОЛЖНО** возвращать экземпляр  `\Psr\Http\Message\ResponseInterface`.
 
-### Closure middleware example.
+### Пример замыкание middleware.
 
-This example middleware is a Closure.
+Пример middleware замыкания.
 
 ```php
 <?php
@@ -73,10 +73,9 @@ function ($request, $response, $next) {
 
 ### Пример вызываемого класса middleware
 
-Это пример middleware вызываемого классо который реализует магический метод `__invoke()`.
+Это пример middleware вызываемого класс о который реализует магический метод `__invoke()`.
 
 ```php
-{% highlight php %}
 <?php
 class ExampleMiddleware
 {
