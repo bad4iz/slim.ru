@@ -2,57 +2,56 @@
 title: Middleware
 ---
 
-You can run code _before_ and _after_ your Slim application to manipulate the
-Request and Response objects as you see fit. This is called _middleware_.
-Why would you want to do this? Perhaps you want to protect your app
-from cross-site request forgery. Maybe you want to authenticate requests
-before your app runs. Middleware is perfect for these scenarios.
+Вы можете запускать код _до_ и _после_ вашего Slim-приложения, чтобы управлять объектами Request and Response по своему 
+усмотрению. Это называется _middleware_ (промежуточным программным обеспечением). Зачем вам это делать? Возможно, вы хотите защитить 
+свое приложение от подделки межсайтовых запросов. Возможно, вы хотите аутентифицировать запросы перед запуском приложения. 
+Middleware идеально подходит для этих сценариев.
 
-## What is middleware?
 
-Technically speaking, a middleware is a _callable_ that accepts three arguments:
+## Что такое middleware?
 
-1. `\Psr\Http\Message\ServerRequestInterface` - The PSR7 request object
-2. `\Psr\Http\Message\ResponseInterface` - The PSR7 response object
-3. `callable` - The next middleware callable
+Технически говоря, middleware является _вызываемым_ которое принимает три аргумента:
 
-It can do whatever is appropriate with these objects. The only hard requirement
-is that a middleware **MUST** return an instance of `\Psr\Http\Message\ResponseInterface`.
-Each middleware **SHOULD** invoke the next middleware and pass it Request and
-Response objects as arguments.
+1. `\Psr\Http\Message\ServerRequestInterface` - Объект запроса PSR7
+2. `\Psr\Http\Message\ResponseInterface` - Объект ответа PSR7
+3. `callable` - Следующее middleware (промежуточное программное обеспечение), подлежащее вызову
 
-## How does middleware work?
+Он может делать все, что подходит этим объектам. Единственное жесткое требование заключается в том, что промежуточное 
+ПО **ДОЛЖНО** возвращать экземпляр `\Psr\Http\Message\ResponseInterface`.
+Каждое промежуточное ПО **СЛЕДУЕТ** вызывать следующее промежуточное программное обеспечение и передавать его 
+объектам Request and Response в качестве аргументов.
 
-Different frameworks use middleware differently. Slim adds middleware as concentric
-layers surrounding your core application. Each new middleware layer surrounds
-any existing middleware layers. The concentric structure expands outwardly as
-additional middleware layers are added.
+## Как работает промежуточное программное обеспечение (middleware)?
 
-The last middleware layer added is the first to be executed.
+Различные структуры используют промежуточное ПО по-разному. Slim добавляет промежуточное ПО как концентрические слои, 
+окружающие ваше основное приложение. Каждый новый слой промежуточного программного обеспечения окружает любые 
+существующие уровни промежуточного программного обеспечения. Концентрическая структура расширяется наружу, когда 
+добавляются дополнительные слои промежуточного слоя.
 
-When you run the Slim application, the Request and Response objects traverse the
-middleware structure from the outside in. They first enter the outer-most middleware,
-then the next outer-most middleware, (and so on), until they ultimately arrive
-at the Slim application itself. After the Slim application dispatches the
-appropriate route, the resultant Response object exits the Slim application and
-traverses the middleware structure from the inside out. Ultimately, a final
-Response object exits the outer-most middleware, is serialized into a raw HTTP
-response, and is returned to the HTTP client. Here's a diagram that illustrates
-the middleware process flow:
+Последний добавленный слой промежуточного программного обеспечения является первым, который будет выполнен.
+
+Когда вы запускаете приложение Slim, объекты Request and Response пересекают структуру промежуточного программного 
+обеспечения извне. Сначала они вводят самое внешнее промежуточное ПО, а затем следующее внешнее самое промежуточное ПО 
+(и т. Д.), пока они в конечном итоге не прибудут к самому Slim-приложению. После того, как приложение Slim отправляет 
+соответствующий маршрут, результирующий объект Response выходит из приложения Slim и пересекает структуру 
+промежуточного программного обеспечения изнутри. В конечном итоге конечный объект Response выходит из самого 
+промежуточного ПО, сериализуется в исходный HTTP-ответ и возвращается клиенту HTTP. Вот диаграмма, иллюстрирующая 
+поток процесса промежуточного программного обеспечения:
 
 <div style="padding: 2em 0; text-align: center">
-    <img src="/docs/images/middleware.png" alt="Middleware architecture" style="max-width: 80%;"/>
+    <img src="/md/images/middleware.png" alt="Middleware architecture" style="max-width: 80%;"/>
 </div>
 
-## How do I write middleware?
+## Как написать промежуточное программное обеспечение?
 
-Middleware is a callable that accepts three arguments: a Request object, a Response object, and the next middleware. Each middleware **MUST** return an instance of `\Psr\Http\Message\ResponseInterface`.
+Middleware является вызываемым, которое принимает три аргумента: объект Request, объект Response и следующее middleware. 
+Каждое middleware **ДОЛЖНО** возвращать экземпляр  `\Psr\Http\Message\ResponseInterface`.
 
 ### Closure middleware example.
 
 This example middleware is a Closure.
 
-{% highlight php %}
+```php
 <?php
 /**
  * Example middleware closure
@@ -70,12 +69,13 @@ function ($request, $response, $next) {
 
     return $response;
 };
-{% endhighlight %}
+```
 
-### Invokable class middleware example
+### Пример вызываемого класса middleware
 
-This example middleware is an invokable class that implements the magic `__invoke()` method.
+Это пример middleware вызываемого классо который реализует магический метод `__invoke()`.
 
+```php
 {% highlight php %}
 <?php
 class ExampleMiddleware
@@ -98,23 +98,28 @@ class ExampleMiddleware
         return $response;
     }
 }
-{% endhighlight %}
+```
 
-To use this class as a middleware, you can use `->add( new ExampleMiddleware() );` function chain after the `$app`, `Route`,  or `group()`, which in the code below, any one of these, could represent $subject.
+Чтобы использовать этот класс в качестве middleware, вы можете использовать `->add( new ExampleMiddleware() );` 
+цепочку функций после `$app`, `Route`,  или `group()`, что в приведенном ниже коде, любой из них, может 
+представлять объект $ subject.
 
-{% highlight php %}
+```php
 $subject->add( new ExampleMiddleware() );
-{% endhighlight %}
+```
 
-## How do I add middleware?
+## Как добавить middleware?
 
-You may add middleware to a Slim application, to an individual Slim application route or to a route group. All scenarios accept the same middleware and implement the same middleware interface.
+Вы можете добавить промежуточное программное обеспечение в Slim-приложение, на индивидуальный маршрут Slim или в 
+группу маршрутов. Все сценарии принимают одно и то же middleware и реализуют один и тот же интерфейс 
+middleware.
 
 ### Application middleware
 
-Application middleware is invoked for every *incoming* HTTP request. Add application middleware with the Slim application instance's `add()` method. This example adds the Closure middleware example above:
+Для каждого *входящего* HTTP-запроса вызывается middleware. Добавьте промежуточное программное обеспечение 
+приложения с помощью  `add()` метода экземпляра Slim. В этом примере добавляется пример Closure middleware:
 
-{% highlight php %}
+```php
 <?php
 $app = new \Slim\App();
 
@@ -133,17 +138,21 @@ $app->get('/', function ($request, $response, $args) {
 });
 
 $app->run();
-{% endhighlight %}
+```
 
-This would output this HTTP response body:
+Это вывело бы это тело ответа HTTP:
 
     BEFORE Hello AFTER
 
 ### Route middleware
 
-Route middleware is invoked _only if_ its route matches the current HTTP request method and URI. Route middleware is specified immediately after you invoke any of the Slim application's routing methods (e.g., `get()` or `post()`). Each routing method returns an instance of `\Slim\Route`, and this class provides the same middleware interface as the Slim application instance. Add middleware to a Route with the Route instance's `add()` method. This example adds the Closure middleware example above:
+Route middleware вызывается _только в том случае, если_ его маршрут соответствует текущему методу HTTP-запроса и URI.
+Route middleware указывается сразу же после вызова любого из методов маршрутизации Slim-приложения 
+(например `get()` или `post()`). Каждый метод маршрутизации возвращает экземпляр `\Slim\Route`, 
+и этот класс предоставляет тот же интерфейс middleware что и экземпляр приложения Slim. Добавьте middleware в 
+маршрут с помощью `add()` метода экземпляра Route. В этом примере добавляется пример Closure middleware:
 
-{% highlight php %}
+```php
 <?php
 $app = new \Slim\App();
 
@@ -162,18 +171,22 @@ $app->get('/', function ($request, $response, $args) {
 })->add($mw);
 
 $app->run();
-{% endhighlight %}
+```
 
-This would output this HTTP response body:
+Это вывело бы это тело ответа HTTP:
 
     BEFORE Hello AFTER
 
-### Group Middleware
+### Групповое Middleware
 
-In addition to the overall application, and standard routes being able to accept middleware, the `group()` multi-route definition functionality, also allows individual routes internally. Route group middleware is invoked _only if_ its route matches one of the defined HTTP request methods and URIs from the group. To add middleware within the callback, and entire-group middleware to be set by chaining `add()` after the `group()` method.
+В дополнение к общему приложению и стандартным маршрутам, способным принимать middleware, `group()` 
+функция определения нескольких маршрутов, также позволяет индивидуальные маршруты внутри. 
+Маршрутное групповое  middleware вызывается _только в том случае, если_ его маршрут соответствует одному из 
+определенных методов HTTP-запроса и URI из группы. Чтобы добавить промежуточное программное обеспечение в обратном 
+вызове и промежуточное ПО всей группы, можно установить путем цепочки `add()` после `group()` метода.
 
-Sample Application, making use of callback middleware on a group of url-handlers
-{% highlight php %}
+Пример приложения, используя callback middleware в группе обработчиков URL-адресов
+```php
 <?php
 
 require_once __DIR__.'/vendor/autoload.php';
@@ -198,32 +211,32 @@ $app->group('/utils', function () use ($app) {
 
     return $response;
 });
-{% endhighlight %}
+```
 
-When calling the `/utils/date` method, this would output a string similar to the below
+При вызове  `/utils/date` метода будет выводиться строка, подобная приведенной ниже
 
     It is now 2015-07-06 03:11:01. Enjoy!
 
-visiting `/utils/time` would output a string similar to the below
+посещение `/utils/time` будет выводить строку, подобную приведенной ниже
 
     It is now 1436148762. Enjoy!
 
-but visiting `/` *(domain-root)*, would be expected to generate the following output as no middleware has been assigned
+но посещение `/` *(domain-root)*, должно было бы генерировать следующий результат, поскольку не было назначено  middleware 
 
     Hello World
 
-### Passing variables from middleware
-The easiest way to pass attributes from middleware is to use the request's
-attributes.
+### Передача переменных из middleware
 
-Setting the variable in the middleware:
+Самый простой способ передать атрибуты из промежуточного программного обеспечения - использовать атрибуты запроса.
 
-{% highlight php %}
+Установка переменной в middleware:
+
+```php
 $request = $request->withAttribute('foo', 'bar');
-{% endhighlight %}
+```
 
-Getting the variable in the route callback:
+Получение переменной в обратном вызове маршрута:
 
-{% highlight php %}
+```php
 $foo = $request->getAttribute('foo');
-{% endhighlight %}
+```
