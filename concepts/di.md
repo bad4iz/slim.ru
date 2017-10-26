@@ -1,37 +1,38 @@
 ---
-title: Dependency Container
+title: Контейнер зависимости - Dependency Container
 ---
 
-Slim uses a dependency container to prepare, manage, and inject application
-dependencies. Slim supports containers that implement [PSR-11](http://www.php-fig.org/psr/psr-11/) or the [Container-Interop](https://github.com/container-interop/container-interop) interface. You can use Slim's built-in container (based on [Pimple](http://pimple.sensiolabs.org/))
-or third-party containers like [Acclimate](https://github.com/jeremeamia/acclimate-container)
-or [PHP-DI](http://php-di.org/doc/frameworks/slim.html).
+Slim использует контейнер зависимостей для подготовки, управления и внедрения зависимостей приложений. 
+Slim поддерживает контейнеры, реализующие [PSR-11](http://www.php-fig.org/psr/psr-11/) или интерфейс 
+[Container-Interop](https://github.com/container-interop/container-interop)  Вы можете использовать встроенный 
+контейнер Slim (на основе [Pimple](http://pimple.sensiolabs.org/))
+или сторонние контейнеры, такие как [Acclimate](https://github.com/jeremeamia/acclimate-container)
+или [PHP-DI](http://php-di.org/doc/frameworks/slim.html).
 
-## How to use the container
+## Как использовать контейнер
 
-You don't _have_ to provide a dependency container. If you do, however, you must
-inject the container instance into the Slim application's constructor.
+Вам не _нужно_ предоставлять контейнер зависимостей. Однако, если вы это сделаете, вы должны вставить 
+экземпляр контейнера в конструктор Slim-приложения.
 
-{% highlight php %}
+```php
 $container = new \Slim\Container;
 $app = new \Slim\App($container);
-{% endhighlight %}
+```
 
-Add a service to Slim container:
+Добавьте сервис в контейнер Slim:
 
-{% highlight php %}
+```php
 $container = $app->getContainer();
 $container['myService'] = function ($container) {
     $myService = new MyService();
     return $myService;
 };
-{% endhighlight %}
+```
 
-You can fetch services from your container explicitly or implicitly.
-You can fetch an explicit reference to the container instance from inside a Slim
-application route like this:
+Вы можете явно или неявно получать службы из своего контейнера. Вы можете получить 
+явную ссылку на экземпляр контейнера из внутреннего маршрута приложения Slim следующим образом:
 
-{% highlight php %}
+```php
 /**
  * Example GET route
  *
@@ -46,11 +47,11 @@ $app->get('/foo', function ($req, $res, $args) {
 
     return $res;
 });
-{% endhighlight %}
+```
 
-You can implicitly fetch services from the container like this:
+Вы можете неявно получать службы из контейнера следующим образом:
 
-{% highlight php %}
+```php
 /**
  * Example GET route
  *
@@ -65,11 +66,11 @@ $app->get('/foo', function ($req, $res, $args) {
 
     return $res;
 });
-{% endhighlight %}
+```
 
-To test if a service exists in the container before using it, use the `has()` method, like this:
+Чтобы проверить, существует ли служба в контейнере перед ее использованием, используйте этот `has()` метод, например:
 
-{% highlight php %}
+```php
 /**
  * Example GET route
  *
@@ -86,18 +87,20 @@ $app->get('/foo', function ($req, $res, $args) {
 
     return $res;
 });
-{% endhighlight %}
+```
 
 
-Slim uses `__get()` and `__isset()` magic methods that defer to the application's
-container for all properties that do not already exist on the application instance.
+Slim использует `__get()` и `__isset()` магические методы, которые переносят в контейнер 
+приложения все свойства, которые еще не существуют в экземпляре приложения.
 
-## Required services
+## Необходимые услуги
 
-Your container MUST implement these required services. If you use Slim's built-in container, these are provided for you. If you choose a third-party container, you must define these required services on your own.
+Ваш контейнер ДОЛЖЕН реализовать эти необходимые услуги. Если вы используете встроенный контейнер Slim, 
+они предоставляются для вас. Если вы выберете сторонний контейнер, вы должны определить эти необходимые 
+службы самостоятельно.
 
-settings
-:   Associative array of application settings, including keys:
+настройки
+:   Ассоциативный массив параметров приложения, включая ключи:
     
     * `httpVersion`
     * `responseChunkSize`
@@ -107,47 +110,53 @@ settings
     * `addContentLengthHeader`.
     * `routerCacheFile`.
 
-environment
-:   Instance of `\Slim\Interfaces\Http\EnvironmentInterface`.
+Окружающая среда    
+:   Экземпляр `\Slim\Interfaces\Http\EnvironmentInterface`.
 
-request
-:   Instance of `\Psr\Http\Message\ServerRequestInterface`.
+запрос    
+:   Экземпляр `\Psr\Http\Message\ServerRequestInterface`.
 
-response
-:   Instance of `\Psr\Http\Message\ResponseInterface`.
+ответ    
+:   Экземпляр `\Psr\Http\Message\ResponseInterface`.  
 
-router
-:   Instance of `\Slim\Interfaces\RouterInterface`.
+
+маршрутизатор
+
+:   Экземпляр `\Slim\Interfaces\RouterInterface`.
 
 foundHandler
-:   Instance of `\Slim\Interfaces\InvocationStrategyInterface`.
+:   Экземпляр `\Slim\Interfaces\InvocationStrategyInterface`.
 
 phpErrorHandler
-:   Callable invoked if a PHP 7 Error is thrown. The callable **MUST** return an instance of `\Psr\Http\Message\ResponseInterface` and accept three arguments:
+:   Вызывается вызываемая, если возникает ошибка PHP 7. Вызываемый **ДОЛЖЕН** возвращать экземпляр  
+`\Psr\Http\Message\ResponseInterface` и принимать три аргумента:
 
 1. `\Psr\Http\Message\ServerRequestInterface`
 2. `\Psr\Http\Message\ResponseInterface`
 3. `\Error`
 
 errorHandler
-:   Callable invoked if an Exception is thrown. The callable **MUST** return an instance of `\Psr\Http\Message\ResponseInterface` and accept three arguments:
+:   Вызывается вызываемая, если вызывается исключение. Вызываемый **ДОЛЖЕН** возвращать экземпляр  
+`\Psr\Http\Message\ResponseInterface` и принимать три аргумента:
 
 1. `\Psr\Http\Message\ServerRequestInterface`
 2. `\Psr\Http\Message\ResponseInterface`
 3. `\Exception`
 
 notFoundHandler
-:   Callable invoked if the current HTTP request URI does not match an application route. The callable **MUST** return an instance of `\Psr\Http\Message\ResponseInterface` and accept two arguments:
+:   Вызывается вызываемая, если текущий URI-запрос HTTP не соответствует маршруту приложения. Вызываемый 
+**ДОЛЖЕН** возвращать экземпляр `\Psr\Http\Message\ResponseInterface` и принимать два аргумента:
 
 1. `\Psr\Http\Message\ServerRequestInterface`
 2. `\Psr\Http\Message\ResponseInterface`
 
 notAllowedHandler
-:   Callable invoked if an application route matches the current HTTP request path but not its method. The callable **MUST** return an instance of `\Psr\Http\Message\ResponseInterface` and accept three arguments:
+:   CВызываемый вызов, если маршрут приложения соответствует текущему пути HTTP-запроса, но не его методу. Вызываемый  
+**ДОЛЖЕН** возвращать экземпляр `\Psr\Http\Message\ResponseInterface` and accept three arguments:
 
 1. `\Psr\Http\Message\ServerRequestInterface`
 2. `\Psr\Http\Message\ResponseInterface`
 3. Array of allowed HTTP methods
 
 callableResolver
-:   Instance of `\Slim\Interfaces\CallableResolverInterface`.
+:   Экземпляр `\Slim\Interfaces\CallableResolverInterface`.
