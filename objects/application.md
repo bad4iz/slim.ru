@@ -1,10 +1,11 @@
 ---
-title: Application
+title: Приложение
 ---
 
-The Application, (or `Slim\App`) is the entry point to your Slim application and is used to register the routes that link to your callbacks or controllers.
+Приложение, (или `Slim\App`) является точкой входа в ваше Slim-приложение и используется для 
+регистрации маршрутов, которые ссылаются на ваши обратные вызовы или контроллеры.
 
-{% highlight php %}
+```php
 // instantiate the App object
 $app = new \Slim\App();
 
@@ -15,20 +16,20 @@ $app->get('/', function ($request, $response, $args) {
 
 // Run application
 $app->run();
-{% endhighlight %}
+```
 
-## Application Configuration
+## Конфигурация приложения
 
-The Application accepts just one argument. This can be either a [Container](/docs/concepts/di.html) instance or
-an array to configure the default container that is created automatically.
+Приложение принимает только один аргумент. Это может быть либо экземпляр [контейнера](/docs/concepts/di.html) 
+либо массив для настройки контейнера по умолчанию, который создается автоматически.
 
-There are also a number of settings that are used by Slim. These are stored in the `settings`
-configuration key. You can also add your application-specific settings.
+Также есть ряд настроек, которые используются Slim. Они сохраняются в `settings`
+ключе конфигурации. Вы также можете добавить свои настройки для конкретного приложения.
 
-For example, we can set the Slim setting `displayErrorDetails` to true and also configure
-Monolog like this:
+Например, мы можем установить для параметра Slim значение `displayErrorDetails` true, а также настроить 
+Monolog следующим образом:
 
-{% highlight php %}
+```php
 $config = [
     'settings' => [
         'displayErrorDetails' => true,
@@ -41,32 +42,33 @@ $config = [
     ],
 ];
 $app = new \Slim\App($config);
-{% endhighlight %}
+```
 
 
-### Retrieving Settings
+### Получение настроек
 
-As the settings are stored in the DI container so you can access them via the `settings` key in container factories. For example:
+Поскольку настройки хранятся в контейнере DI, вы можете получить к ним доступ через `settings` ключ в 
+контейнерах. Например:
 
-{% highlight php %}
+```php
 $loggerSettings = $container->get('settings')['logger'];
-{% endhighlight %}
+```
 
-You can also access them in route callables via `$this`:
+Вы также можете получить к ним доступ в маршрутных вызовах через `$this`:
 
-{% highlight php %}
+```php
 $app->get('/', function ($request, $response, $args) {
     $loggerSettings = $this->get('settings')['logger'];
     // ...
 });
-{% endhighlight %}
+```
 
-### Updating Settings
+### Обновление настроек
 
-If you need to add or update settings stored in the DI container *after* the container is initialized,
-you can use the `replace` method on the settings container. For example:
+Если вам нужно добавить или обновить настройки, сохраненные в контейнере DI *после* инициализации 
+контейнера, вы можете использовать этот `replace` метод в контейнере настроек. Например:
 
-{% highlight php %}
+```php
 $settings = $container->get('settings');
 $settings->replace([
         'displayErrorDetails' => true,
@@ -74,43 +76,40 @@ $settings->replace([
         'debug' => true
     ]);
 ]);
-{% endhighlight %}
+```
 
-## Slim Default Settings
+## Slim настройки по умолчанию
 
-Slim has the following default settings that you can override:
+Slim имеет следующие настройки по умолчанию, которые вы можете переопределить:
 
 <dl>
-<dt><code>httpVersion</code></dt>
-    <dd>The protocol version used by the <a href="/docs/objects/response.html">Response</a>
+<dt>httpVersion</dt>
+    <dd>Версия протокола, используемая объектом <a href="/docs/objects/response.html">Response</a>
         object.
-        <br>(Default: <code>'1.1'</code>)</dd>
-<dt><code>responseChunkSize</code></dt>
-    <dd>Size of each chunk read from the Response body when sending to the
-        browser.
-        <br>(Default: <code>4096</code>)</dd>
-<dt><code>outputBuffering</code></dt>
-    <dd>If <code>false</code>, then no output buffering is enabled. If <code>'append'</code>
-        or <code>'prepend'</code>, then any <code>echo</code> or <code>print</code>
-        statements are captured and are either appended or prepended to the Response
-        returned from the route callable.
-        <br>(Default: <code>'append'</code>)</dd>
-<dt><code>determineRouteBeforeAppMiddleware</code></dt>
-    <dd>When true, the route is calculated before any middleware is executed. This
-    means that you can inspect route parameters in middleware if you need to.
-    <br>(Default: <code>false</code>)</dd>
-<dt><code>displayErrorDetails</code></dt>
-    <dd>When true, additional information about exceptions are displayed by the
-    <a href="/docs/handlers/error.html">default error handler</a>.
-    <br>(Default: <code>false</code>)</dd>
-<dt><code>addContentLengthHeader</code></dt>
-    <dd>When true, Slim will add a <code>Content-Length</code> header to the response.
-    If you are using a runtime analytics tool, such as New Relic, then this should be disabled.
-    <br>(Default: <code>true</code>)</dd>
-<dt><code>routerCacheFile</code></dt>
-    <dd>Filename for caching the FastRoute routes. Must be set to to a valid filename within
-    a writeable directory. If the file does not exist, then it is created with the correct cache
-    information on first run.<br>
-    Set to <code>false</code> to disable the FastRoute cache system.
-    <br>(Default: <code>false</code>)</dd>
+        <br>(По умолчанию: `1.1`)</dd>
+<dt>>responseChunkSize</dt>
+    <dd>Размер каждого фрагмента, считываемого из тела ответа при отправке в браузер.
+        <br>(По умолчанию: 4096)</dd>
+<dt>>outputBuffering</dt>
+    <dd>Если false, то буферизация вывода не включена. Если `append` или `prepend`, то любые echoили print 
+    утверждения захватываются и добавляются или добавляются к Ответу, возвращенному из маршрута, который можно вызывать. 
+        <br>(По умолчанию: >`append`)</dd>
+<dt>>determineRouteBeforeAppMiddleware</dt>
+    <dd>Когда true, маршрут вычисляется до выполнения любого промежуточного программного обеспечения. 
+    Это означает, что вы можете проверить параметры маршрута в промежуточном программном обеспечении, если вам нужно. 
+    <br>(По умолчанию: `false`)</dd>
+<dt>>displayErrorDetails</dt>
+    <dd>Когда true, дополнительная информация об исключениях отображается 
+    [обработчиком ошибок по умолчанию](/docs/handlers/error).
+    <br>(По умолчанию: false)</dd>
+<dt>>addContentLengthHeader</dt>
+    <dd>Когда true, Slim добавит Content-Lengthзаголовок к ответу. Если вы используете средство 
+    аналитики времени исполнения, например New Relic, то это должно быть отключено. 
+    <br>(По умолчанию: true)</dd>
+<dt>>routerCacheFile</dt>
+    <dd>Имя файла для кэширования маршрутов FastRoute. Должно быть установлено допустимое имя файла в 
+    каталоге, пригодном для записи. Если файл не существует, он создается с правильной информацией о 
+    кеше при первом запуске. <br>
+    Установите для `false` отключения системы кэширования `FastRoute`. 
+    <br>(По умолчанию: false)</dd>
 </dl>
