@@ -1,21 +1,22 @@
 ---
-title: Request
+title: Запрос - Request
 ---
 
-Your Slim app's routes and middleware are given a PSR 7 request object that
-represents the current HTTP request received by your web server. The request
-object implements the [PSR 7 ServerRequestInterface][psr7] with which you can
-inspect and manipulate the HTTP request method, headers, and body.
+Вашим маршрутам Slone и промежуточному программному обеспечению предоставляется объект запроса PSR 7, 
+который представляет текущий HTTP-запрос, полученный вашим веб-сервером. Объект запроса реализует 
+[PSR 7 ServerRequestInterface][psr7] с помощью которого вы можете проверять и обрабатывать 
+метод HTTP-запросов, заголовки и тело.
+                                     
+
 
 [psr7]: http://www.php-fig.org/psr/psr-7/#3-2-1-psr-http-message-serverrequestinterface
 
-## How to get the Request object
+## Как получить объект Request
 
-The PSR 7 request object is injected into your Slim application routes as the
-first argument to the route callback like this:
+Объект запроса PSR 7 вводится в ваши маршруты Slim-приложений в качестве первого 
+аргумента для обратного вызова маршрута следующим образом:
 
-<figure>
-{% highlight php %}
+```php
 <?php
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -27,15 +28,16 @@ $app->get('/foo', function (ServerRequestInterface $request, ResponseInterface $
     return $response;
 });
 $app->run();
-{% endhighlight %}
-<figcaption>Figure 1: Inject PSR 7 request into application route callback.</figcaption>
-</figure>
+```
 
-The PSR 7 request object is injected into your Slim application _middleware_
-as the first argument of the middleware callable like this:
+<figcaption>Figure 1: Запрос Inject PSR 7 в обратный вызов маршрута приложения.</figcaption>
 
-<figure>
-{% highlight php %}
+
+Объект запроса PSR 7 вводится в ваше _middleware_ Slim-приложения в качестве первого 
+аргумента промежуточного программного обеспечения, вызываемого следующим образом:
+
+
+```php
 <?php
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -48,13 +50,12 @@ $app->add(function (ServerRequestInterface $request, ResponseInterface $response
 });
 // Define app routes...
 $app->run();
-{% endhighlight %}
-<figcaption>Figure 2: Inject PSR 7 request into application middleware.</figcaption>
-</figure>
+```
+<figcaption>Figure 2: Запрос Inject PSR 7 в промежуточное программное обеспечение приложения.</figcaption>
 
-## The Request Method
+## Метод запроса
 
-Every HTTP request has a method that is typically one of:
+Каждый HTTP-запрос имеет метод, который обычно является одним из следующих:
 
 * GET
 * POST
@@ -64,8 +65,7 @@ Every HTTP request has a method that is typically one of:
 * PATCH
 * OPTIONS
 
-You can inspect the HTTP request's method with the Request object method
-appropriately named `getMethod()`.
+Вы можете проверить метод HTTP-запроса с соответствующим методом имени объекта Request  `getMethod()`.
 
 {% highlight php %}
 $method = $request->getMethod();
