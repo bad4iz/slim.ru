@@ -199,10 +199,9 @@ $headerValueString = $request->getHeaderLine('Accept');
 
 ### Обнаружение заголовка
 
-```php
 Вы можете проверить наличие заголовка с помощью `hasHeader($name)`метода объекта PSR 7 Request .
 
-{% highlight php %}
+```php
 if ($request->hasHeader('Accept')) {
     // Do something
 }
