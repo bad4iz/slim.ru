@@ -53,6 +53,10 @@ $app->run();
 ```
 <figcaption>Figure 2: Запрос Inject PSR 7 в промежуточное программное обеспечение приложения.</figcaption>
 
+
+<div id='the-request-method'>
+</div>
+
 ## Метод запроса
 
 Каждый HTTP-запрос имеет метод, который обычно является одним из следующих:
@@ -159,6 +163,9 @@ URI объекта запроса PSR 7 сам по себе является о
     метода объекта Uri . Это будет пустая строка, если приложение Slim установлено в самый верхний каталог корневого каталога документа.
 </div>
 
+<div id='the-request-headers'>
+</div>
+
 ## Заголовки запросов
 
 Каждый HTTP-запрос имеет заголовки. Это метаданные, которые описывают HTTP-запрос, но не отображаются в теле запроса. Объект запроса PSR 7 Slim предоставляет несколько методов для проверки своих заголовков.
@@ -210,6 +217,9 @@ if ($request->hasHeader('Accept')) {
 <figcaption>Figure 8: Обнаружение присутствия определенного заголовка HTTP-запроса.</figcaption>
 </figure>
 
+<div id='the-request-body'>
+</div>
+
 ## Тело запроса
 
 Каждый запрос HTTP имеет тело. Если вы создаете приложение Slim, которое использует данные JSON или XML, вы можете использовать
@@ -258,6 +268,9 @@ $body = $request->getBody();
 
 Чтобы обеспечить репарацию тела, `reparseBody` можно использовать метод объекта Request.
 
+<div id='uploaded-files'>
+</div>
+
 ## Загруженные файлы
 
 Загрузка файлов `$_FILES` доступна из `getUploadedFiles()` метода объекта Request . Это возвращает массив с именем `<input>` элемента.
@@ -280,6 +293,9 @@ $files = $request->getUploadedFiles();
 * `getClientMediaType()`
 
 См. [cookbook](/cookbook/uploading-files) о том, как загружать файлы с помощью формы POST.
+
+<div id='request-helpers'>
+</div>
 
 ## Запрос помощников - Request Helpers
 
@@ -356,7 +372,10 @@ $length = $request->getContentLength();
 $foo = $request->getServerParam('HTTP_NOT_EXIST', 'default_value_here');
 ```
 
-## Объект маршрута
+<div id='route-object'>
+</div>
+
+## Объект роутера
 
 Иногда в промежуточном программном обеспечении вам требуется параметр вашего маршрута.
 
@@ -371,7 +390,10 @@ $foo = $request->getServerParam('HTTP_NOT_EXIST', 'default_value_here');
     $courseId = $route->getArgument('id');
 ```
 
-## Парсеры типов media
+<div id='media-type-parsers'>
+</div>
+
+## Анализаторы типов мультимедиа
 
 Slim выглядит как тип медиа-запроса и, если он его распознает, будет анализировать его на структурированные данные, доступные через `$request->getParsedBody()`. Обычно это массив, но является объектом для типов media XML.
 
