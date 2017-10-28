@@ -67,13 +67,12 @@ $app->run();
 
 Вы можете проверить метод HTTP-запроса с соответствующим методом имени объекта Request  `getMethod()`.
 
-{% highlight php %}
-$method = $request->getMethod();
-{% endhighlight %}
+```php
+    $method = $request->getMethod();
+```
 
-Because this is a common task, Slim's
-built-in PSR 7 implementation also provides these proprietary methods that return
-`true` or `false`.
+Поскольку это обычная задача, встроенная реализация PSR 7 Slim также предоставляет эти запатентованные методы, которые возвращают
+`true` или `false`.
 
 * `$request->isGet()`
 * `$request->isPost()`
@@ -83,32 +82,28 @@ built-in PSR 7 implementation also provides these proprietary methods that retur
 * `$request->isPatch()`
 * `$request->isOptions()`
 
-It is possible to fake or _override_ the HTTP request method. This is
-useful if, for example, you need to mimic a `PUT` request using a traditional
-web browser that only supports `GET` or `POST` requests.
+Это возможно подменить или _переопределить_ метод HTTP запроса. Это полезно, если например, вам нужно подражать `PUT` запросу, используя традиционный веб-браузер, который поддерживает `GET` или `POST` запроса.
 
-There are two ways to override the HTTP request method. You can include a
-`_METHOD` parameter in a `POST` request's body. The HTTP request must use the
-`application/x-www-form-urlencoded` content type.
+Существует два способа переопределить метод HTTP-запроса. Вы можете включить 
+`_METHOD` параметр в `POST` тело запроса. HTTP-запрос должен использовать
+`application/x-www-form-urlencoded` тип содержимого.
 
-<figure>
-{% highlight text %}
+```php
 POST /path HTTP/1.1
 Host: example.com
 Content-type: application/x-www-form-urlencoded
 Content-length: 22
 
 data=value&_METHOD=PUT
-{% endhighlight %}
-<figcaption>Figure 3: Override HTTP method with _METHOD parameter.</figcaption>
+```
+<figure>
+<figcaption>Figure 3: Переопределить метод HTTP с параметром _METHOD.</figcaption>
 </figure>
 
-You can also override the HTTP request method with a custom
-`X-Http-Method-Override` HTTP request header. This works with any HTTP request
-content type.
+Вы также можете переопределить метод HTTP-запроса с помощью настраиваемого
+`X-Http-Method-Override` заголовка HTTP-запроса. Это работает с любым типом содержимого HTTP-запроса.
 
-<figure>
-{% highlight text %}
+```php
 POST /path HTTP/1.1
 Host: example.com
 Content-type: application/json
@@ -116,34 +111,32 @@ Content-length: 16
 X-Http-Method-Override: PUT
 
 {"data":"value"}
-{% endhighlight %}
-<figcaption>Figure 4: Override HTTP method with X-Http-Method-Override header.</figcaption>
+```
+<figure>
+<figcaption>Figure 4: Переопределить метод HTTP с заголовком X-Http-Method-Override.</figcaption>
 </figure>
 
-You can fetch the _original_ (non-overridden) HTTP method with the PSR 7 Request
-object's method named `getOriginalMethod()`.
+Вы можете получить _оригинальный_ (не переопределеный) HTTP метод с помощью метода объекта запроса PSR 7  `getOriginalMethod()`.
 
-## The Request URI
+## URI запроса
 
-Every HTTP request has a URI that identifies the requested application
-resource. The HTTP request URI has several parts:
+Каждый HTTP-запрос имеет URI, который идентифицирует запрашиваемый ресурс приложения. URI запроса HTTP имеет несколько частей:
 
-* Scheme (e.g. `http` or `https`)
-* Host (e.g. `example.com`)
-* Port (e.g. `80` or `443`)
-* Path (e.g. `/users/1`)
-* Query string (e.g. `sort=created&dir=asc`)
+* Схема (например. `http` or `https`)
+* Хост (например. `example.com`)
+* Порт (например. `80` or `443`)
+* Путь (например. `/users/1`)
+* Строка запроса (например. `sort=created&dir=asc`)
 
-You can fetch the PSR 7 Request object's [URI object][psr7_uri] with its `getUri()` method:
+Вы можете получить объект [URI объекта][psr7_uri]  запроса PSR 7 с помощью его `getUri()` метода:
 
 [psr7_uri]: http://www.php-fig.org/psr/psr-7/#3-5-psr-http-message-uriinterface
 
-{% highlight php %}
+```php
 $uri = $request->getUri();
-{% endhighlight %}
+```
 
-The PSR 7 Request object's URI is itself an object that provides the following
-methods to inspect the HTTP request's URL parts:
+URI объекта запроса PSR 7 сам по себе является объектом, который предоставляет следующие методы для проверки URL-адресов URL-адреса HTTP-запроса:
 
 * `getScheme()`
 * `getAuthority()`
@@ -152,118 +145,100 @@ methods to inspect the HTTP request's URL parts:
 * `getPort()`
 * `getPath()`
 * `getBasePath()`
-* `getQuery()` <small>(returns the full query string, e.g. `a=1&b=2`)</small>
+* `getQuery()` <small>(возвращает полную строку запроса, например `a=1&b=2`)</small>
 * `getFragment()`
 * `getBaseUrl()`
 
-You can get the query parameters as an associative array on the Request object using `getQueryParams()`.
+Вы можете получить параметры запроса как ассоциативный массив при использовании объекта Request `getQueryParams()`.
 
-You can also get a single query parameter value, with optional default value if the parameter is missing, using `getQueryParam($key, $default = null)`.
+Вы также можете получить одно значение параметра запроса, с необязательным значением по умолчанию, если параметр отсутствует, используя `getQueryParam($key, $default = null)`.
 
 <div class="alert alert-info">
-    <div><strong>Base Path</strong></div>
-    If your Slim application's front-controller lives in a physical subdirectory
-    beneath your document root directory, you can fetch the HTTP request's physical
-    base path (relative to the document root) with the Uri object's <code>getBasePath()</code>
-    method. This will be an empty string if the Slim application is installed
-    in the document root's top-most directory.
+    <div><strong>Базовый путь</strong></div>
+    Если ваш front-controller вашего Slim-приложения находится в физическом подкаталоге под корневым каталогом вашего документа, вы можете получить физический базовый путь HTTP-запроса (относительно корня документа) с помощью <code>getBasePath()</code>
+    метода объекта Uri . Это будет пустая строка, если приложение Slim установлено в самый верхний каталог корневого каталога документа.
 </div>
 
-## The Request Headers
+## Заголовки запросов
 
-Every HTTP request has headers. These are metadata that describe the HTTP
-request but are not visible in the request's body. Slim's PSR 7
-Request object provides several methods to inspect its headers.
+Каждый HTTP-запрос имеет заголовки. Это метаданные, которые описывают HTTP-запрос, но не отображаются в теле запроса. Объект запроса PSR 7 Slim предоставляет несколько методов для проверки своих заголовков.
 
-### Get All Headers
+### Получить все заголовки
 
-You can fetch all HTTP request headers as an associative array with the PSR 7
-Request object's `getHeaders()` method. The resultant associative array's keys
-are the header names and its values are themselves a numeric array of string
-values for their respective header name.
+Вы можете получить все заголовки HTTP-запросов в качестве ассоциативного массива с помощью `getHeaders()` метода объекта запроса PSR 7 . Результирующие ключи ассоциативного массива - это имена заголовков, и его значения сами представляют собой числовой массив строковых значений для их соответствующего заголовка.
 
-<figure>
-{% highlight php %}
+```php
 $headers = $request->getHeaders();
 foreach ($headers as $name => $values) {
     echo $name . ": " . implode(", ", $values);
 }
-{% endhighlight %}
-<figcaption>Figure 5: Fetch and iterate all HTTP request headers as an associative array.</figcaption>
+```
+<figure>
+<figcaption>Figure 5: Извлечение и повторение всех заголовков HTTP-запросов в качестве ассоциативного массива.</figcaption>
 </figure>
 
-### Get One Header
+### Получить один заголовок
 
-You can get a single header's value(s) with the PSR 7 Request object's `getHeader($name)` method. This returns an array of values for the given header name. Remember, _a single
-HTTP header may have more than one value!_
+Вы можете получить значения одного заголовка с помощью `getHeader($name)` метода объекта PSR 7 Request. Это возвращает массив значений для данного заголовка. Помните, _что один HTTP-заголовок может иметь более одного значения!_
 
-<figure>
-{% highlight php %}
+```php
 $headerValueArray = $request->getHeader('Accept');
-{% endhighlight %}
-<figcaption>Figure 6: Get values for a specific HTTP header.</figcaption>
+```
+<figure>
+<figcaption>Figure 6: Получить значения для определенного HTTP-заголовка.</figcaption>
 </figure>
 
-You may also fetch a comma-separated string with all values for a given header
-with the PSR 7 Request object's `getHeaderLine($name)` method. Unlike the
-`getHeader($name)` method, this method returns a comma-separated string.
+Вы также можете получить строку, разделенную запятыми, со всеми значениями для данного заголовка с помощью `getHeaderLine($name)` метода объекта запроса PSR 7 . В отличие от `getHeader($name)` метода, этот метод возвращает строку, разделенную запятыми.
 
-<figure>
-{% highlight php %}
+```php
 $headerValueString = $request->getHeaderLine('Accept');
-{% endhighlight %}
+```
+<figure>
 <figcaption>Figure 7: Get single header's values as comma-separated string.</figcaption>
 </figure>
 
-### Detect Header
+### Обнаружение заголовка
 
-You can test for the presence of a header with the PSR 7 Request object's
-`hasHeader($name)` method.
+```php
+Вы можете проверить наличие заголовка с помощью `hasHeader($name)`метода объекта PSR 7 Request .
 
-<figure>
 {% highlight php %}
 if ($request->hasHeader('Accept')) {
     // Do something
 }
-{% endhighlight %}
-<figcaption>Figure 8: Detect presence of a specific HTTP request header.</figcaption>
+```
+<figure>
+<figcaption>Figure 8: Обнаружение присутствия определенного заголовка HTTP-запроса.</figcaption>
 </figure>
 
-## The Request Body
+## Тело запроса
 
-Every HTTP request has a body. If you are building a Slim application that
-consumes JSON or XML data, you can use the PSR 7 Request object's
-`getParsedBody()` method to parse the HTTP request body into a native PHP format.
-Slim can parse JSON, XML, and URL-encoded data out of the box.
+Каждый запрос HTTP имеет тело. Если вы создаете приложение Slim, которое использует данные JSON или XML, вы можете использовать
+`getParsedBody()` метод объекта PSR 7 Request для анализа тела запроса HTTP в собственный PHP-формат. Slim может анализировать данные JSON, XML и URL-кодированные данные.
 
-<figure>
-{% highlight php %}
+```php 
 $parsedBody = $request->getParsedBody();
-{% endhighlight %}
-<figcaption>Figure 9: Parse HTTP request body into native PHP format</figcaption>
-</figure>
-
-* JSON requests are converted into associative arrays with `json_decode($input, true)`.
-* XML requests are converted into a `SimpleXMLElement` with `simplexml_load_string($input)`.
-* URL-encoded requests are converted into a PHP array with `parse_str($input)`.
-
-For URL-encoded requests, you can also get a single parameter value, with optional default value if the parameter is missing, using `getParsedBodyParam($key, $default = null)`.
-
-Technically speaking, Slim's PSR 7 Request object represents the HTTP request
-body as an instance of `\Psr\Http\Message\StreamInterface`. You can get
-the HTTP request body `StreamInterface` instance with the PSR 7 Request object's
-`getBody()` method. The `getBody()` method is preferable if the incoming HTTP
-request size is unknown or too large for available memory.
-
+```
 <figure>
-{% highlight php %}
-$body = $request->getBody();
-{% endhighlight %}
-<figcaption>Figure 10: Get HTTP request body</figcaption>
+<figcaption>Figure 9: Тело запроса HTTP-анализа в собственный PHP-формат</figcaption>
 </figure>
 
-The resultant `\Psr\Http\Message\StreamInterface` instance provides the following
-methods to read and iterate its underlying PHP `resource`.
+* Запросы JSON преобразуются в ассоциативные массивы с помощью `json_decode($input, true)`.
+* XML-запросы преобразуются в  `SimpleXMLElement` с `simplexml_load_string($input)`.
+* Запросы с URL-кодированием преобразуются в массив PHP с `parse_str($input)`.
+
+Для URL-кодированных запросов вы также можете получить одно значение параметра, с необязательным значением по умолчанию, если параметр отсутствует, используя `getParsedBodyParam($key, $default = null)`.
+
+Технически говоря, объект запроса PSR 7 Slim представляет собой тело запроса HTTP как экземпляр `\Psr\Http\Message\StreamInterface`. Вы можете получить `StreamInterface` экземпляр тела запроса HTTP с помощью `getBody()` метода объекта запроса PSR 7. `getBody()` Способ является предпочтительным , если размер входящего запроса HTTP , неизвестен или слишком большой для доступной памяти.
+
+```php
+$body = $request->getBody();
+```
+<figure>
+<figcaption>Figure 10: Получить тело запроса HTTP</figcaption>
+</figure>
+
+Получаемый `\Psr\Http\Message\StreamInterface` экземпляр предоставляет следующие методы для чтения и повторения его базового PHP `resource`.
 
 * `getSize()`
 * `tell()`
@@ -278,29 +253,25 @@ methods to read and iterate its underlying PHP `resource`.
 * `getContents()`
 * `getMetadata($key = null)`
 
-### Reparsing the body
+### Переопределение тела
 
-When calling `getParsedBody` on the Request object multiple times, the body is
-only parsed once, even if the Request body is modified in the meantime.
+При вызове `getParsedBody` объекта Request несколько раз тело обрабатывается только один раз, даже если тело запроса изменяется в то же время.
 
-To ensure the body is reparsed, the Request object's method `reparseBody` can be
-used.
+Чтобы обеспечить репарацию тела, `reparseBody` можно использовать метод объекта Request.
 
-## Uploaded Files
+## Загруженные файлы
 
-The file uploads in `$_FILES` are available from the Request object's
-`getUploadedFiles()` method. This returns an array keyed by the name of the
-`<input>` element.
+Загрузка файлов `$_FILES` доступна из `getUploadedFiles()` метода объекта Request . Это возвращает массив с именем `<input>` элемента.
 
-<figure>
-{% highlight php %}
+```php
 $files = $request->getUploadedFiles();
-{% endhighlight %}
-<figcaption>Figure 11: Get uploaded files</figcaption>
+```
+<figure>
+<figcaption>Figure 11: Загрузка файлов</figcaption>
 </figure>
 
-Each object in the `$files` array is a instance of
-`\Psr\Http\Message\UploadedFileInterface` and supports the following methods:
+Каждый объект в `$files` массиве является экземпляром
+`\Psr\Http\Message\UploadedFileInterface` и поддерживает следующие методы:
 
 * `getStream()`
 * `moveTo($targetPath)`
@@ -309,21 +280,17 @@ Each object in the `$files` array is a instance of
 * `getClientFilename()`
 * `getClientMediaType()`
 
-See the [cookbook](/docs/cookbook/uploading-files.html) on how to upload files using a POST form.
+См. [cookbook](/cookbook/uploading-files) о том, как загружать файлы с помощью формы POST.
 
-## Request Helpers
+## Запрос помощников - Request Helpers
 
-Slim's PSR 7 Request implementation provides these additional proprietary methods
-to help you further inspect the HTTP request.
+Реализация Slim's PSR 7 Request предоставляет эти дополнительные проприетарные методы, которые помогут вам дополнительно проверить HTTP-запрос.
 
-### Detect XHR requests
+### Обнаружение XHR запроса
 
-You can detect XHR requests with the Request object's `isXhr()` method. This
-method detects the presence of the `X-Requested-With` HTTP request header and
-ensures its value is `XMLHttpRequest`.
+Вы можете обнаружить запросы XHR с помощью `isXhr()` метода объекта Request. Этот метод обнаруживает наличие `X-Requested-With` заголовка HTTP-запроса и обеспечивает его значение `XMLHttpRequest`.
 
-<figure>
-{% highlight text %}
+```php
 POST /path HTTP/1.1
 Host: example.com
 Content-type: application/x-www-form-urlencoded
@@ -331,96 +298,97 @@ Content-length: 7
 X-Requested-With: XMLHttpRequest
 
 foo=bar
-{% endhighlight %}
-<figcaption>Figure 13: Example XHR request.</figcaption>
+```
+<figure>
+<figcaption>Figure 13: Пример запроса XHR.</figcaption>
 </figure>
 
-{% highlight php %}
+```php
 if ($request->isXhr()) {
     // Do something
 }
-{% endhighlight %}
+```
 
-### Content Type
+### Тип содержимого
 
-You can fetch the HTTP request content type with the Request object's `getContentType()` method. This returns the `Content-Type` header's full value as provided by the HTTP client.
+Вы можете получить тип содержимого HTTP-запроса с помощью `getContentType()`метода объекта Request . Это возвращает `Content-Type` полное значение заголовка, предоставленное клиентом HTTP.
 
-{% highlight php %}
+```php
 $contentType = $request->getContentType();
-{% endhighlight %}
+```
 
-### Media Type
+### Тип Media
 
-You may not want the complete `Content-Type` header. What if, instead, you only want the media type? You can fetch the HTTP request media type with the Request object's `getMediaType()` method.
+Возможно, вам не нужен полный `Content-Type` заголовок. Что, если вместо этого вам нужен только тип мультимедиа? Вы можете получить тип медиафайла HTTP-запроса с помощью `getMediaType()` метода объекта Request .
 
-{% highlight php %}
+```php
 $mediaType = $request->getMediaType();
-{% endhighlight %}
+```
 
-You can fetch the appended media type parameters as an associative array with the Request object's `getMediaTypeParams()` method.
+Вы можете получить добавленные параметры типа носителя в качестве ассоциативного массива с помощью `getMediaTypeParams()` метода объекта Request.
 
-{% highlight php %}
+```php
 $mediaParams = $request->getMediaTypeParams();
-{% endhighlight %}
+```
 
-### Character Set
+### Набор символов
 
-One of the most common media type parameters is the HTTP request character set. The Request object provides a dedicated method to retrieve this media type parameter.
+Одним из наиболее распространенных параметров типа мультимедиа является набор символов HTTP-запроса. Объект Request предоставляет выделенный метод для получения этого параметра типа носителя.
 
-{% highlight php %}
+```php
 $charset = $request->getContentCharset();
-{% endhighlight %}
+```
 
-### Content Length
+### Длина содержимого
 
-You can fetch the HTTP request content length with the Request object's `getContentLength()` method.
+Вы можете получить длину содержимого запроса HTTP с помощью `getContentLength()` метода объекта Request.
 
-{% highlight php %}
+```php
 $length = $request->getContentLength();
-{% endhighlight %}
+```
 
-### Request Parameter
+### Параметр запроса
 
-To fetch single request parameter value, use methods: `getParam()`, `getQueryParam()`, `getParsedBodyParam()`, `getCookieParam()`, `getServerParam()`, counterparts of PSR-7's plural form get*Params() methods.
+Для извлечения одного значения параметра запроса, использовать методы: `getParam()`, `getQueryParam()`, `getParsedBodyParam()`, `getCookieParam()`, `getServerParam()`, аналоги формы множественного числа PSR-7 get*Params() методы.
 
-For example, to get a single Server Parameter:
+Например, чтобы получить один параметр сервера:
 
-{% highlight php %}
+```php
 $foo = $request->getServerParam('HTTP_NOT_EXIST', 'default_value_here');
-{% endhighlight %}
+```
 
-## Route Object
+## Объект маршрута
 
-Sometimes in middleware you require the parameter of your route.
+Иногда в промежуточном программном обеспечении вам требуется параметр вашего маршрута.
 
-In this example we are checking first that the user is logged in and second that the user has permissions to view the particular video they are attempting to view.
+В этом примере мы сначала проверяем, что пользователь вошел в систему, а во-вторых, у пользователя есть разрешения на просмотр конкретного видео, которое они пытаются просмотреть.
 
-{% highlight php %}
+```php
     $app->get('/course/{id}', Video::class.":watch")->add(Permission::class)->add(Auth::class);
 
     //.. In the Permission Class's Invoke
     /** @var $route \Slim\Route */
     $route = $request->getAttribute('route');
     $courseId = $route->getArgument('id');
-{% endhighlight %}
+```
 
-## Media Type Parsers
+## Парсеры типов media
 
-Slim looks as the request's media type and if it recognises it, will parse it into structured data available via ``$request->getParsedBody()``. This is usually an array, but is an object for XML media types.
+Slim выглядит как тип медиа-запроса и, если он его распознает, будет анализировать его на структурированные данные, доступные через `$request->getParsedBody()`. Обычно это массив, но является объектом для типов media XML.
 
-The following media types are recognised and parsed:
+Следующие типы носителей распознаются и анализируются:
 
 * application/x-www-form-urlencoded
 * application/json
 * application/xml & text/xml
 
-If you want Slim to parse content from a different media type then you need to either parse the raw body yourself or register a new media parser. Media parsers are simply callables that accept an ``$input`` string and return a parsed object or array.
+Если вы хотите, чтобы Slim анализировал контент с другого media type, вам нужно либо самостоятельно разобрать исходный media, либо зарегистрировать новый парсер. Парсеры media - это просто вызывающие элементы, которые принимают `$input` строку и возвращают анализируемый объект или массив.
 
-Register a new media parser in an application or route middleware. Note that you must register the parser before you try to access the parsed body for the first time.
+Зарегистрируйте новый медиасервер в промежуточном программном приложении или маршруте. Обратите внимание, что вы должны зарегистрировать парсер, прежде чем пытаться получить доступ к анализируемому телу в первый раз.
 
-For example, to automatically parse JSON that is sent with a ``text/javascript`` content type, you register a media type parser in middleware like this:
+Например, для автоматического разбора JSON, который отправляется с `text/javascript` типом контента, вы регистрируете парсер типа медиа в промежуточном программном обеспечении следующим образом:
 
-{% highlight php %}
+```php
 // Add the middleware
 $app->add(function ($request, $response, $next) {
     // add media parser
@@ -433,30 +401,30 @@ $app->add(function ($request, $response, $next) {
 
     return $next($request, $response);
 });
-{% endhighlight %}
+```
 
-## Attributes
+## Атрибуты
 
-With PSR-7 it is possible to inject objects/values into the request object for further processing. In your applications middleware often need to pass along information to your route closure and the way to do is it is to add it to the request object via an attribute.
+С помощью PSR-7 можно добавлять объекты / значения в объект запроса для дальнейшей обработки. В ваших приложениях промежуточное программное обеспечение часто должно передавать информацию до вашего закрытия маршрута и способ сделать это заключается в том, чтобы добавить его в объект запроса через атрибут.
 
-Example, Setting a value on your request object.
+Пример. Установка значения для объекта запроса.
 
-{% highlight php %}
+```php
 $app->add(function ($request, $response, $next) {
     $request = $request->withAttribute('session', $_SESSION); //add the session storage to your request as [READ-ONLY]
     return $next($request, $response);
 });
-{% endhighlight %}
+```
 
 
-Example, how to retrieve the value.
+Пример, как получить значение.
 
-{% highlight php %}
+```php
 $app->get('/test', function ($request, $response, $args) {
     $session = $request->getAttribute('session'); //get the session from the request
 
     return $response->write('Yay, ' . $session['name']);
 });
-{% endhighlight %}
+```
 
-The request object also has bulk functions as well. `$request->getAttributes()` and `$request->withAttributes()`
+Объект запроса также имеет объемные функции. `$request->getAttributes()` и `$request->withAttributes()`
