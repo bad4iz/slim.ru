@@ -51,6 +51,8 @@ $app->run();
 <figcaption>Figure 2: Ввести ответ PSR 7 в прикладное промежуточное ПО.</figcaption>
 </figure>
 
+<div id="the-response-status"></div>
+
 ## Статус ответа
 
 Каждый ответ HTTP имеет числовой [status code][statuscodes]. Код состояния определяет _тип_ ответа HTTP, 
@@ -74,6 +76,8 @@ $newResponse = $response->withStatus(302);
 <figure>
 <figcaption>Figure 4: Создать ответ с новым кодом состояния.</figcaption>
 </figure>
+
+<div id="the-response-headers"></div>
 
 ## Заголовки ответов
 
@@ -194,6 +198,8 @@ $newResponse = $oldResponse->withoutHeader('Allow');
     </div>
 </div>
 
+<div id="the-response-body"></div>
+
 ## Тело ответа
 
 Ответ HTTP обычно имеет тело. Slim предоставляет объект PSR 7 Response, с 
@@ -258,6 +264,9 @@ $newResponse = $oldResponse->withBody($newStream);
         Объект Response неизменен. Этот метод возвращает <em>копию</em> объекта Response, который содержит новый элемент.
     </div>
 </div>
+
+
+<div id="returning-json"></div>
 
 ## Возвращение JSON
 
