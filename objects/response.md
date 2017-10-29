@@ -1,21 +1,19 @@
 ---
-title: Response
+title: Ответ - Response
 ---
 
-Your Slim app's routes and middleware are given a PSR 7 response object that
-represents the current HTTP response to be returned to the client. The response
-object implements the [PSR 7 ResponseInterface][psr7] with which you can
-inspect and manipulate the HTTP response status, headers, and body.
+Вашим маршрутам Slone и промежуточному программному обеспечению предоставляется объект ответа PSR 7, 
+который представляет текущий HTTP-ответ, который должен быть возвращен клиенту. Объект ответа реализует 
+[PSR 7 ResponseInterface][psr7], с помощью которого вы можете проверять и обрабатывать статус ответа HTTP, заголовки и тело.
 
 [psr7]: http://www.php-fig.org/psr/psr-7/#3-2-1-psr-http-message-responseinterface
 
-## How to get the Response object
+## Как получить объект Response
 
-The PSR 7 response object is injected into your Slim application routes as the
-second argument to the route callback like this:
+Объект ответа PSR 7 вводится в ваши маршруты Slim-приложений в качестве второго аргумента для обратного вызова 
+маршрута следующим образом:
 
-<figure>
-{% highlight php %}
+```php
 <?php
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -27,15 +25,15 @@ $app->get('/foo', function (ServerRequestInterface $request, ResponseInterface $
     return $response;
 });
 $app->run();
-{% endhighlight %}
-<figcaption>Figure 1: Inject PSR 7 response into application route callback.</figcaption>
+```
+<figure>
+<figcaption>Figure 1:  Ввести ответ PSR 7 в обратный вызов маршрута приложения.</figcaption>
 </figure>
 
-The PSR 7 response object is injected into your Slim application _middleware_
-as the second argument of the middleware callable like this:
+Объект ответа PSR 7 вводится в ваше _middleware_
+Slim-приложения в качестве второго аргумента middleware, вызываемого следующим образом:
 
-<figure>
-{% highlight php %}
+```php
 <?php
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -48,179 +46,174 @@ $app->add(function (ServerRequestInterface $request, ResponseInterface $response
 });
 // Define app routes...
 $app->run();
-{% endhighlight %}
-<figcaption>Figure 2: Inject PSR 7 response into application middleware.</figcaption>
+```
+<figure>
+<figcaption>Figure 2: Ввести ответ PSR 7 в прикладное промежуточное ПО.</figcaption>
 </figure>
 
-## The Response Status
+## Статус ответа
 
-Every HTTP response has a numeric [status code][statuscodes]. The status code
-identifies the _type_ of HTTP response to be returned to the client. The PSR 7
-Response object's default status code is `200` (OK). You can get the PSR 7
-Response object's status code with the `getStatusCode()` method like this.
+Каждый ответ HTTP имеет числовой [status code][statuscodes]. Код состояния определяет _тип_ ответа HTTP, 
+который должен быть возвращен клиенту. Код состояния объекта PSR 7 по умолчанию `200(OK)`. 
+Вы можете получить код состояния объекта PSR 7 с помощью `getStatusCode()` метода, подобного этому.
 
 [statuscodes]: http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
 
-<figure>
-{% highlight php %}
+```php
 $status = $response->getStatusCode();
-{% endhighlight %}
-<figcaption>Figure 3: Get response status code.</figcaption>
+```
+<figure>
+<figcaption>Figure 3: Получить код состояния ответа.</figcaption>
 </figure>
 
-You can copy a PSR 7 Response object and assign a new status code like this:
+Вы можете скопировать объект ответа PSR 7 и присвоить новый код состояния следующим образом:
 
-<figure>
-{% highlight php %}
+```php
 $newResponse = $response->withStatus(302);
-{% endhighlight %}
-<figcaption>Figure 4: Create response with new status code.</figcaption>
+```
+<figure>
+<figcaption>Figure 4: Создать ответ с новым кодом состояния.</figcaption>
 </figure>
 
-## The Response Headers
+## Заголовки ответов
 
-Every HTTP response has headers. These are metadata that describe the HTTP
-response but are not visible in the response's body. Slim's PSR 7
-Response object provides several methods to inspect and manipulate its headers.
+У каждого HTTP-ответа есть заголовки. Это метаданные, которые описывают HTTP-ответ, 
+но не отображаются в теле ответа. Объект Slim's PSR 7 Response предоставляет несколько методов 
+для проверки и управления его заголовками.
 
-### Get All Headers
+### Получить все заголовки
 
-You can fetch all HTTP response headers as an associative array with the PSR 7
-Response object's `getHeaders()` method. The resultant associative array's keys
-are the header names and its values are themselves a numeric array of string
-values for their respective header name.
+Вы можете получить все заголовки HTTP-ответа в качестве ассоциативного массива с помощью `getHeaders()` метода объекта 
+PSR 7 Response . Результирующие ключи ассоциативного массива - это имена заголовков, и его значения 
+сами представляют собой числовой массив строковых значений для их соответствующего заголовка.
 
-<figure>
-{% highlight php %}
+```php
 $headers = $response->getHeaders();
 foreach ($headers as $name => $values) {
     echo $name . ": " . implode(", ", $values);
 }
-{% endhighlight %}
-<figcaption>Figure 5: Fetch and iterate all HTTP response headers as an associative array.</figcaption>
+```
+<figure>
+<figcaption>Figure 5: Извлечение и повторение всех заголовков HTTP-ответов в качестве ассоциативного массива.</figcaption>
 </figure>
 
-### Get One Header
+### Получить один заголовок
 
-You can get a single header's value(s) with the PSR 7 Response object's
-`getHeader($name)` method. This returns an array of values for the given header
-name. Remember, _a single HTTP header may have more than one value!_
+Вы можете получить значения (ов) одного заголовка с помощью `getHeader($name)` метода объекта PSR 7 Response. 
+Это возвращает массив значений для данного заголовка. Помните, что _один HTTP-заголовок может иметь более одного 
+значения!_
 
-<figure>
-{% highlight php %}
+```php
 $headerValueArray = $response->getHeader('Vary');
-{% endhighlight %}
-<figcaption>Figure 6: Get values for a specific HTTP header.</figcaption>
+```
+<figure>
+<figcaption>Figure 6: Получить значения для определенного HTTP-заголовка.</figcaption>
 </figure>
 
-You may also fetch a comma-separated string with all values for a given header
-with the PSR 7 Response object's `getHeaderLine($name)` method. Unlike the
-`getHeader($name)` method, this method returns a comma-separated string.
 
-<figure>
-{% highlight php %}
+Вы также можете получить строку с разделителями-запятыми со всеми значениями для данного заголовка 
+с помощью `getHeaderLine($name)` метода объекта PSR 7 Response . В отличие от `getHeader($name)` метода, 
+этот метод возвращает строку, разделенную запятыми.
+
+```php
 $headerValueString = $response->getHeaderLine('Vary');
-{% endhighlight %}
-<figcaption>Figure 7: Get single header's values as comma-separated string.</figcaption>
+```
+<figure>
+<figcaption>Figure 7:Получить значения одного заголовка в виде строки, разделенной запятыми.</figcaption>
 </figure>
 
-### Detect Header
+### Обнаружение заголовка
 
-You can test for the presence of a header with the PSR 7 Response object's
-`hasHeader($name)` method.
+Вы можете проверить наличие заголовка с помощью `hasHeader($name)` метода объекта PSR 7 Response .
 
-<figure>
-{% highlight php %}
+```php
 if ($response->hasHeader('Vary')) {
     // Do something
 }
-{% endhighlight %}
-<figcaption>Figure 8: Detect presence of a specific HTTP header.</figcaption>
+```
+<figure>
+<figcaption>Figure 8: Обнаружение присутствия определенного HTTP-заголовка.</figcaption>
 </figure>
 
-### Set Header
+### Установить заголовок
 
-You can set a header value with the PSR 7 Response object's
-`withHeader($name, $value)` method.
+Вы можете установить значение заголовка с помощью `withHeader($name, $value)` метода объекта PSR 7 Response.
 
-<figure>
-{% highlight php %}
+```php
 $newResponse = $oldResponse->withHeader('Content-type', 'application/json');
-{% endhighlight %}
-<figcaption>Figure 9: Set HTTP header</figcaption>
+```
+<figure>
+<figcaption>Figure 9:  Настройка заголовка HTTP</figcaption>
 </figure>
 
 <div class="alert alert-info">
-    <div><strong>Reminder</strong></div>
+    <div><strong>напоминание</strong></div>
     <div>
-        The Response object is immutable. This method returns a <em>copy</em> of
-        the Response object that has the new header value. <strong>This method is
-        destructive</strong>, and it <em>replaces</em> existing header
-        values already associated with the same header name.
+        Объект Response неизменен. Этот метод возвращает <em>копию</em> объекта Response с новым значением 
+        заголовка. <strong>Этот метод является разрушительным</strong> и <em>заменяет</em> существующие значения заголовков, 
+        уже связанные с тем же заголовком.
     </div>
 </div>
 
-### Append Header
+### Добавить заголовок
 
-You can append a header value with the PSR 7 Response object's
-`withAddedHeader($name, $value)` method.
+Вы можете добавить значение заголовка с помощью `withAddedHeader($name, $value)` метода объекта PSR 7 Response 
 
-<figure>
-{% highlight php %}
+```php
 $newResponse = $oldResponse->withAddedHeader('Allow', 'PUT');
-{% endhighlight %}
-<figcaption>Figure 10: Append HTTP header</figcaption>
+```
+<figure>
+<figcaption>Figure 10: Добавление заголовка HTTP</figcaption>
 </figure>
 
 <div class="alert alert-info">
-    <div><strong>Reminder</strong></div>
+    <div><strong>напоминание</strong></div>
     <div>
-        Unlike the <code>withHeader()</code> method, this method <em>appends</em>
-        the new value to the set of values that already exist for the same header
-        name. The Response object is immutable. This method returns a
-        <em>copy</em> of the Response object that has the appended header value.
+        В отличие от <code>withHeader()</code> метода, этот метод <em>добавляет</em> новое значение к набору 
+        значений, которые уже существуют для одного и того же заголовка. Объект Response 
+        неизменен. Этот метод возвращает <em>копию</em> объекта Response с добавленным значением заголовка.
     </div>
 </div>
 
-### Remove Header
+### Удалить заголовок
 
-You can remove a header with the Response object's `withoutHeader($name)` method.
+Вы можете удалить заголовок с помощью `withoutHeader($name)` метода объекта Response.
 
-<figure>
-{% highlight php %}
+```php
 $newResponse = $oldResponse->withoutHeader('Allow');
-{% endhighlight %}
-<figcaption>Figure 11: Remove HTTP header</figcaption>
+```
+<figure>
+<figcaption>Figure 11: Удалите HTTP-заголовок</figcaption>
 </figure>
 
 <div class="alert alert-info">
-    <div><strong>Reminder</strong></div>
+    <div><strong>напоминание</strong></div>
     <div>
-        The Response object is immutable. This method returns a <em>copy</em>
-        of the Response object that has the appended header value.
+        Объект Response неизменен. Этот метод возвращает <em>копию</em> объекта Response с 
+        добавленным значением заголовка.
     </div>
 </div>
 
-## The Response Body
+## Тело ответа
 
-An HTTP response typically has a body. Slim provides a PSR 7 Response object
-with which you can inspect and manipulate the eventual HTTP response's body.
+Ответ HTTP обычно имеет тело. Slim предоставляет объект PSR 7 Response, с 
+помощью которого вы можете проверять и обрабатывать тело ответа в конечном итоге.
 
-Just like the PSR 7 Request object, the PSR 7 Response object implements
-the body as an instance of `\Psr\Http\Message\StreamInterface`. You can get
-the HTTP response body `StreamInterface` instance with the PSR 7 Response
-object's `getBody()` method. The `getBody()` method is preferable if the
-outgoing HTTP response length is unknown or too large for available memory.
+Так же, как объект запроса PSR 7, объект ответа PSR 7 реализует тело как экземпляр 
+`\Psr\Http\Message\StreamInterface`. Вы можете получить `StreamInterface` экземпляр 
+тела ответа HTTP с помощью `getBody()` метода объекта PSR 7 Response. `getBody()` 
+Способ является предпочтительным , если исходящей длина ответа HTTP , неизвестна 
+или слишком большая для доступной памяти.
 
-<figure>
-{% highlight php %}
+```php
 $body = $response->getBody();
-{% endhighlight %}
-<figcaption>Figure 12: Get HTTP response body</figcaption>
+```
+<figure>
+<figcaption>Figure 12: Получить тело ответа HTTP</figcaption>
 </figure>
 
-The resultant `\Psr\Http\Message\StreamInterface` instance provides the following
-methods to read from, iterate, and write to its underlying PHP `resource`.
+Получаемый `\Psr\Http\Message\StreamInterface` экземпляр предоставляет следующие методы 
+для чтения, итерации и записи в базовый PHP `resource`.
 
 * `getSize()`
 * `tell()`
@@ -235,79 +228,94 @@ methods to read from, iterate, and write to its underlying PHP `resource`.
 * `getContents()`
 * `getMetadata($key = null)`
 
-Most often, you'll need to write to the PSR 7 Response object. You can write
-content to the `StreamInterface` instance with its `write()` method like this:
+Чаще всего вам нужно будет записать объект PSR 7 Response. Вы можете записать 
+содержимое в `StreamInterface` экземпляр с помощью его `write()` метода следующим образом:
 
-<figure>
-{% highlight php %}
+```php
 $body = $response->getBody();
 $body->write('Hello');
-{% endhighlight %}
-<figcaption>Figure 13: Write content to the HTTP response body</figcaption>
+```
+<figure>
+<figcaption>Figure 13:  Запись содержимого в тело ответа HTTP</figcaption>
 </figure>
 
-You can also _replace_ the PSR 7 Response object's body with an entirely new
-`StreamInterface` instance. This is particularly useful when you want to pipe
-content from a remote destination (e.g. the filesystem or a remote API) into
-the HTTP response. You can replace the PSR 7 Response object's body with
-its `withBody(StreamInterface $body)` method. Its argument **MUST** be an
-instance of `\Psr\Http\Message\StreamInterface`.
+Вы также можете _заменить_ тело объекта PSR 7 Response совершенно новым `StreamInterface` экземпляром. 
+Это особенно полезно, когда вы хотите передать контент из удаленного адресата (например, файловой 
+системы или удаленного API) в ответ HTTP. Вы можете заменить тело объекта PSR 7 Response своим 
+`withBody(StreamInterface $body)` методом. Его аргумент **ДОЛЖЕН** быть примером `\Psr\Http\Message\StreamInterface`.
 
-<figure>
-{% highlight php %}
+```php
 $newStream = new \GuzzleHttp\Psr7\LazyOpenStream('/path/to/file', 'r');
 $newResponse = $oldResponse->withBody($newStream);
-{% endhighlight %}
-<figcaption>Figure 14: Replace the HTTP response body</figcaption>
+```
+<figure>
+<figcaption>Figure 14: Замените тело ответа HTTP</figcaption>
 </figure>
 
 <div class="alert alert-info">
-    <div><strong>Reminder</strong></div>
+    <div><strong>напоминание</strong></div>
     <div>
-        The Response object is immutable. This method returns a <em>copy</em>
-        of the Response object that contains the new body.
+        Объект Response неизменен. Этот метод возвращает <em>копию</em> объекта Response, который содержит новый элемент.
     </div>
 </div>
 
-## Returning JSON
+## Возвращение JSON
 
-Slim's Response object has a custom method `withJson($data, $status, $encodingOptions)` to help simplify the process of returning JSON data.
+У объекта Slim Response есть собственный метод, `withJson($data, $status, $encodingOptions)` 
+помогающий упростить процесс возвращения данных JSON.
 
-The `$data` parameter contains the data structure you wish returned as JSON. `$status` is optional, and can be used to return a custom HTTP code. `$encodingOptions` is optional, and are the same encoding options used for [`json_encode()`][json_encode].
+Параметр `$data` содержит структуру данных, которые вы хотите возвратить как JSON. `$status` является 
+необязательным и может использоваться для возврата пользовательского HTTP-кода. `$encodingOptions` 
+является необязательным, и для него используются одни и те же параметры кодирования [`json_encode()`][json_encode].
 
-In it's simplest form, JSON data can be returned with a default 200 HTTP status code.
+В простейшей форме данные JSON могут быть возвращены с кодом состояния HTTP по умолчанию 200.
 
-<figure>
-{% highlight php %}
+```php
 $data = array('name' => 'Bob', 'age' => 40);
 $newResponse = $oldResponse->withJson($data);
-{% endhighlight %}
-<figcaption>Figure 15: Returning JSON with a 200 HTTP status code.</figcaption>
+```
+<figure>
+<figcaption>Figure 15:  Возврат JSON с кодом состояния HTTP HTTP.</figcaption>
 </figure>
 
-We can also return JSON data with a custom HTTP status code.
+Мы также можем вернуть данные JSON с пользовательским кодом состояния HTTP.
 
-<figure>
-{% highlight php %}
+```php
 $data = array('name' => 'Rob', 'age' => 40);
 $newResponse = $oldResponse->withJson($data, 201);
-{% endhighlight %}
-<figcaption>Figure 16: Returning JSON with a 201 HTTP status code.</figcaption>
+```
+<figure>
+<figcaption>Figure 16: Возврат JSON с кодом статуса HTTP HTTP.</figcaption>
 </figure>
 
-The `Content-Type` of the Response is automatically set to `application/json;charset=utf-8`.
+`Content-Type` В ответ автоматически устанавливается `application/json;charset=utf-8`.
 
-If there is a problem encoding the data to JSON, a `\RuntimeException($message, $code)` is thrown containing the values of [`json_last_error_msg()`][json_last_error_msg] as the `$message` and [`json_last_error()`][json_last_error] as the `$code`.
+Если есть проблема с кодировкой данных в JSON, a `\RuntimeException($message, $code)` выбрано значение, 
+содержащее значения [`json_last_error_msg()`][json_last_error_msg] как `$message` и [`json_last_error()`][json_last_error]
+как `$code`.
 
 <div class="alert alert-info">
-    <div><strong>Reminder</strong></div>
+    <div><strong>напоминание</strong></div>
     <div>
-        The Response object is immutable. This method returns a <em>copy</em> of
-        the Response object that has a new Content-Type header. <strong>This method is
-        destructive</strong>, and it <em>replaces</em> the existing Content-Type header. The Status is also replaced if a $status was passed when <code>withJson()</code> was called.
+        Объект Response неизменен. Этот метод возвращает <em>копию </em> объекта Response с новым 
+        заголовком Content-Type. <strong>Этот метод является разрушительным</strong>, и он <em>заменяет</em> 
+        существующий заголовок Content-Type. Статус также заменяется, если статус $ был 
+        передан при <code>withJson()</code> вызове.
     </div>
 </div>
 
 [json_encode]: http://php.net/manual/en/function.json-encode.php
 [json_last_error]: http://php.net/manual/en/function.json-last-error.php
 [json_last_error_msg]: http://php.net/manual/en/function.json-last-error-msg.php
+
+## Возврат перенаправления
+Объект ответа Slim имеет настраиваемый метод, `withRedirect($url, $status = null)` 
+когда вы хотите вернуть перенаправление на другой URL. Вы указываете, `$url` куда 
+вы хотите, чтобы клиент был перенаправлен вместе с дополнительным `$status` кодом.
+
+```php
+return $response->withRedirect('/new-url', 301);
+```
+<figure>
+<figcaption>Figure 17: Возврат перенаправления с необязательным кодом состояния.</figcaption>
+</figure>
