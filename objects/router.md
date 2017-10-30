@@ -1,161 +1,172 @@
 ---
-title: Router
+title: Router - маршрутизатор
 ---
 
-The Slim Framework's router is built on top of the [nikic/fastroute](https://github.com/nikic/FastRoute) component, and it is remarkably fast and stable.
+Маршрутизатор Slim Framework построен поверх компонента [nikic/fastroute](https://github.com/nikic/FastRoute)  и он очень быстрый и стабильный.
 
-## How to create routes
+<div id="how-to-create-routes"></div>
 
-You can define application routes using proxy methods on the `\Slim\App` instance. The Slim Framework provides methods for the most popular HTTP methods.
+## Как создать маршруты
+
+Вы можете определить маршруты приложений с помощью proxy methods (методов-посредников) в `\Slim\App` экземпляре. 
+Slim Framework предоставляет методы для самых популярных HTTP-методов.
 
 ### GET Route
 
-You can add a route that handles only `GET` HTTP requests with the Slim
-application's `get()` method. It accepts two arguments:
+Вы можете добавить маршрут, который обрабатывает только `GET` HTTP-запросы с помощью `get()` метода Slim-приложения. 
+Он принимает два аргумента:
 
-1. The route pattern (with optional named placeholders)
-2. The route callback
+1. Шаблон маршрута (с дополнительными именными заполнителями)
+2. Обратный вызов маршрута (callback)
 
-{% highlight php %}
+```php
 $app = new \Slim\App();
 $app->get('/books/{id}', function ($request, $response, $args) {
     // Show book identified by $args['id']
 });
-{% endhighlight %}
+```
 
-### POST Route
+### Маршрут POST
 
-You can add a route that handles only `POST` HTTP requests with the Slim
-application's `post()` method. It accepts two arguments:
+Вы можете добавить маршрут, который обрабатывает только `POST` HTTP-запросы с помощью `post()` метода Slim-приложения. 
+Он принимает два аргумента:
 
-1. The route pattern (with optional named placeholders)
-2. The route callback
+1. Шаблон маршрута (с дополнительными именными заполнителями)
+2. Обратный вызов маршрута (callback)
 
-{% highlight php %}
+```php
 $app = new \Slim\App();
 $app->post('/books', function ($request, $response, $args) {
     // Create new book
 });
-{% endhighlight %}
+```
 
 ### PUT Route
 
-You can add a route that handles only `PUT` HTTP requests with the Slim
-application's `put()` method. It accepts two arguments:
+Вы можете добавить маршрут, который обрабатывает только `PUT` HTTP-запросы с помощью `put()` метода Slim-приложения. 
+Он принимает два аргумента:
 
-1. The route pattern (with optional named placeholders)
-2. The route callback
+1. Шаблон маршрута (с дополнительными именными заполнителями)
+2. Обратный вызов маршрута (callback)
 
-{% highlight php %}
+```php
 $app = new \Slim\App();
 $app->put('/books/{id}', function ($request, $response, $args) {
     // Update book identified by $args['id']
 });
-{% endhighlight %}
+```
 
 ### DELETE Route
 
-You can add a route that handles only `DELETE` HTTP requests with the Slim
-application's `delete()` method. It accepts two arguments:
+Вы можете добавить маршрут, который обрабатывает только `DELETE` HTTP-запросы с помощью `delete()` метода Slim-приложения. 
+Он принимает два аргумента:
 
-1. The route pattern (with optional named placeholders)
-2. The route callback
+1. Шаблон маршрута (с дополнительными именными заполнителями)
+2. Обратный вызов маршрута (callback)
 
-{% highlight php %}
+```php
 $app = new \Slim\App();
 $app->delete('/books/{id}', function ($request, $response, $args) {
     // Delete book identified by $args['id']
 });
-{% endhighlight %}
+```
 
 ### OPTIONS Route
 
-You can add a route that handles only `OPTIONS` HTTP requests with the Slim
-application's `options()` method. It accepts two arguments:
+Вы можете добавить маршрут, который обрабатывает только `OPTIONS` HTTP-запросы с помощью `options()` метода Slim-приложения. 
+Он принимает два аргумента:
 
-1. The route pattern (with optional named placeholders)
-2. The route callback
+1. Шаблон маршрута (с дополнительными именными заполнителями)
+2. Обратный вызов маршрута (callback)
 
-{% highlight php %}
+```php
 $app = new \Slim\App();
 $app->options('/books/{id}', function ($request, $response, $args) {
     // Return response headers
 });
-{% endhighlight %}
+```
 
 ### PATCH Route
 
-You can add a route that handles only `PATCH` HTTP requests with the Slim
-application's `patch()` method. It accepts two arguments:
+Вы можете добавить маршрут, который обрабатывает только `PATCH` HTTP-запросы с помощью `patch()` метода Slim-приложения. 
+Он принимает два аргумента:
 
-1. The route pattern (with optional named placeholders)
-2. The route callback
+1. Шаблон маршрута (с дополнительными именными заполнителями)
+2. Обратный вызов маршрута (callback)
 
-{% highlight php %}
+```php
 $app = new \Slim\App();
 $app->patch('/books/{id}', function ($request, $response, $args) {
     // Apply changes to book identified by $args['id']
 });
-{% endhighlight %}
+```
 
-### Any Route
+### Любой Route
 
-You can add a route that handles all HTTP request methods with the Slim application's `any()` method. It accepts two arguments:
+Вы можете добавить маршрут, который обрабатывает все методы HTTP-запроса с помощью `any()` метода Slim-приложения. 
+Он принимает два аргумента:
 
-1. The route pattern (with optional named placeholders)
-2. The route callback
+1. Шаблон маршрута (с дополнительными именными заполнителями)
+2. Обратный вызов маршрута (callback)
 
-{% highlight php %}
+```php
 $app = new \Slim\App();
 $app->any('/books/[{id}]', function ($request, $response, $args) {
     // Apply changes to books or book identified by $args['id'] if specified.
     // To check which method is used: $request->getMethod();
 });
-{% endhighlight %}
+```
+Обратите внимание, что вторым параметром является обратный вызов. Вы можете указать класс (который нуждается в 
+`__invoke()` реализации) вместо Closure. Затем вы можете выполнить сопоставление в другом месте:
 
-Note that the second parameter is a callback. You could specify a Class (which need a `__invoke()` implementation) instead of a Closure. You can then do the mapping somewhere else:
-
-{% highlight php %}
+```php
 $app->any('/user', 'MyRestfulController');
-{% endhighlight %}
+```
 
-### Custom Route
+### Пользовательский маршрут
 
-You can add a route that handles multiple HTTP request methods with the Slim application's `map()` method. It accepts three arguments:
+Вы можете добавить маршрут, который обрабатывает несколько методов HTTP-запроса с помощью `map()` метода Slim-приложения. 
+Он принимает три аргумента:
 
-1. Array of HTTP methods
-2. The route pattern (with optional named placeholders)
+1. Массив методов HTTP
+2. Шаблон маршрута (с дополнительными именными заполнителями)
 3. The route callback
 
-{% highlight php %}
+```php
 $app = new \Slim\App();
 $app->map(['GET', 'POST'], '/books', function ($request, $response, $args) {
     // Create new book or list all books
 });
-{% endhighlight %}
+```
+
+<div id="route-callbacks"></div>
 
 ## Route callbacks
 
-Each routing method described above accepts a callback routine as its final argument. This argument can be any PHP callable, and by default it accepts three arguments.
+Каждый описанный выше способ маршрутизации принимает в качестве последнего аргумента процедуру обратного вызова (callback). 
+Этот аргумент может быть любым вызываемым PHP, и по умолчанию он принимает три аргумента.
 
-**Request**
-: The first argument is a `Psr\Http\Message\ServerRequestInterface` object that represents the current HTTP request.
+**Request Запрос**
+: Первый аргумент - это `Psr\Http\Message\ServerRequestInterface` объект, который представляет текущий HTTP-запрос.
 
-**Response**
-: The second argument is a `Psr\Http\Message\ResponseInterface` object that represents the current HTTP response.
+**Response отклик**
+: Второй аргумент - это `Psr\Http\Message\ResponseInterface` объект, который представляет текущий HTTP-ответ.
 
-**Arguments**
-: The third argument is an associative array that contains values for the current route's named placeholders.
+**аргументы**
+: Третий аргумент представляет собой ассоциативный массив, который содержит значения для имен имен текущего маршрута.
 
-### Writing content to the response
+### Написание контента для ответа
 
-There are two ways you can write content to the HTTP response. First, you can simply `echo()` content from the route callback. This content will be appended to the current HTTP response object. Second, you can return a `Psr\Http\Message\ResponseInterface` object.
+Существует два способа записи контента в ответ HTTP. Во-первых, вы можете просто `echo()` контент с _callback_ маршрута. 
+Этот контент будет добавлен к текущему объекту ответа HTTP. Во-вторых, вы можете вернуть `Psr\Http\Message\ResponseInterface` объект.
 
-### Closure binding
+###  Привязка Closure
 
-If you use a `Closure` instance as the route callback, the closure's state is bound to the `Container` instance. This means you will have access to the DI container instance _inside_ of the Closure via the `$this` keyword:
+Если вы используете `Closure` экземпляр в качестве обратного вызова маршрута, состояние закрытия привязывается к 
+`Container` экземпляру. Это означает, что у вас будет доступ к экземпляру контейнера DI _внутри_ Closure с помощью `$this` 
+ключевого слова:
 
-{% highlight php %}
+```php
 $app = new \Slim\App();
 $app->get('/hello/{name}', function ($request, $response, $args) {
     // Use app HTTP cookie service
@@ -164,13 +175,20 @@ $app->get('/hello/{name}', function ($request, $response, $args) {
         'expires' => '7 days'
     ]);
 });
-{% endhighlight %}
+```
 
-## Route strategies
+<div id="route-strategies"></div>
 
-The route callback signature is determined by a route strategy. By default, Slim expects route callbacks to accept the request, response, and an array of route placeholder arguments. This is called the RequestResponse strategy. However, you can change the expected route callback signature by simply using a different strategy. As an example, Slim provides an alternative strategy called RequestResponseArgs that accepts request and response, plus each route placeholder as a separate argument. Here is an example of using this alternative strategy; simply replace the `foundHandler` dependency provided by the default `\Slim\Container`:
+## Стратегии маршрута
 
-{% highlight php %}
+Подпись обратного вызова маршрута определяется стратегией маршрута. По умолчанию Slim ожидает, что обратные вызовы 
+маршрута будут принимать запрос, ответ и массив аргументов заполнителя маршрута. Это называется стратегией RequestResponse. 
+Однако вы можете изменить ожидаемую подпись обратного вызова, просто используя другую стратегию. В качестве примера 
+Slim предоставляет альтернативную стратегию, называемую RequestResponseArgs, которая принимает запрос и ответ, а также 
+каждый заполнитель маршрута в качестве отдельного аргумента. Вот пример использования этой альтернативной стратегии; 
+просто замените `foundHandler` зависимость, предоставленную по умолчанию `\Slim\Container`:
+
+```php
 $c = new \Slim\Container();
 $c['foundHandler'] = function() {
     return new \Slim\Handlers\Strategies\RequestResponseArgs();
@@ -180,101 +198,112 @@ $app = new \Slim\App($c);
 $app->get('/hello/{name}', function ($request, $response, $name) {
     return $response->write($name);
 });
-{% endhighlight %}
+```
 
-You can provide your own route strategy by implementing the `\Slim\Interfaces\InvocationStrategyInterface`.
+Вы можете предоставить свою собственную стратегию маршрута, выполнив ее  `\Slim\Interfaces\InvocationStrategyInterface`.
 
-## Route placeholders
+<div id="route-placeholders"></div>
 
-Each routing method described above accepts a URL pattern that is matched against the current HTTP request URI. Route patterns may use named placeholders to dynamically match HTTP request URI segments.
+## Заполнители маршрутов
 
-### Format
+Каждый описанный выше метод маршрутизации принимает шаблон URL, который сопоставляется с текущим URI запроса HTTP. 
+Шаблоны маршрутов могут использовать именованные заполнители для динамического соответствия сегментам URI запроса HTTP.
 
-A route pattern placeholder starts with a `{`, followed by the placeholder name, ending with a `}`. This is an example placeholder named `name`:
+### Формат
 
-{% highlight php %}
+Заполнитель шаблона маршрута начинается с `{`, за которым следует имя заполнителя, заканчивающееся на `}`. Это пример заполнителя с именем `name`:
+
+```php
 $app = new \Slim\App();
 $app->get('/hello/{name}', function ($request, $response, $args) {
     echo "Hello, " . $args['name'];
 });
-{% endhighlight %}
+```
 
-### Optional segments
+### Дополнительные сегменты
 
-To make a section optional, simply wrap in square brackets:
+Чтобы сделать раздел необязательным, просто оберните в квадратные скобки:
 
-{% highlight php %}
+```php
 $app->get('/users[/{id}]', function ($request, $response, $args) {
     // responds to both `/users` and `/users/123`
     // but not to `/users/`
 });
-{% endhighlight %}
+```
 
+Несколько необязательных параметров поддерживаются вложением:
 
-Multiple optional parameters are supported by nesting:
-
-{% highlight php %}
+```php
 $app->get('/news[/{year}[/{month}]]', function ($request, $response, $args) {
     // reponds to `/news`, `/news/2016` and `/news/2016/03`
 });
-{% endhighlight %}
+```
 
-For "Unlimited" optional parameters, you can do this:
+Для необязательных параметров «Без ограничений» вы можете сделать это:
 
-{% highlight php %}
+```php
 $app->get('/news[/{params:.*}]', function ($request, $response, $args) {
     $params = explode('/', $request->getAttribute('params'));
 
     // $params is an array of all the optional segments
 });
-{% endhighlight %}
+```
 
-In this example, a URI of `/news/2016/03/20` would result in the `$params` array
-containing three elements: `['2016', '03', '20']`.
+В этом примере, URI `/news/2016/03/20` приведет k `$params` массиву, содержащим три элемента: `['2016', '03', '20']`.
 
 
-### Regular expression matching
+### Регулярное выражение
 
-By default the placeholders are written inside `{}` and can accept any
-values. However, placeholders can also require the HTTP request URI to match a particular regular expression. If the current HTTP request URI does not match a placeholder regular expression, the route is not invoked. This is an example placeholder named `id` that requires one or more digits.
+По умолчанию заполнители записываются внутри `{}` и могут принимать любые значения. Однако заполнители могут также 
+требовать, чтобы URI HTTP-запроса соответствовал определенному регулярному выражению. Если текущий URI-запрос HTTP 
+не соответствует регулярному выражению-заполнителю, маршрут не вызывается. Это пример имени заполнителя, `id` который 
+требует одну или несколько цифр.
 
-{% highlight php %}
+```php
 $app = new \Slim\App();
 $app->get('/users/{id:[0-9]+}', function ($request, $response, $args) {
     // Find user identified by $args['id']
 });
-{% endhighlight %}
+```
 
-## Route names
+<div id="route-names"></div>
 
-Application routes can be assigned a name. This is useful if you want to programmatically generate a URL to a specific route with the router's `pathFor()` method. Each routing method described above returns a `\Slim\Route` object, and this object exposes a `setName()` method.
+## Названия маршрутов
 
-{% highlight php %}
+Маршрутам приложения может быть присвоено имя. Это полезно, если вы хотите программно генерировать URL-адрес для 
+определенного маршрута с помощью `pathFor()` метода маршрутизатора . Каждый описанный выше метод маршрутизации 
+возвращает `\Slim\Route` объект, и этот объект предоставляет `setName()` метод.
+
+```php
 $app = new \Slim\App();
 $app->get('/hello/{name}', function ($request, $response, $args) {
     echo "Hello, " . $args['name'];
 })->setName('hello');
-{% endhighlight %}
+```
 
-You can generate a URL for this named route with the application router's `pathFor()`  method.
+Вы можете создать URL-адрес для этого именованного маршрута с помощью `pathFor()` метода маршрутизатора приложения .
 
-{% highlight php %}
+```php
 echo $app->getContainer()->get('router')->pathFor('hello', [
     'name' => 'Josh'
 ]);
 // Outputs "/hello/Josh"
-{% endhighlight %}
+```
 
-The router's `pathFor()` method accepts two arguments:
+Метод маршрутизатора `pathFor()` принимает два аргумента:
 
-1. The route name
-2. Associative array of route pattern placeholders and replacement values
+1. Название маршрута
+2. Ассоциативный массив заполнителей шаблонов маршрутов и значения замещения
 
-## Route groups
+<div id="route-groups"></div>
 
-To help organize routes into logical groups, the `\Slim\App` also provides a `group()` method. Each group's route pattern is prepended to the routes or groups contained within it, and any placeholder arguments in the group pattern are ultimately made available to the nested routes:
+## Группы маршрутов
 
-{% highlight php %}
+Чтобы помочь организовать маршруты в логические группы, `\Slim\App` также предоставляется `group()` метод. Структура 
+маршрута каждой группы добавляется к маршрутам или группам, содержащимся в ней, и любые аргументы-заполнители в 
+групповом шаблоне в конечном итоге становятся доступными для вложенных маршрутов:
+
+```php
 $app = new \Slim\App();
 $app->group('/users/{id:[0-9]+}', function () {
     $this->map(['GET', 'DELETE', 'PATCH', 'PUT'], '', function ($request, $response, $args) {
@@ -285,55 +314,59 @@ $app->group('/users/{id:[0-9]+}', function () {
         // Reset the password for user identified by $args['id']
     })->setName('user-password-reset');
 });
-{% endhighlight %}
+```
 
-Note inside the group closure, `$this` is used instead of `$app`. Slim binds the closure to the application instance for you, just like it is the case with route callback binds with container instance.
+Примечание внутри закрытия группы `$this` используется вместо `$app`. Slim связывает закрытие с экземпляром приложения 
+для вас, точно так же, как в случае обратного вызова маршрута с экземпляром контейнера.
 
-* inside group closure, `$this` is bound to the instance of `Slim\App`
-* inside route closure, `$this` is bound to the instance of `Slim\Container`
+* внутри группового замыкания, `$this` связано с примером `Slim\App`
+* закрытие внутри маршрута, `$this` связано с экземпляром `Slim\Container`
+
+<div id="route-middleware"></div>
 
 ## Route middleware
 
-You can also attach middleware to any route or route group. [Learn more](/docs/concepts/middleware.html).
+Вы также можете подключить middleware к любому маршруту или группе маршрутов. [узнать больше](/concepts/middleware).
 
-## Router caching
+## Кэширование маршрутизатора
 
-It's possible to enable router cache by setting valid filename in default Slim settings. [Learn more](/docs/objects/application.html#slim-default-settings).
+Кэш маршрутизатора можно включить, установив допустимое имя файла в настройках по умолчанию Slim. [узнать больше](/objects/application.html#slim-default-settings).
 
-## Container Resolution
+<div id="container-resolution"></div>
 
-You are not limited to defining a function for your routes. In Slim there are a few different ways to define your route action functions.
+## Разрешение контейнера
 
-In addition to a function, you may use:
+Вы не ограничены определением функции для своих маршрутов. В Slim существует несколько разных способов определения ваших функций действия маршрута.
+
+В дополнение к функции вы можете использовать:
 
  - `container_key:method`
  - `Class:method`
  - An invokable class
  - `container_key`
  
-This functionality is enabled by Slim's Callable Resolver Class. It translates a string entry into a function call.
-Example:
+Эта функциональность включена Slim's Callable Resolver Class. Он преобразует строку в вызов функции. Пример:
 
-{% highlight php %}
-$app->get('/', '\HomeController:home');
-{% endhighlight %}
+```php
+  $app->get('/', '\HomeController:home');
+```
 
-Alternatively, you can take advantage of PHP's `::class` operator which works well with IDE lookup systems and produces the same result: 
+Кроме того, вы можете воспользоваться `::class` оператором PHP, который хорошо работает с системами поиска IDE и дает тот же результат:
 
-{% highlight php %}
-$app->get('/', \HomeController::class . ':home');
-{% endhighlight %}
+```php
+  $app->get('/', \HomeController::class . ':home');
+```
+В этом коде выше мы определяем `/` маршрут и сообщаем Slim о выполнении `home()` метода в `HomeController` классе.
 
-In this code above we are defining a `/` route and telling Slim to execute the `home()` method on the `HomeController` class.
+Сначала Slim ищет запись `HomeController` в контейнере, если будет найден, он будет использовать этот экземпляр, иначе 
+он будет называть его конструктором с контейнером в качестве первого аргумента. Когда экземпляр класса будет создан, 
+он затем вызовет указанный метод, используя любую стратегию, которую вы определили.
 
-Slim first looks for an entry of `HomeController` in the container, if it's found it will use that instance otherwise it will call it's constructor with the container as the first argument. Once an instance of the class is created it will then call the specified method using whatever Strategy you have defined.
+### Регистрация контроллера с контейнером
 
-### Registering a controller with the container
+Создайте контроллер с помощью `home` метода действий. Конструктор должен принимать зависимости, которые требуются. Например:
 
-Create a controller with the `home` action method. The constructor should accept
-the dependencies that are required. For example:
-
-{% highlight php %}
+```php
 class HomeController
 {
     protected $view;
@@ -347,29 +380,29 @@ class HomeController
       return $response;
     }
 }
-{% endhighlight %}
+```
 
-Create a factory in the container that instantiates the controller with the dependencies:
+Создайте фабрику в контейнере, который запускает контроллер с зависимостями:
 
-{% highlight php %}
+```php
 $container = $app->getContainer();
 $container['HomeController'] = function($c) {
     $view = $c->get("view"); // retrieve the 'view' from the container
     return new HomeController($view);
 };
-{% endhighlight %}
+```
 
-This allows you to leverage the container for dependency injection and so you can 
-inject specific dependencies into the controller.
+Это позволяет использовать контейнер для инъекций зависимостей, и поэтому вы можете 
+вводить определенные зависимости в контроллер..
 
 
-### Allow Slim to instantiate the controller
+### Разрешить Slim создавать экземпляр контроллера
 
-Alternatively, if the class does not have an entry in the container, then Slim
-will pass the container's instance to the constructor. You can construct controllers 
-with many actions instead of an invokable class which only handles one action.
+Альтернативно, если класс не имеет записи в контейнере, то Slim передает экземпляр контейнера в конструктор. 
+Вы можете создавать контроллеры со многими действиями вместо вызываемого класса, который обрабатывает 
+только одно действие.
 
-{% highlight php %}
+```php
 class HomeController 
 {
    protected $container;
@@ -391,20 +424,20 @@ class HomeController
         return $response;
    }
 }
-{% endhighlight %}
+```
 
-You can use your controller methods like so.
+Вы можете использовать свои методы контроллера так.
 
-{% highlight php %}
+```php
 $app->get('/', \HomeController::class . ':home');
 $app->get('/contact', \HomeController::class . ':contact');
-{% endhighlight %}
+```
 
-### Using an invokable class
+### Использование вызываемого класса
 
-You do not have to specify a method in your route callable and can just set it to be an invokable class such as:
+Вам не нужно указывать метод в вашем маршруте, который может быть вызван, и может просто установить его как вызывающий класс, например:
 
-{% highlight php %}
+```php
 class HomeAction
 {
    protected $container;
@@ -419,14 +452,14 @@ class HomeAction
         return $response;
    }
 }
-{% endhighlight %}
+```
 
-You can use this class like so.
+Вы можете использовать этот класс так.
 
-{% highlight php %}
+```php
 $app->get('/', \HomeAction::class);
-{% endhighlight %}
+```
 
-Again, as with controllers, if you register the class name with the container, then you 
-can create a factory and inject just the specific dependencies that you require into your
-action class.
+
+Опять же, как и в случае с контроллерами, если вы зарегистрируете имя класса в контейнере, вы можете создать 
+фабрику и ввести только конкретные зависимости, которые вам нужны, в ваш класс действий.

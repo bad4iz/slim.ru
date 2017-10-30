@@ -255,7 +255,7 @@ $newStream = new \GuzzleHttp\Psr7\LazyOpenStream('/path/to/file', 'r');
 $newResponse = $oldResponse->withBody($newStream);
 ```
 <figure>
-<figcaption>Figure 14: Замените тело ответа HTTP</figcaption>
+    <figcaption>Figure 14: Замените тело ответа HTTP</figcaption>
 </figure>
 
 <div class="alert alert-info">
