@@ -1,38 +1,36 @@
 ---
-title: Templates
+title: Шаблоны
 ---
 
-Slim does not have a view layer like traditional MVC frameworks. Instead,
-Slim's "view" _is the HTTP response_. Each Slim application route is responsible
-for preparing and returning an appropriate PSR 7 response object.
+У Slim нет слоя представления, такого как традиционные рамки MVC. "view" Slim _является ответом HTTP_. 
+Каждый тонкий маршрут приложения отвечает за подготовку и возвращение соответствующего объекта ответа PSR 7.
 
-> Slim's "view" is the HTTP response.
+> "view" Slim - это ответ HTTP.
 
-That being said, the Slim project provides the [Twig-View](#the-slimtwig-view-component) and
-[PHP-View](#the-slimphp-view-component) components to help you render templates to a PSR7
+Это, как говорится, Slim проект предусматривает [Twig-View](#the-slimtwig-view-component) и
+[PHP-View](#the-slimphp-view-component) компоненты, которые помогут вам создать шаблоны для объекта PSR7 Response.  
+components to help you render templates to a PSR7
 Response object.
 
-## The slim/twig-view component
+## slim/twig-view Компонент
 
-The [Twig-View][twigview] PHP component helps you render [Twig][twig]
-templates in your application. This component is available on Packagist, and
-it's easy to install with Composer like this:
+Компонент [Twig-View][twigview] PHP помогает построить [Twig][twig]
+шаблоны в вашем приложении. Этот компонент доступер в Packagist, и
+его можно установить в Composer следующим образом:
 
 [twigview]: https://github.com/slimphp/Twig-View
 [twig]: http://twig.sensiolabs.org/
 
-<figure>
-{% highlight text %}
+```php
 composer require slim/twig-view
-{% endhighlight %}
-<figcaption>Figure 1: Install slim/twig-view component.</figcaption>
+```
+<figure>
+<figcaption>Figure 1: Установка slim/twig-view компонента.</figcaption>
 </figure>
 
-Next, you need to register the component as a service on the Slim app's
-container like this:
+Затем вам необходимо зарегистрировать компонент в качестве службы в контейнере Slim, например:
 
-<figure>
-{% highlight php %}
+```php
 <?php
 // Create app
 $app = new \Slim\App();
@@ -52,17 +50,19 @@ $container['view'] = function ($container) {
 
     return $view;
 };
-{% endhighlight %}
-<figcaption>Figure 2: Register slim/twig-view component with container.</figcaption>
+```
+<figure>
+<figcaption>Figure 2: Зарегистрируйте компонент slim / twig-view с контейнером.</figcaption>
 </figure>
 
-Note : "cache" could be set to false to disable it, see also 'auto_reload' option, useful in development environment. For more information, see [Twig environment options](http://twig.sensiolabs.org/doc/2.x/api.html#environment-options)
+Примечание: для кеша может быть установлено значение false, чтобы отключить его, см. Также параметр «auto_reload», 
+полезный в среде разработки. Дополнительные сведения см. 
+В разделе  [Twig environment options](http://twig.sensiolabs.org/doc/2.x/api.html#environment-options)
 
-Now you can use the `slim/twig-view` component service inside an app route
-to render a template and write it to a PSR 7 Response object like this:
+Теперь вы можете использовать `slim/twig-view` службу компонента внутри маршрута приложения 
+для визуализации шаблона и записать его в объект PSR 7 Response следующим образом:
 
-<figure>
-{% highlight php %}
+```php
 // Render Twig template in route
 $app->get('/hello/{name}', function ($request, $response, $args) {
     return $this->view->render($response, 'profile.html', [
@@ -72,32 +72,33 @@ $app->get('/hello/{name}', function ($request, $response, $args) {
 
 // Run app
 $app->run();
-{% endhighlight %}
-<figcaption>Figure 3: Render template with slim/twig-view container service.</figcaption>
+```
+<figure>
+<figcaption>Figure 3:  Шаблон Render с тонким / twig-view контейнером.</figcaption>
 </figure>
 
-In this example, `$this->view` invoked inside the route callback is a reference
-to the `\Slim\Views\Twig` instance returned by the `view` container service.
-The `\Slim\Views\Twig` instance's `render()` method accepts a PSR 7 Response
-object as its first argument, the Twig template path as its second argument,
-and an array of template variables as its final argument. The `render()` method
-returns a new PSR 7 Response object whose body is the rendered Twig template.
+В этом примере, `$this->view` вызываемый внутри callback маршрута, является 
+ссылкой на `\Slim\Views\Twig` экземпляр, возвращаемый службой `view` контейнера. 
+Метод `\Slim\Views\Twig` экземпляра `render()` принимает объект ответа PSR 7 как его 
+первый аргумент, путь шаблона Twig как его второй аргумент и массив переменных 
+шаблона в качестве его последнего аргумента. Метод `render()` возвращает новый объект 
+PSR 7 Response , чье тело созданно шаблоном Twig.
 
-### The path_for() method
 
-The `slim/twig-view` component exposes a custom `path_for()` function
-to your Twig templates. You can use this function to generate complete
-URLs to any named route in your Slim application. The `path_for()`
-function accepts two arguments:
+### Метод path_for()
 
-1. A route name
-2. A hash of route placeholder names and replacement values
+Компонент`slim/twig-view` представляет пользовательскую функцию `path_for()` шаблона Twig. 
+ Вы можете использовать эту функцию для создания полных URL-адресов для любого именованного 
+ маршрута в своем Slim-приложении. Функция `path_for()` принимает два аргумента:
 
-The second argument's keys should correspond to the selected route's pattern
-placeholders. This is an example Twig template that draws a link URL
-for the "profile" named route shown in the example Slim application above.
+1. Имя маршрута
+2. Хэш имен заполнителей маршрута и значений замены.
 
-{% highlight html %}
+Второй аргумент ключевой должен соответствовать записям шаблонов выбранного маршрута. 
+Это пример шаблона Twig, который рисует URL-адрес ссылки для "profile" с именем route, 
+показанного в примере Slim, описанном выше.
+```html
+
 {% raw %}
 {% extends "layout.html" %}
 
@@ -108,27 +109,25 @@ for the "profile" named route shown in the example Slim application above.
 </ul>
 {% endblock %}
 {% endraw %}
-{% endhighlight %}
+```
 
-## The slim/php-view component
+## Компонент slim/php-view
 
-The [PHP-View][phpview] PHP component helps you render PHP templates.
-This component is available on Packagist and can be installed using
-Composer like this:
+[PHP-View][phpview] компонент PHP помогает визуализации шаблонов PHP. Этот компонент доступен 
+в Packagist и может быть установлен с помощью Composer следующим образом:
 
 [phpview]: https://github.com/slimphp/PHP-View
 
-<figure>
-{% highlight text %}
+```php
 composer require slim/php-view
-{% endhighlight %}
-<figcaption>Figure 4: Install slim/php-view component.</figcaption>
+```
+<figure>
+<figcaption>Figure 4: Установите компонент slim / php-view.</figcaption>
 </figure>
 
-To register this component as a service on Slim App's container, do this:
+Чтобы зарегистрировать этот компонент в качестве службы в контейнере Slim App, выполните следующие действия:
 
-<figure>
-{% highlight php %}
+```php
 <?php
 // Create app
 $app = new \Slim\App();
@@ -140,13 +139,15 @@ $container = $app->getContainer();
 $container['view'] = function ($container) {
     return new \Slim\Views\PhpRenderer('path/to/templates/with/trailing/slash/');
 };
+```
 {% endhighlight %}
-<figcaption>Figure 5: Register slim/php-view component with container.</figcaption>
+<figure>
+<figcaption>Figure 5: Регистрация компонента slim/php-view с контейнером.</figcaption>
 </figure>
 
-Use the view component to render a PHP view like this:
+Используйте компонент вида для визуализации представления PHP следующим образом:
 
-<figure>
+```php
 {% highlight php %}
 
 // Render PHP template in route
@@ -158,12 +159,12 @@ $app->get('/hello/{name}', function ($request, $response, $args) {
 
 // Run app
 $app->run();
-{% endhighlight %}
-<figcaption>Figure 6: Render template with slim/php-view container service.</figcaption>
+```
+<figure>
+<figcaption>Figure 6: Создайте шаблон с помощью сервиса slim/php-view.</figcaption>
 </figure>
 
-## Other template systems
+## Другие системы шаблонов
 
-You are not limited to the `Twig-View` and `PHP-View` components. You
-can use any PHP template system provided that you ultimately write the rendered
-template output to the PSR 7 Response object's body.
+Вы не ограничены `Twig-View` и `PHP-View` компонентами. Вы можете использовать любую систему 
+шаблонов PHP, при условии, что вы в конечном итоге напишите вывод обработанного шаблона в тело объекта PSR 7 Response.
