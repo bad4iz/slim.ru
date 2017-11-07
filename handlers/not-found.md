@@ -2,17 +2,20 @@
 title: 404 Not Found Handler
 ---
 
-If your Slim Framework application does not have a route that matches the current HTTP request URI, the application invokes its Not Found handler and returns a `HTTP/1.1 404 Not Found` response to the HTTP client.
+Если ваше приложение Slim Framework не имеет маршрута, соответствующего текущему URI-запросу HTTP, приложение вызывает 
+обработчик Not Found и возвращает `HTTP/1.1 404 Not Found` ответ HTTP-клиенту.
 
-## Default Not Found handler
+## Обработчик по умолчанию Not Found
 
 Each Slim Framework application has a default Not Found handler. This handler sets the Response status to `404`, it sets the content type to `text/html`, and it writes a simple explanation to the Response body.
 
-## Custom Not Found handler
+## Пользовательский обработчик Not Found
 
-A Slim Framework application's Not Found handler is a Pimple service. You can substitute your own Not Found handler by defining a custom Pimple factory method with the application container.
+Обработчик Not Found для Slim Framework - это услуга Pimple. Вы можете заменить свой собственный обработчик Not Found, 
+указав собственный заводский метод Pimple с контейнером приложения.
 
-{% highlight php %}
+
+```php
 $c = new \Slim\Container(); //Create Your container
 
 //Override the default Not Found Handler
@@ -29,11 +32,13 @@ $c['notFoundHandler'] = function ($c) {
 $app = new \Slim\App($c);
 
 //... Your code
-{% endhighlight %}
+```
 
-In this example, we define a new `notFoundHandler` factory that returns a callable. The returned callable accepts two arguments:
+В этом примере мы определяем новый `notFoundHandler` фабрику, который возвращает вызываемый. Возвращаемый вызов 
+допускает два аргумента:
 
-1. A `\Psr\Http\Message\ServerRequestInterface` instance
-2. A `\Psr\Http\Message\ResponseInterface` instance
+1.  `\Psr\Http\Message\ServerRequestInterface` экземпляр
+2.  `\Psr\Http\Message\ResponseInterface` экземпляр
 
-The callable **MUST** return an appropriate `\Psr\Http\Message\ResponseInterface` instance.
+
+Вызываемый **ДОЛЖЕН** вернуть соответствующий `\Psr\Http\Message\ResponseInterface` экземпляр.
