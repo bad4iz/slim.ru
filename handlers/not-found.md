@@ -40,5 +40,4 @@ $app = new \Slim\App($c);
 1.  `\Psr\Http\Message\ServerRequestInterface` экземпляр
 2.  `\Psr\Http\Message\ResponseInterface` экземпляр
 
-
 Вызываемый **ДОЛЖЕН** вернуть соответствующий `\Psr\Http\Message\ResponseInterface` экземпляр.
