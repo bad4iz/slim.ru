@@ -1,18 +1,23 @@
 ---
-title: 405 Not Allowed Handler
+title: 405 обработчик Not Allowed
 ---
 
-If your Slim Framework application has a route that matches the current HTTP request URI **but NOT the HTTP request method**, the application invokes its Not Allowed handler and returns a `HTTP/1.1 405 Not Allowed` response to the HTTP client.
+Если ваше приложение Slim Framework имеет маршрут, соответствующий текущему URI-запросу HTTP, 
+**но не метод HTTP-запроса** , приложение вызывает обработчик Not Allowed и возвращает 
+`HTTP/1.1 405 Not Allowed` ответ HTTP-клиенту.
 
-## Default Not Allowed handler
+## Обработчик Not Allowed по умолчанию
 
-Each Slim Framework application has a default Not Allowed handler. This handler sets the Response status to `405`, it sets the content type to `text/html`, it adds a `Allowed:` HTTP header with a comma-delimited list of allowed HTTP methods, and it writes a simple explanation to the Response body.
+Каждое приложение Slim Framework имеет обработчик Not Allowed по умолчанию. Этот обработчик устанавливает 
+статус ответа на него `405`, он устанавливает тип содержимого `text/html`, он добавляет `Allowed:` HTTP-заголовок 
+с разделенным запятыми списком разрешенных HTTP-методов, и он пишет простое объяснение телу Response.
 
-## Custom Not Allowed handler
+## Обработчик Not Allowed пользовательский
 
-A Slim Framework application's Not Allowed handler is a Pimple service. You can substitute your own Not Allowed handler by defining a custom Pimple factory method with the application container.
+Не разрешенный обработчик приложения Slim Framework - это служба Pimple. Вы можете заменить свой собственный 
+обработчик не разрешенным, указав собственный заводский метод Pimple с контейнером приложения.
 
-{% highlight php %}
+```php
 // Create Slim
 $app = new \Slim\App();
 // get the app's di-container
@@ -26,14 +31,17 @@ $c['notAllowedHandler'] = function ($c) {
             ->write('Method must be one of: ' . implode(', ', $methods));
     };
 };
-{% endhighlight %}
+```
 
-> **N.B** Check out [Not Found](/docs/handlers/not-found.html) docs for pre-slim creation method using a new instance of `\Slim\Container`
+> **N.B** Проверте [Not Found](/docs/handlers/not-found.html) документы для метода предварительного тонкого создания, используя новый экземпляр `\Slim\Container`
 
-In this example, we define a new `notAllowedHandler` factory that returns a callable. The returned callable accepts three arguments:
+В этом примере мы определяем новый `notAllowedHandler` завод, который возвращает вызываемый. Возвращаемый вызов допускает 
+три аргумента:
+In this example, we define a new `notAllowedHandler` factory that returns a callable. The returned callable accepts 
+three arguments:
 
-1. A `\Psr\Http\Message\ServerRequestInterface` instance
-2. A `\Psr\Http\Message\ResponseInterface` instance
-3. A numeric array of allowed HTTP method names
+1. `\Psr\Http\Message\ServerRequestInterface` экземпляр
+2. `\Psr\Http\Message\ResponseInterface` экземпляр
+3. Числовой массив разрешенных имен методов HTTP
 
-The callable **MUST** return an appropriate `\Psr\Http\Message\ResponseInterface` instance.
+Вызываемый **ДОЛЖЕН** вернуть соответствующий  `\Psr\Http\Message\ResponseInterface` экземпляр.
