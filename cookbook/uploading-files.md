@@ -13,7 +13,7 @@ title: Загрузка файлов с использованием форм PO
 
 Ниже приведен пример HTML-формы, содержащей как одиночную, так и множественную загрузку файлов.
 
-```html
+```php
 <!-- make sure the attribute enctype is set to multipart/form-data -->
 <form method="post" enctype="multipart/form-data">
     <!-- upload of a single file -->
@@ -40,7 +40,6 @@ title: Загрузка файлов с использованием форм PO
     </p>
 ```
 </form>
-{% endhighlight %}
 <figure>
 <figcaption>Figure 1: Пример формы HTML для загрузки файлов</figcaption>
 </figure>
