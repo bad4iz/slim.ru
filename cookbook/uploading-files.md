@@ -1,21 +1,19 @@
 ---
-title: Uploading files using POST forms
+title: Загрузка файлов с использованием форм POST
 ---
 
-Files that are uploaded using forms in POST requests can be retrieved with the
-[`getUploadedFiles`](/docs/objects/request.html#uploaded-files) method of the
-`Request` object.
+Файлы, которые загружаются с использованием форм в POST-запросах, могут быть получены с помощью
+[`getUploadedFiles`](/docs/objects/request.html#uploaded-files) метода `Request` объекта.
 
-When uploading files using a POST request, make sure your file upload form has the
-attribute `enctype="multipart/form-data"` otherwise `getUploadedFiles()` will return an empty array.
+При загрузке файлов с использованием запроса POST убедитесь, что ваша форма загрузки файла имеет атрибут, 
+`enctype="multipart/form-data"` иначе `getUploadedFiles()` будет возвращен пустой массив.
 
-If multiple files are uploaded for the same input name, add brackets after the input name in the HTML, otherwise
-only one uploaded file will be returned for the input name by `getUploadedFiles()`.
+Если несколько файлов загружаются для одного имени ввода, добавьте скобки после имени ввода в HTML, иначе только 
+один загруженный файл будет возвращен для имени ввода `getUploadedFiles()`.
 
-Below is an example HTML form that contains both single and multiple file uploads.
+Ниже приведен пример HTML-формы, содержащей как одиночную, так и множественную загрузку файлов.
 
-<figure>
-{% highlight php %}
+```html
 <!-- make sure the attribute enctype is set to multipart/form-data -->
 <form method="post" enctype="multipart/form-data">
     <!-- upload of a single file -->
@@ -40,16 +38,17 @@ Below is an example HTML form that contains both single and multiple file upload
     <p>
         <input type="submit"/>
     </p>
+```
 </form>
 {% endhighlight %}
-<figcaption>Figure 1: Example HTML form for file uploads</figcaption>
+<figure>
+<figcaption>Figure 1: Пример формы HTML для загрузки файлов</figcaption>
 </figure>
 
-Uploaded files can be moved to a directory using the `moveTo` method. Below is an example application
-that handles the uploaded files of the HTML form above.
+Загруженные файлы можно перемещать в каталог с помощью `moveTo` метода. Ниже приведен пример приложения, который
+обрабатывает загруженные файлы HTML-формы выше.
 
-<figure>
-{% highlight php %}
+```php
 <?php
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -121,10 +120,11 @@ function moveUploadedFile($directory, UploadedFile $uploadedFile)
 }
 
 $app->run();
-{% endhighlight %}
-<figcaption>Figure 2: Example Slim applcation to handle the uploaded files</figcaption>
+```
+<figure>
+<figcaption>Figure 2: Пример Slim applcation для обработки загруженных файловs</figcaption>
 </figure>
 
-See also
+Смотрите также
 --------
 * [https://akrabat.com/psr-7-file-uploads-in-slim-3/](https://akrabat.com/psr-7-file-uploads-in-slim-3/)
