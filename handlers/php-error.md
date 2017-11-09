@@ -1,25 +1,22 @@
 ---
-title: PHP Error Handler
+title: Обработчик ошибок PHP
 ---
 
-If your Slim Framework application throws a
-[PHP Runtime error](http://php.net/manual/en/class.error.php) (PHP 7+ only),
-the application invokes its PHP Error handler and returns a
-`HTTP/1.1 500 Internal Server Error` response to the HTTP client.
+Если ваше приложение Slim Framework выдает ошибку [PHP Runtime error](http://php.net/manual/en/class.error.php)
+ (только для PHP 7+), приложение вызывает обработчик ошибок PHP и возвращает 
+ `HTTP/1.1 500 Internal Server Error` ответ HTTP-клиенту.
 
-## Default PHP Error handler
+## Обработчик ошибок PHP по умолчанию
 
-Each Slim Framework application has a default PHP Error handler. This handler
-sets the Response status to `500`, it sets the content type to `text/html`,
-and it writes a simple explanation to the Response body.
+Каждое приложение Slim Framework имеет обработчик ошибок PHP по умолчанию. Этот обработчик устанавливает 
+статус ответа `500`, он устанавливает тип содержимого `text/html` и записывает простое объяснение телу Response.
 
-## Custom PHP Error handler
+## Пользовательский обработчик ошибок PHP
 
-A Slim Framework application's PHP Error handler is a Pimple service. You can
-substitute your own PHP Error handler by defining a custom Pimple factory
-method with the application container.
+Обработчик ошибок PHP Slim Framework - это служба Pimple. Вы можете заменить свой 
+собственный обработчик ошибок PHP, указав собственный заводский метод Pimple с контейнером приложения.
 
-{% highlight php %}
+```php
 // Create Slim
 $app = new \Slim\App();
 // get the app's di-container
@@ -32,17 +29,17 @@ $c['phpErrorHandler'] = function ($c) {
             ->write('Something went wrong!');
     };
 };
-{% endhighlight %}
+```
 
-> **N.B** Check out [Not Found](/docs/handlers/not-found.html) docs for
-> pre-slim creation method using a new instance of `\Slim\Container`
+> **N.B** Проверте [Not Found](/docs/handlers/not-found.html) документы для метода предварительного тонкого 
+> создания, используя новый экземпляр `\Slim\Container`
 
-In this example, we define a new `phpErrorHandler` factory that returns a
-callable. The returned callable accepts three arguments:
+В этом примере мы определяем новый `phpErrorHandler` завод, который возвращает вызываемый. 
+Возвращаемый вызов допускает три аргумента:
 
-1. A `\Psr\Http\Message\ServerRequestInterface` instance
-2. A `\Psr\Http\Message\ResponseInterface` instance
-3. A `\Throwable` instance
+1. `\Psr\Http\Message\ServerRequestInterface` экземпляр
+2. `\Psr\Http\Message\ResponseInterface` экземпляр
+3. `\Throwable` экземпляр
 
-The callable **MUST** return a new `\Psr\Http\Message\ResponseInterface`
-instance as is appropriate for the given error.
+Вызываемый **ДОЛЖЕН** вернуть новый `\Psr\Http\Message\ResponseInterface` 
+экземпляр, подходящий для данной ошибки.
