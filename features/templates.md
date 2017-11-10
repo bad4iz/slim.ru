@@ -140,7 +140,7 @@ $container['view'] = function ($container) {
     return new \Slim\Views\PhpRenderer('path/to/templates/with/trailing/slash/');
 };
 ```
-{% endhighlight %}
+```
 <figure>
 <figcaption>Figure 5: Регистрация компонента slim/php-view с контейнером.</figcaption>
 </figure>
@@ -148,7 +148,7 @@ $container['view'] = function ($container) {
 Используйте компонент вида для визуализации представления PHP следующим образом:
 
 ```php
-{% highlight php %}
+```php
 
 // Render PHP template in route
 $app->get('/hello/{name}', function ($request, $response, $args) {

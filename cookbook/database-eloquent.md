@@ -9,7 +9,7 @@ You can use a database ORM such as [Eloquent](https://laravel.com/docs/5.1/eloqu
 <figure>
 {% highlight bash %}
 composer require illuminate/database "~5.1"
-{% endhighlight %}
+```
 <figcaption>Figure 1: Add Eloquent to your application.</figcaption>
 </figure>
 
@@ -18,7 +18,7 @@ composer require illuminate/database "~5.1"
 Add the database settings to Slim's settings array.
 
 <figure>
-{% highlight php %}
+```php
 <?php
 return [
     'settings' => [
@@ -37,14 +37,14 @@ return [
         ]
     ],
 ];
-{% endhighlight %}
+```
 <figcaption>Figure 2: Settings array.</figcaption>
 </figure>
 
 In your `dependencies.php` or wherever you add your Service Factories:
 
 <figure>
-{% highlight php %}
+```php
 // Service factory for the ORM
 $container['db'] = function ($container) {
     $capsule = new \Illuminate\Database\Capsule\Manager;
@@ -55,28 +55,28 @@ $container['db'] = function ($container) {
 
     return $capsule;
 };
-{% endhighlight %}
+```
 <figcaption>Figure 3: Configure Eloquent.</figcaption>
 </figure>
 
 ## Pass a controller an instance of your table
 
 <figure>
-{% highlight php %}
+```php
 $container[App\WidgetController::class] = function ($c) {
     $view = $c->get('view');
     $logger = $c->get('logger');
     $table = $c->get('db')->table('table_name');
     return new \App\WidgetController($view, $logger, $table);
 };
-{% endhighlight %}
+```
 <figcaption>Figure 4: Pass table object into a controller.</figcaption>
 </figure>
 
 ## Query the table from a controller
 
 <figure>
-{% highlight php %}
+```php
 <?php
 
 namespace App;
@@ -114,29 +114,29 @@ class WidgetController
         return $response;
     }
 }
-{% endhighlight %}
+```
 <figcaption>Figure 5: Sample controller querying the table.</figcaption>
 </figure>
 
 ### Query the table with where
 
 <figure>
-{% highlight php %}
+```php
 ...
 $records = $this->table->where('name', 'like', '%foo%')->get();
 ...
-{% endhighlight %}
+```
 <figcaption>Figure 6: Query searching for names matching foo.</figcaption>
 </figure>
 
 ### Query the table by id
 
 <figure>
-{% highlight php %}
+```php
 ...
 $record = $this->table->find(1);
 ...
-{% endhighlight %}
+```
 <figcaption>Figure 7: Selecting a row based on id.</figcaption>
 </figure>
 
