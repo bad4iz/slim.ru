@@ -1,14 +1,18 @@
 ---
-title: Trailing / in route patterns
+title: Завершение / в роутах
 ---
 
-Slim treats a URL pattern with a trailing slash as different to one without. That is, `/user` and `/user/` are different and so can have different callbacks attached.
+Slim обрабатывает шаблон URL с косой чертой в конце и без по разному. То есть, `/user` и `/user/` разные, и поэтому 
+могут иметь разные callbacks вызовы.
 
-For GET requests a permanent redirect is fine, but for other request methods like POST or PUT the browser will send the second request with the GET method. To avoid this you simply need to remove the trailing slash and pass the manipulated url to the next middleware.
+Для запросов GET постоянное перенаправление выполняется нормально, но для других методов запроса, таких как POST 
+или PUT, браузер отправит второй запрос с помощью метода GET. Чтобы этого избежать, вам просто нужно удалить конечную 
+косую черту и передать управляемый URL-адрес следующему middleware.
 
-If you want to redirect/rewrite all URLs that end in a `/` to the non-trailing `/` equivalent, then you can add this middleware:
+Если вы хотите перенаправить/переписать все URL-адреса, которые заканчиваются `/` на не-trailing `/` эквивалент, 
+вы можете добавить это middleware:
 
-{% highlight php %}
+```php
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -30,12 +34,14 @@ $app->add(function (Request $request, Response $response, callable $next) {
 
     return $next($request, $response);
 });
-{% endhighlight %}
+```
 
-Alternatively, consider [oscarotero/psr7-middlewares' TrailingSlash](//github.com/oscarotero/psr7-middlewares#trailingslash) middleware which also allows you to force a trailing slash to be appended to all URLs:
+В качестве альтернативы рассмотрим 
+[oscarotero/psr7-middlewares' TrailingSlash](//github.com/oscarotero/psr7-middlewares#trailingslash) 
+которое также позволяет принудительно привязать конечную косую черту ко всем URL-адресам:
 
-{% highlight php %}
+```php
 use Psr7Middlewares\Middleware\TrailingSlash;
 
 $app->add(new TrailingSlash(true)); // true adds the trailing slash (false removes it)
-{% endhighlight %}
+```
