@@ -1,14 +1,19 @@
 ---
-title: Retrieving Current Route
+title: Получение текущего маршрута
 ---
 
-If you ever need to get access to the current route within your application all you have to do is call the request class' `getAttribute` method with an argument of `'route'` and it will return the current route, which is an instance of the `Slim\Route` class.
+Если вам когда-либо понадобится доступ к текущему маршруту в вашем приложении, все, что вам нужно сделать, 
+это вызвать метод класса запроса `getAttribute` с аргументом, `'route'` и он вернет текущий маршрут, который является 
+экземпляром `Slim\Route` класса.
 
-From there you can get the route's name by using `getName()` or get the methods supported by this route via `getMethods()`, etc.
+Оттуда вы можете получить имя маршрута, используя `getName()` или получить методы, поддерживаемые этим маршрутом, 
+через `getMethods()` и т. Д.
 
- Note: If you need to access the route from within your app middleware you must set `'determineRouteBeforeAppMiddleware'` to true in your configuration otherwise `getAttribute('route')` will return null. Also `getAttribute('route')` will return null on non existent routes.
+Примечание. Если вам нужно получить доступ к маршруту из middleware вашего приложения, вы должны установить 
+`'determineRouteBeforeAppMiddleware'` значение true в своей конфигурации, иначе оно `getAttribute('route')` вернет значение 
+null. Также `getAttribute('route')` возвратит null на несуществующих маршрутах.
 
-Example:
+Пример:
 ```php
 use Slim\App;
 use Slim\Exception\NotFoundException;
@@ -17,7 +22,7 @@ use Slim\Http\Response;
 
 $app = new App([
     'settings' => [
-        // Only set this if you need access to route within middleware
+        // Установите это только в том случае, если вам нужен доступ к маршруту внутри middleware
         'determineRouteBeforeAppMiddleware' => true
     ]
 ]);
@@ -26,7 +31,7 @@ $app = new App([
 $app->add(function (Request $request, Response $response, callable $next) {
     $route = $request->getAttribute('route');
 
-    // return NotFound for non existent route
+    // return NotFound для несуществующего маршрута
     if (empty($route)) {
         throw new NotFoundException($request, $response);
     }
