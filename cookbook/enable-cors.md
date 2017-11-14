@@ -1,25 +1,25 @@
 ---
-title: Setting up CORS
+title: Настройка CORS
 ---
 
-CORS - Cross origin resource sharing
+CORS - совместное использование ресурсов между разными источниками
 
-A good flowchart for implementing CORS support Reference: 
+Хорошая блок-схема для реализации поддержки CORS. Ссылка:
 
 [CORS server flowchart](http://www.html5rocks.com/static/images/cors_server_flowchart.png)
 
-You can test your CORS Support here: http://www.test-cors.org/
+Вы можете проверить свою поддержку CORS здесь: http://www.test-cors.org/
 
-You can read the specification here: https://www.w3.org/TR/cors/
+Здесь вы можете ознакомиться со спецификацией: https://www.w3.org/TR/cors/
 
 
-## The simple solution
+## Простое решение
 
-For simple CORS requests, the server only needs to add the following header to its response:
+Для простых запросов CORS серверу необходимо добавить в ответ следующий заголовок:
 
 `Access-Control-Allow-Origin: <domain>, ... | *`
 
-The following code should enable lazy CORS.
+Следующий код должен включать ленивый CORS.
 
 ```php
 $app->options('/{routes:.+}', function ($request, $response, $args) {
@@ -40,22 +40,23 @@ $app->add(function ($req, $res, $next) {
 
 ## Access-Control-Allow-Methods
 
-The following middleware can be used to query Slim's router and get a list of methods a particular pattern implements.
+Следующее middleware может использоваться для запроса маршрутизатора Slim и получения 
+списка методов, которые реализует определенный шаблон.
 
-Here is a complete example application:
+Вот пример приложения:
 
 ```php
 require __DIR__ . "/vendor/autoload.php";
 
-// This Slim setting is required for the middleware to work
+// Эта настройка Slim требуется для того, чтобы middleware работало
 $app = new Slim\App([
     "settings"  => [
         "determineRouteBeforeAppMiddleware" => true,
     ]
 ]);
 
-// This is the middleware
-// It will add the Access-Control-Allow-Methods header to every request
+// Это the middleware
+// Он будет добавлять заголовок Access-Control-Allow-Methods для каждого запроса
 
 $app->add(function($request, $response, $next) {
     $route = $request->getAttribute("route");
@@ -70,7 +71,7 @@ $app->add(function($request, $response, $next) {
                 $methods = array_merge_recursive($methods, $route->getMethods());
             }
         }
-        //Methods holds all of the HTTP Verbs that a particular route handles.
+        // Методы содержат все HTTP-глаголы, которые обрабатывает конкретный маршрут.
     } else {
         $methods[] = $request->getMethod();
     }
@@ -90,11 +91,11 @@ $app->post("/api/{id}", function($request, $response, $arguments) {
 $app->map(["DELETE", "PATCH"], "/api/{id}", function($request, $response, $arguments) {
 });
 
-// Pay attention to this when you are using some javascript front-end framework and you are using groups in slim php
+// Обратите внимание на это, когда вы используете фреймворк javascript front-end, и вы используете группы в slim php
 $app->group('/api', function () {
-    // Due to the behaviour of browsers when sending PUT or DELETE request, you must add the OPTIONS method. Read about preflight.
+    // Из-за поведения браузеров при отправке запроса PUT или DELETE вы должны добавить метод OPTIONS. Читайте о предполетном освещении.
     $this->map(['PUT', 'OPTIONS'], '/{user_id:[0-9]+}', function ($request, $response, $arguments) {
-        // Your code here...
+        // Ваш код здесь ...
     });
 });
 
