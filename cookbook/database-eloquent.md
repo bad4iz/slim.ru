@@ -1,23 +1,23 @@
 ---
-title: Using Eloquent with Slim
+title: Использование Eloquent вместе со Slim
 ---
 
-You can use a database ORM such as [Eloquent](https://laravel.com/docs/5.1/eloquent) to connect your SlimPHP application to a database.
+Вы можете использовать ORM базы данных, например [Eloquent](https://laravel.com/docs/5.1/eloquent) для подключения 
+вашего приложения SlimPHP к базе данных.
 
-## Adding Eloquent to your application
+## Добавление Eloquent в ваше приложение
 
-<figure>
-{% highlight bash %}
+```
 composer require illuminate/database "~5.1"
 ```
-<figcaption>Figure 1: Add Eloquent to your application.</figcaption>
+<figure>
+<figcaption>Figure 1: Добвить Eloquent в ваше приложение.</figcaption>
 </figure>
 
-## Configure Eloquent
+## Настройки Eloquent
 
-Add the database settings to Slim's settings array.
+Добавьте настройки базы данных в массив настроек Slim.
 
-<figure>
 ```php
 <?php
 return [
@@ -38,12 +38,12 @@ return [
     ],
 ];
 ```
-<figcaption>Figure 2: Settings array.</figcaption>
+<figure>
+    <figcaption>Figure 2: Массив настроек.</figcaption>
 </figure>
 
-In your `dependencies.php` or wherever you add your Service Factories:
+В вашем `dependencies.php` или где вы добавляете свои Служебные Фабрики:
 
-<figure>
 ```php
 // Service factory for the ORM
 $container['db'] = function ($container) {
@@ -56,12 +56,12 @@ $container['db'] = function ($container) {
     return $capsule;
 };
 ```
-<figcaption>Figure 3: Configure Eloquent.</figcaption>
+<figure>
+<figcaption>Figure 3: Конфигурация Eloquent.</figcaption>
 </figure>
 
-## Pass a controller an instance of your table
+## Передайте контроллеру экземпляр вашей таблицы
 
-<figure>
 ```php
 $container[App\WidgetController::class] = function ($c) {
     $view = $c->get('view');
@@ -70,12 +70,12 @@ $container[App\WidgetController::class] = function ($c) {
     return new \App\WidgetController($view, $logger, $table);
 };
 ```
-<figcaption>Figure 4: Pass table object into a controller.</figcaption>
+<figure>
+<figcaption>Figure 4: Передайте объект таблицы в контроллер.</figcaption>
 </figure>
 
-## Query the table from a controller
+## Запросить таблицу с контроллера
 
-<figure>
 ```php
 <?php
 
@@ -115,31 +115,32 @@ class WidgetController
     }
 }
 ```
-<figcaption>Figure 5: Sample controller querying the table.</figcaption>
+<figure>
+<figcaption>Figure 5:  Пример контроллера, запрашивающего таблицу.</figcaption>
 </figure>
 
-### Query the table with where
+### Запрос из таблицы с where
 
-<figure>
 ```php
 ...
 $records = $this->table->where('name', 'like', '%foo%')->get();
 ...
 ```
-<figcaption>Figure 6: Query searching for names matching foo.</figcaption>
+<figure>
+<figcaption>Figure 6: Поиск запросов для имен, соответствующих foo.</figcaption>
 </figure>
 
-### Query the table by id
+### Запрос таблицы по идентификатору
 
-<figure>
 ```php
 ...
 $record = $this->table->find(1);
 ...
 ```
-<figcaption>Figure 7: Selecting a row based on id.</figcaption>
+<figure>
+<figcaption>Figure 7:  Выбор строки на основе идентификатора.</figcaption>
 </figure>
 
-## More information
+## Больше информации
 
 [Eloquent](https://laravel.com/docs/5.1/eloquent) Documentation
