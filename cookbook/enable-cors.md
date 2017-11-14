@@ -102,5 +102,5 @@ $app->group('/api', function () {
 $app->run();
 ```
 
-A big thank you to [tuupola](https://github.com/tuupola) for coming up with this!
+Большое спасибо [tuupola](https://github.com/tuupola) за это!
 
