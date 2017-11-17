@@ -1,67 +1,74 @@
 ---
-title: Getting and Mocking the Environment
+title: Getting и Mocking окружение
 ---
 
-The Environment object encapsulates the `$_SERVER` superglobal array and decouples the Slim application from the PHP global environment. Decoupling the Slim application from the PHP global environment lets us create HTTP requests that may (or may not) resemble the global environment. This is particuarly useful for unit testing and initiating sub-requests. You can fetch the current Environment object anywhere in your Slim application like this:
+Объект Environment инкапсулирует `$_SERVER` суперглобальный массив и отделяет приложение Slim от глобальной среды PHP. 
+Развязка приложения Slim из глобальной среды PHP позволяет нам создавать HTTP-запросы, которые могут (или не могут) 
+представлять глобальную среду. Это особенно полезно для модульного тестирования и инициирования вспомогательных запросов. 
+Вы можете получить текущий объект Environment в любом месте вашего Slim-приложения следующим образом:
 
 ```php
 $container = $app->getContainer();
 $environment = $container['environment'];
 ```
 
-## Environment Properties
+## Свойства среды
+Каждое приложение Slim имеет объект среды с различными свойствами, которые определяют поведение приложения. 
+Многие из этих свойств отражают найденные в `$_SERVER` суперглобальном массиве. Требуются некоторые свойства. 
+Другие свойства являются необязательными.
 
-Each Slim application has an Environment object with various properties that determine application behavior. Many of these properties mirror those found in the `$_SERVER` superglobal array. Some properties are required. Other properties are optional.
-
-### Required Properties
+### Обязательные свойства
 
 REQUEST_METHOD
-:   The HTTP request method. This must be one of "GET", "POST", "PUT", "DELETE", "HEAD", "PATCH", or "OPTIONS".
+:   метод запроса HTTP. Это должно быть одно из «GET», «POST», «PUT», «DELETE», «HEAD», «PATCH» или «OPTIONS».
 
 SCRIPT_NAME
-:   The absolute path name to the front-controller PHP script relative to your document root, disregarding any URL rewriting performed by your web server.
+:   Абсолютное имя пути к PHP-скрипту front-controller относительно вашего корня документа, без учета любой перезаписи URL, выполняемой вашим веб-сервером.
 
 REQUEST_URI
-:   The absolute path name of the HTTP request URI, including any URL rewriting changes performed by your web server.
+:   абсолютное имя пути URI-запроса HTTP, включая любые изменения перезаписи URL-адресов, выполняемые вашим веб-сервером.
 
 QUERY_STRING
-:   The part of the HTTP request’s URI path after, but not including, the “?”. This may be an empty string if the current HTTP request does not specify a query string.
+:    часть пути URI HTTP-запроса после, но не включая, «?». Это может быть пустая строка, если текущий HTTP-запрос не указывает строку запроса.
 
 SERVER_NAME
-:   The name of the server host under which the current script is executing. If the script is running on a virtual host, this will be the value defined for that virtual host.
+:   имя хоста сервера, под которым выполняется текущий скрипт. Если скрипт запущен на виртуальном хосте, это будет значение, определенное для этого виртуального хоста.
 
 SERVER_PORT
-:   The port on the server machine being used by the web server for communication. For default setups, this will be '80'; using SSL, for instance, will change this to whatever your defined secure HTTP port is.
+:   порт на сервере, используемый веб-сервером для связи. Для настроек по умолчанию это будет «80»; используя SSL, например, изменит это на любой ваш защищенный HTTP-порт.
 
 HTTPS
-:   Set to a non-empty value if the script was queried through the HTTPS protocol.
+:   установить непустое значение, если скрипт был запрошен через протокол HTTPS.
 
-### Optional Properties
+### Дополнительные свойства
 
 CONTENT_TYPE
-:   The HTTP request content type (e.g., `application/json;charset=utf8`)
+:   тип содержимого запроса HTTP (например, `application/json;charset=utf8`)
 
 CONTENT_LENGTH
-:   The HTTP request content length. This must be an integer if present.
+:   длина содержимого запроса HTTP. Это должно быть целое число, если оно присутствует.
 
 HTTP_*
-:   The HTTP request headers sent by the client. These values are identical to their counterparts in the `$_SERVER` superglobal array. If present, these values must retain the "HTTP_" prefix.
+:   заголовки HTTP-запросов, отправленные клиентом. Эти значения идентичны их аналогам в `$_SERVER` суперглобальной матрице. Если они присутствуют, эти значения должны содержать префикс «HTTP_».  
 
 PHP_AUTH_USER
-:   The HTTP `Authentication` header's decoded username.
+:   `Authentication` расшифрованное имя пользователя заголовка HTTP .
 
 PHP_AUTH_PW
-:   The HTTP `Authentication` header's decoded password.
+:   `Authentication` расшифрованный пароль HTTP- заголовка.
 
 PHP_AUTH_DIGEST
-:   The raw HTTP `Authentication` header as sent by the HTTP client.
+:   необработанный HTTP- `Authentication` заголовок, отправленный клиентом HTTP.
 
 AUTH_TYPE
-:   The HTTP `Authentication` header's authentication type (e.g., "Basic" or "Digest").
+:   `Authentication` тип аутентификации HTTP- заголовка (например, «Basic» или «Digest»).
+                              
 
-## Mock Environments
+## Макетная среда
 
-Each Slim application instantiates an Environment object using information from the current global environment. However, you may also create mock environment objects with custom information. Mock Environment objects are only useful when writing unit tests.
+Каждое Slim-приложение создает экземпляр объекта Environment, используя информацию из текущей глобальной среды. 
+Тем не менее, вы также можете создавать объекты mock environment с настраиваемой информацией. Объекты Mock Environment 
+полезны только при написании модульных тестов.
 
 ```php
 $env = \Slim\Http\Environment::mock([
