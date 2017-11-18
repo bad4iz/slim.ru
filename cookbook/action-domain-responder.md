@@ -1,16 +1,23 @@
 ---
-title: Action-Domain-Responder with Slim
+title: Action-Domain-Responder с Slim
 ---
 
-In this post, I'll show how to refactor the Slim tutorial application to more closely follow the [Action-Domain-Responder](http://pmjones.io/adr) pattern.
+Тут я покажу, как реорганизовать учебное приложение Slim, чтобы более внимательно следить за шаблоном 
+[Action-Domain-Responder](http://pmjones.io/adr).
 
-One nice thing about Slim (and most other [HTTP user interface frameworks](http://paul-m-jones.com/archives/6627)) is that they are already "action" oriented. That is, their routers do not presume a controller class with many action methods. Instead, they presume an action closure or a single-action invokable class.
+Одна приятная вещь о Slim (и большинстве других [HTTP пользовательского интерфейса фреймворка](http://paul-m-jones.com/archives/6627))) заключается в том, 
+что они уже ориентированы на действия. То есть, их маршрутизаторы не предполагают класс контроллера со многими методами 
+действий. Вместо этого они предполагают закрытие действия или однонаправленный вызывающий класс.
 
-So the Action part of Action-Domain-Responder already exists for Slim. All that is needed is to pull extraneous bits out of the Actions, to more clearly separate the Action behaviors from Domain and the Responder behaviors.
+
+Таким образом, часть действия Action-Domain-Responder уже существует для Slim. Все, что необходимо, - вытащить 
+посторонние биты из Actions, чтобы более четко разделить действия Action от Domain и поведения Responder.
 
 ## Extract Domain
 
-Let's begin by extracting the Domain logic. In the original tutorial, the Actions use two data-source mappers directly, and embed some business logic as well. We can create a Service Layer class called `TicketService` and move those operations from the Actions into the Domain. Doing so gives us this class:
+Начнем с извлечения логики домена. В оригинальном учебном пособии, в действии, используются два источника данных, 
+а также встроенная бизнес-логика. Мы можем создать класс Service Layer `TicketService` и переместить эти операции из 
+Actions в Domain. Это дает нам этот класс:
 
 ```php
 class TicketService
@@ -59,7 +66,7 @@ class TicketService
 }
 ```
 
-We create a container object for it in `index.php` like so:
+Мы создаем для него контейнерный объект `index.php`:
 
 ```php
 $container['ticket_service'] = function ($c) {
@@ -69,8 +76,7 @@ $container['ticket_service'] = function ($c) {
     );
 };
 ```
-
-And now the Actions can use the `TicketService` instead of performing domain logic directly:
+И теперь Actions может использовать `TicketService` вместо непосредственного выполнения логики домена:
 
 ```php
 $app->get('/tickets', function (Request $request, Response $response) {
@@ -112,13 +118,17 @@ $app->get('/ticket/{id}', function (Request $request, Response $response, $args)
 })->setName('ticket-detail');
 ```
 
-One benefit here is that we can now test the domain activities separately from the actions. We can begin to do something more like integration testing, even unit testing, instead of end-to-end system testing.
+Одно из преимуществ заключается в том, что мы теперь можем тестировать действия домена отдельно от действий. 
+Мы можем начать делать нечто большее, как интеграционное тестирование, даже модульное тестирование, а не сквозное 
+тестирование системы.
 
-## Extract Responder
+## Извлечение ответчика
 
-In the case of the tutorial application, the presentation work is so straightforward as to not require a separate Responder for each action. A relaxed variation of a Responder layer is perfectly suitable in this simple case, one where each Action uses a different method on a common Responder.
+В случае с учебным приложением работа с презентацией настолько проста, что для каждого действия не требуется 
+отдельный ответчик. Расслабленная вариация слоя ответчика идеально подходит в этом простом случае, где каждое 
+действие использует другой метод для общего ответчика.
 
-Extracting the presentation work to a separate Responder, so that response-building is completely removed from the Action, looks like this:
+Извлечение работы презентации отдельному ответчику, так что создание ответа полностью удаляется из Action, выглядит так:
 
 ```php
 use Psr\Http\Message\ResponseInterface as Response;
@@ -167,7 +177,7 @@ class TicketResponder
 }
 ```
 
-We can then add the `TicketResponder` object to the container in `index.php`:
+Затем мы можем добавить `TicketResponder` объект в контейнер `index.php` :
 
 ```php
 $container['ticket_responder'] = function ($c) {
@@ -175,7 +185,7 @@ $container['ticket_responder'] = function ($c) {
 };
 ```
 
-And finally we can refer to the Responder, instead of just the template system, in the Actions:
+И, наконец, мы можем ссылаться на ответчика, а не только на систему шаблонов, в Actions:
 
 ```php
 $app->get('/tickets', function (Request $request, Response $response) {
@@ -210,22 +220,34 @@ $app->get('/ticket/{id}', function (Request $request, Response $response, $args)
 })->setName('ticket-detail');
 ```
 
-Now we can test the response-building work separately from the domain work.
+Теперь мы можем протестировать работу по созданию ответа отдельно от работы в домене.
 
-Some notes:
+Некоторые примечания:
 
-Putting all the response-building in a single class with multiple methods, especially for simple cases like this tutorial, is fine to start with. For ADR, is not strictly necessary to have one Responder for each Action. What *is* necessary is to extract the response-building concerns out of the Action.
+Помещение всего здания ответа в одном классе с несколькими методами, особенно для простых случаев, таких как этот 
+учебник, отлично подходит для начала. Для *этого* не обязательно иметь одного ответчика для каждого действия. Что это 
+необходимо, чтобы извлечь ответ потенциал проблемы выхода из действий.
+Putting all the response-building in a single class with multiple methods, especially for simple cases like this 
+tutorial, is fine to start with. For ADR, is not strictly necessary to have one Responder for each Action. What *is* 
+necessary is to extract the response-building concerns out of the Action.
 
-But as the presentation logic complexity increases (content-type negotiation? status headers? etc.), and as dependencies become different for each kind of response being built, you will want to have a Responder for each Action.
+Но по мере того как сложность логики представления возрастает (заголовки состояния согласования контента и т. Д.), 
+И поскольку зависимости для каждого типа создаваемого ответа становятся разными, вам нужно иметь ответчика для каждого
+ действия.
 
-Alternatively, you might stick with a single Responder, but reduce its interface to a single method. In that case, you may find that using a [Domain Payload](http://paul-m-jones.com/archives/6043) (instead of "naked" domain results) has some significant benefits.
+Кроме того, вы можете придерживаться одного ответчика, но уменьшите его интерфейс до одного метода. В этом случае 
+вы можете обнаружить, что использование [полезной нагрузки домена](http://paul-m-jones.com/archives/6043) (вместо «голых» результатов домена) имеет некоторые 
+существенные преимущества.
 
-## Conclusion
+## Вывод
 
-At this point, the Slim tutorial application has been converted to ADR. We have separated the domain logic to a `TicketService`, and the presentation logic to a `TicketResponder`. And it's easy to see how each Action does pretty much the same thing:
+На данный момент приложение Slim tutorial было преобразовано в ADR. Мы разделили логику домена на a `TicketService` и 
+логику представления на a `TicketResponder`. И легко понять, как каждое действие делает почти то же самое:
 
-- Marshals input and passes it into the Domain
-- Gets back a result from the Domain and passes it to the Responder
-- Invokes the Responder so it can build and return the Response
+- Маршалы вводят и передают его в домен
+- Возвращает результат из Домена и передает его ответчику
+- Вызывает ответчика, чтобы он мог создавать и возвращать ответ
 
-Now, for a simple case like this, using ADR (or even webbishy MVC) might seem like overkill. But simple cases become complex quickly, and this simple case shows how the ADR separation-of-concerns can be applied as a Slim-based application increases in complexity.
+Теперь, для простого случая, подобного этому, использование ADR (или даже webbishy MVC) может показаться излишним. 
+Но простые случаи быстро становятся сложными, и в этом простом случае показано, как разделение проблем ADR может 
+быть применено как сложное приложение на основе Slim.
