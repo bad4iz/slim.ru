@@ -1,35 +1,35 @@
 ---
-title: Flash Messages
+title: Флеш-Сообщения
 ---
 
-## Install
+## Установка
 
-Via Composer
+через Composer
 
 ``` bash
 $ composer require slim/flash
 ```
 
-Requires Slim 3.0.0 or newer.
+Требуется Slim 3.0.0 или новее.
 
-## Usage
+## Применение
 
 ```php
-// Start PHP session
-session_start(); //by default requires session storage
+// Начало сессии в PHP
+session_start(); // по умолчанию не требует хранения сессии
 
 $app = new \Slim\App();
 
 // Fetch DI Container
 $container = $app->getContainer();
 
-// Register provider
+// Провайдер регистрации
 $container['flash'] = function () {
     return new \Slim\Flash\Messages();
 };
 
 $app->get('/foo', function ($req, $res, $args) {
-    // Set flash message for next request
+    // Установка флэш-сообщения для следующего запроса
     $this->flash->addMessage('Test', 'This is a message');
 
     // Redirect
@@ -37,12 +37,11 @@ $app->get('/foo', function ($req, $res, $args) {
 });
 
 $app->get('/bar', function ($req, $res, $args) {
-    // Get flash messages from previous request
+    // Получение флэш-сообщений из предыдущего запроса
     $messages = $this->flash->getMessages();
     print_r($messages);
 });
 
 $app->run();
 ```
-
-Please note that a message could be a string, object or array. Please check what your storage can handle.
+Обратите внимание, что сообщение может быть строкой, объектом или массивом. Проверьте, что может хранить ваше хранилище.
