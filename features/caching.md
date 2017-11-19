@@ -18,7 +18,7 @@ composer require slim/http-cache
 
 ## Применение
 
-Компонент `slimphp/Slim-HttpCache` содержит поставщик услуг и промежуточное программное приложение. 
+Компонент `slimphp/Slim-HttpCache` содержит поставщик услуг и middleware. 
 Вы должны добавить оба приложения в это приложение:
 
 ```php
