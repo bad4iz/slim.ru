@@ -1,47 +1,47 @@
 ---
-title: HTTP Caching
+title: Кэширование HTTP
 ---
 
-Slim 3 uses the optional standalone [slimphp/Slim-HttpCache](https://github.com/slimphp/Slim-HttpCache) PHP component
-for HTTP caching. You can use this component to create and return responses that
-contain `Cache`, `Expires`, `ETag`, and `Last-Modified` headers that control
-when and how long application output is retained by client-side caches. You may have to set your php.ini setting "session.cache_limiter" to an empty string in order to get this working without interferences.
+В Slim 3 используется дополнительный компонент PHP [slimphp/Slim-HttpCache](https://github.com/slimphp/Slim-HttpCache) 
+для HTTP-кеширования. Вы можете использовать этот компонент для создания и возвращать ответы , которые содержат 
+`Cache`, `Expires`, `ETag` и `Last-Modified` заголовки, которые управляют временем хранения выходных 
+данных приложения, кэшами на стороне клиента.  Возможно, вам нужно установить для параметра php.ini 
+«session.cache_limiter» пустую строку.
 
-## Installation
+## Установка
 
-Execute this bash command from your project's root directory:
+Выполните эту команду bash из корневого каталога вашего проекта:
 
-{% highlight bash %}
+```
 composer require slim/http-cache
 ```
 
-## Usage
+## Применение
 
-The `slimphp/Slim-HttpCache` component contains a service provider and an application
-middleware. You should add both to your application like this:
+Компонент `slimphp/Slim-HttpCache` содержит поставщик услуг и промежуточное программное приложение. 
+Вы должны добавить оба приложения в это приложение:
 
 ```php
-// Register service provider with the container
+// Регистрация поставщика услуг с контейнером
 $container = new \Slim\Container;
 $container['cache'] = function () {
     return new \Slim\HttpCache\CacheProvider();
 };
 
-// Add middleware to the application
+// Добавить middleware к приложению
 $app = new \Slim\App($container);
 $app->add(new \Slim\HttpCache\Cache('public', 86400));
 
-// Create your application routes...
+// Создайте свой маршрутов приложение...
 
-// Run application
+// Запуск приложения
 $app->run();
 ```
 
 ## ETag
 
-Use the service provider's `withEtag()` method to create a Response object
-with the desired `ETag` header. This method accepts a PSR7 response object,
-and it returns a cloned PSR7 response with the new HTTP header.
+Используйте метод поставщика услуг `withEtag()` для создания объекта Response с нужным `ETag` заголовком. 
+Этот метод принимает объект ответа PSR7 и возвращает клонированный ответ PSR7 с новым HTTP-заголовком.
 
 ```php
 $app->get('/foo', function ($req, $res, $args) {
@@ -53,9 +53,8 @@ $app->get('/foo', function ($req, $res, $args) {
 
 ## Expires
 
-Use the service provider's `withExpires()` method to create a Response object
-with the desired `Expires` header. This method accepts a PSR7 response object,
-and it returns a cloned PSR7 response with the new HTTP header.
+Используйте метод поставщика услуг `withExpires()` для создания объекта Response с нужным `Expires` заголовком. 
+Этот метод принимает объект ответа PSR7 и возвращает клонированный ответ PSR7 с новым HTTP-заголовком.
 
 ```php
 $app->get('/bar',function ($req, $res, $args) {
@@ -67,12 +66,12 @@ $app->get('/bar',function ($req, $res, $args) {
 
 ## Last-Modified
 
-Use the service provider's `withLastModified()` method to create a Response object
-with the desired `Last-Modified` header. This method accepts a PSR7 response object,
-and it returns a cloned PSR7 response with the new HTTP header.
+Используйте метод поставщика услуг `withLastModified()` для создания объекта Response с нужным `Last-Modified` 
+заголовком. 
+Этот метод принимает объект ответа PSR7 и возвращает клонированный ответ PSR7 с новым HTTP-заголовком.
 
 ```php
-//Example route with LastModified
+//Пример маршрута с помощью LastModified
 $app->get('/foobar',function ($req, $res, $args) {
     $resWithLastMod = $this->cache->withLastModified($res, time() - 3600);
 
