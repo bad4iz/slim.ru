@@ -14,34 +14,34 @@ title: Загрузка файлов с использованием форм PO
 Ниже приведен пример HTML-формы, содержащей как одиночную, так и множественную загрузку файлов.
 
 ```php
-<!-- make sure the attribute enctype is set to multipart/form-data -->
+<!-- убедитесь, что enctype атрибут имеет значение multipart/form-data -->
 <form method="post" enctype="multipart/form-data">
-    <!-- upload of a single file -->
+    <!-- загрузка одного файла -->
     <p>
-        <label>Add file (single): </label><br/>
+        <label>Добавить файл (один): </label><br/>
         <input type="file" name="example1"/>
     </p>
 
-    <!-- multiple input fields for the same input name, use brackets -->
+    <!-- несколько полей ввода для одного и того же имени ввода, используйте квадратные скобки -->
     <p>
-        <label>Add files (up to 2): </label><br/>
+        <label>Добавить файлы (два): </label><br/>
         <input type="file" name="example2[]"/><br/>
         <input type="file" name="example2[]"/>
     </p>
 
-    <!-- one file input field that allows multiple files to be uploaded, use brackets -->
+    <!--одно поле ввода файла, позволяющее загружать несколько файлов, используйте квадратные скобки -->
     <p>
-        <label>Add files (multiple): </label><br/>
+        <label>Добавить файлы (много): </label><br/>
         <input type="file" name="example3[]" multiple="multiple"/>
     </p>
 
     <p>
         <input type="submit"/>
     </p>
-```
 </form>
+```
 <figure>
-<figcaption>Figure 1: Пример формы HTML для загрузки файлов</figcaption>
+<figcaption>Пример 1: Пример формы HTML для загрузки файлов</figcaption>
 </figure>
 
 Загруженные файлы можно перемещать в каталог с помощью `moveTo` метода. Ниже приведен пример приложения, который
@@ -66,7 +66,7 @@ $app->post('/', function(Request $request, Response $response) {
 
     $uploadedFiles = $request->getUploadedFiles();
 
-    // handle single input with single file upload
+    // обработчик одного input с одним файлом загрузки
     $uploadedFile = $uploadedFiles['example1'];
     if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
         $filename = moveUploadedFile($directory, $uploadedFile);
@@ -74,7 +74,7 @@ $app->post('/', function(Request $request, Response $response) {
     }
 
 
-    // handle multiple inputs with the same key
+    // обработчик нескольких input с одним и тем же ключом
     foreach ($uploadedFiles['example2'] as $uploadedFile) {
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
             $filename = moveUploadedFile($directory, $uploadedFile);
@@ -82,21 +82,14 @@ $app->post('/', function(Request $request, Response $response) {
         }
     }
 
-    // handle single input with multiple file uploads
+    // обработчик одного input с множественной загрузкой файлов
     foreach ($uploadedFiles['example3'] as $uploadedFile) {
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
             $filename = moveUploadedFile($directory, $uploadedFile);
             $response->write('uploaded ' . $filename . '<br/>');
         }
     }
-
-    // handle single input with multiple file uploads
-    foreach ($uploadedFiles['example3'] as $uploadedFile) {
-        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-            $filename = moveUploadedFile($directory, $uploadedFile);
-            $response->write('uploaded ' . $filename . '<br/>');
-        }
-    }
+    
 });
 
 /**
@@ -121,7 +114,7 @@ function moveUploadedFile($directory, UploadedFile $uploadedFile)
 $app->run();
 ```
 <figure>
-<figcaption>Figure 2: Пример Slim applcation для обработки загруженных файловs</figcaption>
+<figcaption>Пример 2: Пример Slim applcation для обработки загруженных файловs</figcaption>
 </figure>
 
 Смотрите также
