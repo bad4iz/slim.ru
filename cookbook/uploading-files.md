@@ -93,12 +93,12 @@ $app->post('/', function(Request $request, Response $response) {
 });
 
 /**
- * Moves the uploaded file to the upload directory and assigns it a unique name
- * to avoid overwriting an existing uploaded file.
+ * Перемещает загруженный файл в каталог загрузки и назначает ему уникальное имя, 
+ * чтобы избежать перезаписи существующего загруженного файла.
  *
- * @param string $directory directory to which the file is moved
- * @param UploadedFile $uploaded file uploaded file to move
- * @return string filename of moved file
+ * @param string $directory каталог, в который перемещается файл
+ * @param UploadedFile $uploadedFile загруженный файл для перемещения
+ * @return string имя перемещенного файла
  */
 function moveUploadedFile($directory, UploadedFile $uploadedFile)
 {
