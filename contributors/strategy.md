@@ -1,5 +1,5 @@
 ---
-title: Branching Strategy
+title: Стратегия ветвления
 ---
 
-The Slim Framework uses a simple branching strategy. There is a `3.x` branch, and the `3.x` branch `HEAD` reference points to the latest unstable code. Each stable release is denoted with a numeric tag (e.g., `3.0.0`).
+В Slim Framework используется простая стратегия ветвления. Существует ветвь 3.x, а ссылка HEAD в разделе 3.x указывает на последнюю нестабильную версию. Каждый стабильный выпуск обозначается числовым тегом (например, 3.0.0).

@@ -1,29 +1,29 @@
 ---
-title: Contributor Guidelines
+title: Руководство для участников
 ---
 
-I encourage everyone to contribute to the Slim Framework project. You can find the latest code on GitHub at <https://github.com/slimphp/Slim>.
+Я призываю каждого внести свой вклад в проект Slim Framework. Вы можете найти последнюю версию кода на GitHub <https://github.com/slimphp/Slim>.
 
-## Issue Tracker
+## Трекер задач
 
-You can find outstanding issues on the [GitHub Issue Tracker](https://github.com/slimphp/Slim/issues). If you intend to work on a specific issue, leave a comment on the appropriate thread to inform other project contributors.
+Список нерешённых задач доступен в [Трекере задач GitHub](https://github.com/slimphp/Slim/issues). Если вы намерены решить какую-либо задачу, оставьте комментарий к соответствующей задаче, чтобы другие участники проекта знали об этом
 
-## Pull Requests
+## Pull реквесты
 
-* Each pull request should contain only one new feature or improvement.
-* Pull requests should be submitted to the `master` branch
+* Каждый pull-реквест должен содержать только одно улучшение или новую функцию
+* Pull-реквесты необходимо отправлять в ветку `master`
 
-## Code Style
+## Стиль кода
 
-All pull requests must use the [PSR-2](http://www.php-fig.org/psr/psr-2/) code style.
+Все pull-реквесты должны соответствовать стандарту стиля кодирования [PSR-2](http://www.php-fig.org/psr/psr-2/).
 
-* Code MUST use the [PSR-1](http://www.php-fig.org/psr/psr-1/) code style.
-* Code MUST use 4 spaces for indenting, not tabs.
-* There MUST NOT be a hard limit on line length; the soft limit MUST be 120 characters; lines SHOULD be 80 characters or less.
-* There MUST be one blank line after the namespace declaration, and there MUST be one blank line after the block of use declarations.
-* Opening braces for classes MUST go on the next line, and closing braces MUST go on the next line after the body.
-* Opening braces for methods MUST go on the next line, and closing braces MUST go on the next line after the body.
-* Visibility MUST be declared on all properties and methods; abstract and final MUST be declared before the visibility; static MUST be declared after the visibility.
-* Control structure keywords MUST have one space after them; method and function calls MUST NOT.
-* Opening braces for control structures MUST go on the same line, and closing braces MUST go on the next line after the body.
-* Opening parentheses for control structures MUST NOT have a space after them, and closing parentheses for control structures MUST NOT have a space before.
+* Код ДОЛЖЕН соответствовать тандарту [PSR-1](http://www.php-fig.org/psr/psr-1/).
+* Для отступов НЕОБХОДИМО использовать 4 пробела. Табуляция недопустима.
+* Строка кода ДОЛЖНА быть не длиннее 80 символов. "мягкий предел" строки - ДОЛЖЕН быть 120 символов.
+* После объявления простарнства имен ДОЛЖНА быть пустая строка. После блока `use` ДОЛЖНА быть пустая строка
+* Открывающие и закрывающие скобки класса ДОЛЖНЫ быть на новой строке
+* Открывающие и закрывающие скобки методов ДОЛЖНЫ быть на новой строке
+* Область видимости ДОЛЖНА быть объявлена для всех методов и свойств; Ключевые слова `abstract` и `final` ДОЛЖНЫ быть указаны перед областью видимости свойства или метода; ключевое слово `static` ДОЛЖНО быть объявлено после области видимости свойства или метода
+* Ключевые слова управляющий структур ДОЛЖНЫ иметь пробел после них; Вызовы методов и функций - НЕ ДОЛЖНЫ.
+* Открывающие скобки управляющих структур ДОЛЖНЫ быть на той же строке, а закрывающие скобки ДОЛЖНЫ быть с новой строки.
+* После открывающей круглой скобки управляющих структур НЕ ДОЛЖНО быть пробелов. Перед закрывающей круглой скобки управляющих структур НЕ ДОЛЖНО быть проелов.
