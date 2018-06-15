@@ -80,3 +80,25 @@ $env = \Slim\Http\Environment::mock([
     'CONTENT_LENGTH' => 15
 ]);
 ```
+
+### Загруженные файлы
+
+Если есть необходимость добавить загруженные файлы в Mock Environment, используйте ключ `slim.files` массива настроек. 
+В этом ключе должен быть массив объектов, реализующих интерфейс `\Psr\Http\Message\UploadedFileInterface` 
+(например, нативный лдя Slim Framework `\Slim\Http\UploadedFile`)
+
+```php
+use Slim\Http\Environment;
+use Slim\Http\UploadedFile;
+
+$env = Environment::mock([
+    'REQUEST_METHOD' => 'POST',
+    'REQUEST_URI' => '/foo/bar',
+    'SERVER_NAME' => 'example.com',
+    'CONTENT_TYPE' => 'multipart/form-data',
+    'slim.files' => [
+        'field1' => new UploadedFile('/path/to/file1', 'filename1.txt', 'text/plain', filesize('/path/to/file1')),
+        'field2' => new UploadedFile('/path/to/file2', 'filename2.txt', 'text/plain', filesize('/path/to/file2')),
+    ]
+]);
+```
