@@ -62,6 +62,10 @@ PHP_AUTH_DIGEST
 
 AUTH_TYPE
 :   `Authentication` тип аутентификации HTTP- заголовка (например, «Basic» или «Digest»).
+
+slim.files
+:   массив объектов, реализующих интерфейс `\Psr\Http\Message\UploadedFileInterface` 
+    (например, нативный для Slim Framework `\Slim\Http\UploadedFile`)
                               
 
 ## Макетная среда
@@ -77,28 +81,10 @@ $env = \Slim\Http\Environment::mock([
     'QUERY_STRING' => 'abc=123&foo=bar',
     'SERVER_NAME' => 'example.com',
     'CONTENT_TYPE' => 'application/json;charset=utf8',
-    'CONTENT_LENGTH' => 15
-]);
-```
-
-### Загруженные файлы
-
-Если есть необходимость добавить загруженные файлы в Mock Environment, используйте ключ `slim.files` массива настроек. 
-В этом ключе должен быть массив объектов, реализующих интерфейс `\Psr\Http\Message\UploadedFileInterface` 
-(например, нативный лдя Slim Framework `\Slim\Http\UploadedFile`)
-
-```php
-use Slim\Http\Environment;
-use Slim\Http\UploadedFile;
-
-$env = Environment::mock([
-    'REQUEST_METHOD' => 'POST',
-    'REQUEST_URI' => '/foo/bar',
-    'SERVER_NAME' => 'example.com',
-    'CONTENT_TYPE' => 'multipart/form-data',
+    'CONTENT_LENGTH' => 15,
     'slim.files' => [
         'field1' => new UploadedFile('/path/to/file1', 'filename1.txt', 'text/plain', filesize('/path/to/file1')),
         'field2' => new UploadedFile('/path/to/file2', 'filename2.txt', 'text/plain', filesize('/path/to/file2')),
-    ]
+    ],
 ]);
 ```
