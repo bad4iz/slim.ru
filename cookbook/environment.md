@@ -62,6 +62,10 @@ PHP_AUTH_DIGEST
 
 AUTH_TYPE
 :   `Authentication` тип аутентификации HTTP- заголовка (например, «Basic» или «Digest»).
+
+slim.files
+:   массив объектов, реализующих интерфейс `\Psr\Http\Message\UploadedFileInterface` 
+    (например, нативный для Slim Framework `\Slim\Http\UploadedFile`)
                               
 
 ## Макетная среда
@@ -72,11 +76,14 @@ AUTH_TYPE
 
 ```php
 $env = \Slim\Http\Environment::mock([
-    'REQUEST_METHOD' => 'PUT',
+    'REQUEST_METHOD' => 'POST',
     'REQUEST_URI' => '/foo/bar',
     'QUERY_STRING' => 'abc=123&foo=bar',
     'SERVER_NAME' => 'example.com',
-    'CONTENT_TYPE' => 'application/json;charset=utf8',
-    'CONTENT_LENGTH' => 15
+    'CONTENT_TYPE' => 'multipart/form-data',
+    'slim.files' => [
+        'field1' => new UploadedFile('/path/to/file1', 'filename1.txt', 'text/plain', filesize('/path/to/file1')),
+        'field2' => new UploadedFile('/path/to/file2', 'filename2.txt', 'text/plain', filesize('/path/to/file2')),
+    ],
 ]);
 ```
