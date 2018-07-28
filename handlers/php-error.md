@@ -31,7 +31,7 @@ $c['phpErrorHandler'] = function ($c) {
 };
 ```
 
-> **N.B** Проверте [Not Found](/docs/handlers/not-found.html) документы для метода предварительного тонкого 
+> **N.B** Проверьте [Not Found](/docs/handlers/not-found.html) документы для метода предварительного тонкого 
 > создания, используя новый экземпляр `\Slim\Container`
 
 В этом примере мы определяем новый `phpErrorHandler` завод, который возвращает вызываемый. 

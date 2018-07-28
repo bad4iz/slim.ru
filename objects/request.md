@@ -120,7 +120,7 @@ X-Http-Method-Override: PUT
 <figcaption>Figure 4: Переопределить метод HTTP с заголовком X-Http-Method-Override.</figcaption>
 </figure>
 
-Вы можете получить _оригинальный_ (не переопределеный) HTTP метод с помощью метода объекта запроса PSR 7  `getOriginalMethod()`.
+Вы можете получить _оригинальный_ (не переопределенный) HTTP метод с помощью метода объекта запроса PSR 7  `getOriginalMethod()`.
 
 ## URI запроса
 
