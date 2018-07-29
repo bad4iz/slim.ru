@@ -151,7 +151,7 @@ notFoundHandler
 2. `\Psr\Http\Message\ResponseInterface`
 
 notAllowedHandler
-:   CВызываемый вызов, если маршрут приложения соответствует текущему пути HTTP-запроса, но не его методу. Вызываемый  
+:   Вызываемый вызов, если маршрут приложения соответствует текущему пути HTTP-запроса, но не его методу. Вызываемый  
 **ДОЛЖЕН** возвращать экземпляр `\Psr\Http\Message\ResponseInterface` and accept three arguments:
 
 1. `\Psr\Http\Message\ServerRequestInterface`
